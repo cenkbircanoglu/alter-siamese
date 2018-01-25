@@ -9,11 +9,11 @@ import torch.nn as nn
 
 
 class SiameseNetwork(nn.Module):
-    def __init__(self):
+    def __init__(self, channel):
         super(SiameseNetwork, self).__init__()
         self.cnn1 = nn.Sequential(
             nn.ReflectionPad2d(1),
-            nn.Conv2d(1, 4, kernel_size=3),
+            nn.Conv2d(channel, 4, kernel_size=3),
             nn.ReLU(inplace=True),
             nn.BatchNorm2d(4),
             nn.Dropout2d(p=.2),
@@ -53,11 +53,12 @@ class SiameseNetwork(nn.Module):
 
 
 class MySiameseNetwork(nn.Module):
-    def __init__(self):
+    def __init__(self, channel):
+        self.channel = channel
         super(MySiameseNetwork, self).__init__()
         self.cnn1 = nn.Sequential(
             nn.ReflectionPad2d(1),
-            nn.Conv2d(2, 4, kernel_size=3),
+            nn.Conv2d(2 * channel, 4, kernel_size=3),
             nn.ReLU(inplace=True),
             nn.BatchNorm2d(4),
             nn.Dropout2d(p=.2),
@@ -82,11 +83,11 @@ class MySiameseNetwork(nn.Module):
             nn.Linear(500, 500),
             nn.ReLU(inplace=True),
 
-            nn.Linear(500, 32))
+            nn.Linear(500, 32 * 2 * self.channel))
 
     def forward(self, x):
         output = self.cnn1(x)
         output = output.view(output.size()[0], -1)
         output = self.fc1(output)
-        output = output.view(-1, 2, int(output.size()[1] / 2))
+        output = output.view(-1, 2 * self.channel, int(output.size()[1] / self.channel))
         return output[:, 0, :], output[:, 1, :]

@@ -26,7 +26,7 @@ from draw_plot import show_plot, imshow
 
 folder_dataset = dset.ImageFolder(root=Config.training_dir)
 siamese_dataset = MySiameseNetworkDataset(imageFolderDataset=folder_dataset,
-                                          transform=transforms.Compose([transforms.Scale((100, 100)),
+                                          transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
                                                                         transforms.ToTensor()
                                                                         ]), should_invert=False)
 
@@ -34,8 +34,8 @@ train_dataloader = DataLoader(siamese_dataset,
                               shuffle=True,
                               num_workers=8,
                               batch_size=Config.train_batch_size)
-margin = 1.0
-net = MySiameseNetwork()
+margin = Config.margin
+net = MySiameseNetwork(Config.channel)
 criterion = ContrastiveLoss(margin=margin)
 optimizer = optim.Adam(net.parameters(), lr=0.0005)
 
@@ -67,7 +67,7 @@ with open("siamese_alternative.txt", mode="a") as f:
 show_plot(counter, loss_history, name="siamese_alternative")
 folder_dataset_test = dset.ImageFolder(root=Config.testing_dir)
 siamese_dataset = MySiameseNetworkDataset(imageFolderDataset=folder_dataset_test,
-                                          transform=transforms.Compose([transforms.Scale((100, 100)),
+                                          transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
                                                                         transforms.ToTensor()
                                                                         ])
                                           , should_invert=False)
@@ -105,7 +105,8 @@ dataiter = iter(test_dataloader)
 for i in range(50):
     x1, label = next(dataiter)
     output1, output2 = net(Variable(x1))
-    concatenated = torch.cat((x1[0][0:1].view(1, 1, 100, 100), x1[0][1:2].view(1, 1, 100, 100)), 0)
+    concatenated = torch.cat((x1[0][0:1].view(1, Config.channel, Config.heigth, Config.width),
+                              x1[0][1:2].view(1, Config.channel, Config.heigth, Config.width)), 0)
     euclidean_distance = F.pairwise_distance(output1, output2)
     imshow(torchvision.utils.make_grid(concatenated),
            'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]), name="siamese_alternative")

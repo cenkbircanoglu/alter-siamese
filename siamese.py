@@ -26,7 +26,7 @@ from draw_plot import imshow, show_plot
 
 folder_dataset = dset.ImageFolder(root=Config.training_dir)
 siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
-                                        transform=transforms.Compose([transforms.Scale((100, 100)),
+                                        transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
                                                                       transforms.ToTensor()
                                                                       ])
                                         , should_invert=False)
@@ -35,8 +35,8 @@ train_dataloader = DataLoader(siamese_dataset,
                               shuffle=True,
                               num_workers=8,
                               batch_size=Config.train_batch_size)
-margin = 1.0
-net = SiameseNetwork()  # .cuda()
+margin = Config.margin
+net = SiameseNetwork(Config.channel)  # .cuda()
 criterion = ContrastiveLoss(margin=margin)
 optimizer = optim.Adam(net.parameters(), lr=0.0005)
 
@@ -70,7 +70,7 @@ with open("siamese.txt", mode="a") as f:
 show_plot(counter, loss_history, name="siamese")
 folder_dataset_test = dset.ImageFolder(root=Config.testing_dir)
 siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset_test,
-                                        transform=transforms.Compose([transforms.Scale((100, 100)),
+                                        transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
                                                                       transforms.ToTensor()
                                                                       ])
                                         , should_invert=False)
@@ -78,7 +78,6 @@ siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset_test,
 test_dataloader = DataLoader(siamese_dataset, num_workers=6, batch_size=1, shuffle=True)
 
 train_counts = []
-data_counts = 0
 for i, data in enumerate(train_dataloader, 0):
     img0, img1, label = data
     img0, img1, label = Variable(img0), Variable(img1), Variable(label)
@@ -86,9 +85,7 @@ for i, data in enumerate(train_dataloader, 0):
     euclidean_distance = F.pairwise_distance(output1, output2)
 
     for j, boolean in enumerate((euclidean_distance.data >= margin), 0):
-        data_counts += 1
         train_counts.append(boolean[0] == bool(label.data[j][0]))
-print(data_counts)
 train_counter = Counter(train_counts)
 with open("siamese.txt", mode="a") as f:
     f.write("train %s\n" % str(train_counter))
