@@ -1,5 +1,16 @@
+import time
+from collections import Counter
+
+import numpy as np
+
+from network import SiameseNetwork
+
+np.random.seed(1137)
+
+import random
+
+random.seed(1137)
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
@@ -20,62 +31,6 @@ siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
                                                                       ])
                                         , should_invert=False)
 
-vis_dataloader = DataLoader(siamese_dataset,
-                            shuffle=True,
-                            num_workers=8,
-                            batch_size=8)
-dataiter = iter(vis_dataloader)
-
-example_batch = next(dataiter)
-concatenated = torch.cat((example_batch[0], example_batch[1]), 0)
-imshow(torchvision.utils.make_grid(concatenated))
-print(example_batch[2].numpy())
-
-
-class SiameseNetwork(nn.Module):
-    def __init__(self):
-        super(SiameseNetwork, self).__init__()
-        self.cnn1 = nn.Sequential(
-            nn.ReflectionPad2d(1),
-            nn.Conv2d(1, 4, kernel_size=3),
-            nn.ReLU(inplace=True),
-            nn.BatchNorm2d(4),
-            nn.Dropout2d(p=.2),
-
-            nn.ReflectionPad2d(1),
-            nn.Conv2d(4, 8, kernel_size=3),
-            nn.ReLU(inplace=True),
-            nn.BatchNorm2d(8),
-            nn.Dropout2d(p=.2),
-
-            nn.ReflectionPad2d(1),
-            nn.Conv2d(8, 8, kernel_size=3),
-            nn.ReLU(inplace=True),
-            nn.BatchNorm2d(8),
-            nn.Dropout2d(p=.2),
-        )
-
-        self.fc1 = nn.Sequential(
-            nn.Linear(8 * 100 * 100, 500),
-            nn.ReLU(inplace=True),
-
-            nn.Linear(500, 500),
-            nn.ReLU(inplace=True),
-
-            nn.Linear(500, 5))
-
-    def forward_once(self, x):
-        output = self.cnn1(x)
-        output = output.view(output.size()[0], -1)
-        output = self.fc1(output)
-        return output
-
-    def forward(self, input1, input2):
-        output1 = self.forward_once(input1)
-        output2 = self.forward_once(input2)
-        return output1, output2
-
-
 train_dataloader = DataLoader(siamese_dataset,
                               shuffle=True,
                               num_workers=8,
@@ -89,6 +44,7 @@ counter = []
 loss_history = []
 iteration_number = 0
 
+start = time.time()
 for epoch in range(0, Config.train_number_epochs):
     for i, data in enumerate(train_dataloader, 0):
         img0, img1, label = data
@@ -103,7 +59,13 @@ for epoch in range(0, Config.train_number_epochs):
             iteration_number += 10
             counter.append(iteration_number)
             loss_history.append(loss_contrastive.data[0])
-show_plot(counter, loss_history)
+end = time.time()
+torch.save(net.state_dict(), "siamese_parameters")
+print(end - start)
+
+with open("siamese.txt", mode="a") as f:
+    f.write("%s\n" % str(end - start))
+show_plot(counter, loss_history, name="siamese")
 folder_dataset_test = dset.ImageFolder(root=Config.testing_dir)
 siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset_test,
                                         transform=transforms.Compose([transforms.Scale((100, 100)),
@@ -112,14 +74,44 @@ siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset_test,
                                         , should_invert=False)
 
 test_dataloader = DataLoader(siamese_dataset, num_workers=6, batch_size=1, shuffle=True)
+
+train_counts = []
+data_counts = 0
+for i, data in enumerate(train_dataloader, 0):
+    img0, img1, label = data
+    img0, img1, label = Variable(img0), Variable(img1), Variable(label)
+    output1, output2 = net(img0, img1)
+    euclidean_distance = F.pairwise_distance(output1, output2)
+
+    for j, boolean in enumerate((euclidean_distance.data < 2), 0):
+        data_counts += 1
+        train_counts.append(boolean[0] == bool(label.data[j][0]))
+print(data_counts)
+train_counter = Counter(train_counts)
+with open("siamese.txt", mode="a") as f:
+    f.write("train %s\n" % str(train_counter))
+
+test_counts = []
+for i, data in enumerate(test_dataloader, 0):
+    img0, img1, label = data
+    img0, img1, label = Variable(img0), Variable(img1), Variable(label)
+    output1, output2 = net(img0, img1)
+    euclidean_distance = F.pairwise_distance(output1, output2)
+
+    for j, boolean in enumerate((euclidean_distance.data < 2), 0):
+        test_counts.append(boolean[0] == bool(label.data[j][0]))
+test_counter = Counter(test_counts)
+with open("siamese.txt", mode="a") as f:
+    f.write("test %s\n" % str(test_counter))
+
 dataiter = iter(test_dataloader)
 x0, _, _ = next(dataiter)
 
-for i in range(10):
+for i in range(50):
     _, x1, label2 = next(dataiter)
     concatenated = torch.cat((x0, x1), 0)
 
     output1, output2 = net(Variable(x0), Variable(x1))
     euclidean_distance = F.pairwise_distance(output1, output2)
     imshow(torchvision.utils.make_grid(concatenated),
-           'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]))
+           'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]), name="siamese")
