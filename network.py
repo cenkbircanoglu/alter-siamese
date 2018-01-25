@@ -88,5 +88,5 @@ class MySiameseNetwork(nn.Module):
         output = self.cnn1(x)
         output = output.view(output.size()[0], -1)
         output = self.fc1(output)
-        output = output.view(-1, 2, output.size()[1] / 2)
+        output = output.view(-1, 2, int(output.size()[1] / 2))
         return output[:, 0, :], output[:, 1, :]

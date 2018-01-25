@@ -34,9 +34,9 @@ train_dataloader = DataLoader(siamese_dataset,
                               shuffle=True,
                               num_workers=8,
                               batch_size=Config.train_batch_size)
-
+margin = 1.0
 net = MySiameseNetwork()
-criterion = ContrastiveLoss()
+criterion = ContrastiveLoss(margin=margin)
 optimizer = optim.Adam(net.parameters(), lr=0.0005)
 
 counter = []
@@ -62,6 +62,7 @@ torch.save(net.state_dict(), "my_siamese_parameters")
 print(end - start)
 
 with open("siamese_alternative.txt", mode="a") as f:
+    f.write("%s\n" % str(loss_contrastive.data[0]))
     f.write("%s\n" % str(end - start))
 show_plot(counter, loss_history, name="siamese_alternative")
 folder_dataset_test = dset.ImageFolder(root=Config.testing_dir)
@@ -80,7 +81,7 @@ for i, data in enumerate(train_dataloader, 0):
     output1, output2 = net(img)
     euclidean_distance = F.pairwise_distance(output1, output2)
 
-    for j, boolean in enumerate((euclidean_distance.data < 2), 0):
+    for j, boolean in enumerate((euclidean_distance.data >= margin), 0):
         train_counts.append(boolean[0] == bool(label.data[j][0]))
 train_counter = Counter(train_counts)
 with open("siamese_alternative.txt", mode="a") as f:
@@ -93,7 +94,7 @@ for i, data in enumerate(test_dataloader, 0):
     output1, output2 = net(img)
     euclidean_distance = F.pairwise_distance(output1, output2)
 
-    for j, boolean in enumerate((euclidean_distance.data < 2), 0):
+    for j, boolean in enumerate((euclidean_distance.data >= margin), 0):
         test_counts.append(boolean[0] == bool(label.data[j][0]))
 test_counter = Counter(test_counts)
 with open("siamese_alternative.txt", mode="a") as f:
@@ -108,3 +109,30 @@ for i in range(50):
     euclidean_distance = F.pairwise_distance(output1, output2)
     imshow(torchvision.utils.make_grid(concatenated),
            'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]), name="siamese_alternative")
+
+net = MySiameseNetwork()
+train_counts = []
+for i, data in enumerate(train_dataloader, 0):
+    img, label = data
+    img, label = Variable(img), Variable(label)
+    output1, output2 = net(img)
+    euclidean_distance = F.pairwise_distance(output1, output2)
+
+    for j, boolean in enumerate((euclidean_distance.data >= margin), 0):
+        train_counts.append(boolean[0] == bool(label.data[j][0]))
+train_counter = Counter(train_counts)
+with open("siamese_alternative.txt", mode="a") as f:
+    f.write("train %s\n" % str(train_counter))
+
+test_counts = []
+for i, data in enumerate(test_dataloader, 0):
+    img, label = data
+    img, label = Variable(img), Variable(label)
+    output1, output2 = net(img)
+    euclidean_distance = F.pairwise_distance(output1, output2)
+
+    for j, boolean in enumerate((euclidean_distance.data >= margin), 0):
+        test_counts.append(boolean[0] == bool(label.data[j][0]))
+test_counter = Counter(test_counts)
+with open("siamese_alternative.txt", mode="a") as f:
+    f.write("test %s\n" % str(test_counter))
