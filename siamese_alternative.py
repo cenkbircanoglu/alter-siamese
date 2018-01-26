@@ -3,8 +3,8 @@ from collections import Counter
 
 import numpy as np
 
-from dataset import MySiameseNetworkDataset
-from network import MySiameseNetwork
+from dataset import SiameseNetworkDataset
+from network import MySiameseNetwork, MyLeNet
 
 np.random.seed(1137)
 
@@ -24,18 +24,21 @@ from config import Config
 from contrastive_loss import ContrastiveLoss
 from draw_plot import show_plot, imshow
 
+NETWORK = MySiameseNetwork
+NETWORK = MyLeNet
 folder_dataset = dset.ImageFolder(root=Config.training_dir)
-siamese_dataset = MySiameseNetworkDataset(imageFolderDataset=folder_dataset,
-                                          transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
-                                                                        transforms.ToTensor()
-                                                                        ]), should_invert=False)
+siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
+                                        transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
+                                                                      transforms.ToTensor()
+                                                                      ]), should_invert=False, channel=Config.channel,
+                                        concat=True)
 
 train_dataloader = DataLoader(siamese_dataset,
                               shuffle=True,
                               num_workers=8,
                               batch_size=Config.train_batch_size)
 margin = Config.margin
-net = MySiameseNetwork(Config.channel)
+net = NETWORK(Config.channel)
 criterion = ContrastiveLoss(margin=margin)
 optimizer = optim.Adam(net.parameters(), lr=0.0005)
 
@@ -66,11 +69,11 @@ with open("siamese_alternative.txt", mode="a") as f:
     f.write("%s\n" % str(end - start))
 show_plot(counter, loss_history, name="siamese_alternative")
 folder_dataset_test = dset.ImageFolder(root=Config.testing_dir)
-siamese_dataset = MySiameseNetworkDataset(imageFolderDataset=folder_dataset_test,
-                                          transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
-                                                                        transforms.ToTensor()
-                                                                        ])
-                                          , should_invert=False)
+siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset_test,
+                                        transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
+                                                                      transforms.ToTensor()
+                                                                      ]), should_invert=False, channel=Config.channel,
+                                        concat=True)
 
 test_dataloader = DataLoader(siamese_dataset, num_workers=6, batch_size=1, shuffle=True)
 
@@ -111,7 +114,7 @@ for i in range(50):
     imshow(torchvision.utils.make_grid(concatenated),
            'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]), name="siamese_alternative")
 
-net = MySiameseNetwork()
+net = NETWORK(Config.channel)
 train_counts = []
 for i, data in enumerate(train_dataloader, 0):
     img, label = data

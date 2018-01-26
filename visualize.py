@@ -12,7 +12,7 @@ import torchvision.utils
 from torch.utils.data import DataLoader
 
 from config import Config
-from dataset import SiameseNetworkDataset, MySiameseNetworkDataset
+from dataset import SiameseNetworkDataset
 from draw_plot import imshow
 
 import os
@@ -23,10 +23,11 @@ if not os.path.exists("pairs/my_siamese"):
     os.makedirs("pairs/my_siamese")
 folder_dataset = dset.ImageFolder(root=Config.training_dir)
 siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
-                                        transform=transforms.Compose([transforms.Scale((100, 100)),
+                                        transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
                                                                       transforms.ToTensor()
                                                                       ])
-                                        , should_invert=False)
+                                        , should_invert=False, channel=Config.channel,
+                                        concat=False)
 
 vis_dataloader = DataLoader(siamese_dataset,
                             shuffle=True,
@@ -37,11 +38,12 @@ for i, example_batch in enumerate(vis_dataloader, 0):
     concatenated = torch.cat((example_batch[0], example_batch[1]), 0)
     imshow(torchvision.utils.make_grid(concatenated), name="pairs/siamese", i=i)
 
-siamese_dataset = MySiameseNetworkDataset(imageFolderDataset=folder_dataset,
-                                          transform=transforms.Compose([transforms.Scale((100, 100)),
-                                                                        transforms.ToTensor()
-                                                                        ])
-                                          , should_invert=False)
+siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
+                                        transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
+                                                                      transforms.ToTensor()
+                                                                      ])
+                                        , should_invert=False, channel=Config.channel,
+                                        concat=True)
 
 vis_dataloader = DataLoader(siamese_dataset,
                             shuffle=True,

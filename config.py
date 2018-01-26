@@ -1,9 +1,9 @@
-class Config:
-    training_dir = "./data/faces/train/"
-    testing_dir = "./data/faces/test/"
+class Config(object):
+    training_dir = "./data/cifar/train/"
+    testing_dir = "./data/cifar/test/"
     train_batch_size = 64
-    train_number_epochs = 250
+    train_number_epochs = 50
     margin = 1.0
-    width = 100
-    heigth = 100
-    channel = 1
+    width = 32
+    heigth = 32
+    channel = 3

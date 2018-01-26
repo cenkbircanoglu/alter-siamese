@@ -3,7 +3,7 @@ from collections import Counter
 
 import numpy as np
 
-from network import SiameseNetwork
+from network import SiameseNetwork, LeNet
 
 np.random.seed(1137)
 
@@ -24,19 +24,22 @@ from contrastive_loss import ContrastiveLoss
 from dataset import SiameseNetworkDataset
 from draw_plot import imshow, show_plot
 
+NETWORK = SiameseNetwork
+NETWORK = LeNet
 folder_dataset = dset.ImageFolder(root=Config.training_dir)
 siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
                                         transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
                                                                       transforms.ToTensor()
                                                                       ])
-                                        , should_invert=False)
+                                        , should_invert=False, channel=Config.channel,
+                                        concat=True)
 
 train_dataloader = DataLoader(siamese_dataset,
                               shuffle=True,
                               num_workers=8,
                               batch_size=Config.train_batch_size)
 margin = Config.margin
-net = SiameseNetwork(Config.channel)  # .cuda()
+net = NETWORK(Config.channel)  # .cuda()
 criterion = ContrastiveLoss(margin=margin)
 optimizer = optim.Adam(net.parameters(), lr=0.0005)
 
@@ -73,7 +76,8 @@ siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset_test,
                                         transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
                                                                       transforms.ToTensor()
                                                                       ])
-                                        , should_invert=False)
+                                        , should_invert=False, channel=Config.channel,
+                                        concat=False)
 
 test_dataloader = DataLoader(siamese_dataset, num_workers=6, batch_size=1, shuffle=True)
 
@@ -115,7 +119,7 @@ for i in range(50):
     imshow(torchvision.utils.make_grid(concatenated),
            'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]), name="siamese")
 
-net = SiameseNetwork()
+net = NETWORK(Config.channel)
 
 train_counts = []
 data_counts = 0
