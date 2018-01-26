@@ -108,8 +108,8 @@ dataiter = iter(test_dataloader)
 for i in range(50):
     x1, label = next(dataiter)
     output1, output2 = net(Variable(x1))
-    concatenated = torch.cat((x1[0][0:1].view(1, Config.channel, Config.heigth, Config.width),
-                              x1[0][1:2].view(1, Config.channel, Config.heigth, Config.width)), 0)
+    concatenated = torch.cat((x1[0][0:3].view(1, Config.channel, Config.heigth, Config.width),
+                              x1[0][3:6].view(1, Config.channel, Config.heigth, Config.width)), 0)
     euclidean_distance = F.pairwise_distance(output1, output2)
     imshow(torchvision.utils.make_grid(concatenated),
            'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]), name="siamese_alternative")
