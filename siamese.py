@@ -32,7 +32,7 @@ siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
                                                                       transforms.ToTensor()
                                                                       ])
                                         , should_invert=False, channel=Config.channel,
-                                        concat=True)
+                                        concat=False)
 
 train_dataloader = DataLoader(siamese_dataset,
                               shuffle=True,
