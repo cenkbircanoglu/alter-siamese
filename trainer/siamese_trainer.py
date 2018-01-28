@@ -22,12 +22,15 @@ np.random.seed(1137)
 
 def run():
     config = get_config()
+    create_dirs()
     with open(config.log_path, "a") as f:
         f.write('%s' % (str(config.__dict__)))
-    create_dirs()
+
     tr_data_loader, te_data_loader = data_loaders()
 
     net = getattr(models, config.network).get_network()(config.network_channel)
+    if config.cuda:
+        net = net.cuda()
     criterion = ContrastiveLoss(margin=config.margin)
     optimizer = optim.Adam(net.parameters())
 
@@ -39,15 +42,18 @@ def run():
     for epoch in range(0, config.epochs):
         for i, data in enumerate(tr_data_loader, 0):
             (img1, img2), label = data
-            img, label = (Variable(img1), Variable(img2)), Variable(label)
+            if config.cuda:
+                img, label = (Variable(img1).cuda(), Variable(img2).cuda()), Variable(label).cuda()
+            else:
+                img, label = (Variable(img1), Variable(img2)), Variable(label)
             output = net(img)
             optimizer.zero_grad()
             loss_contrastive = criterion(output, label)
             loss_contrastive.backward()
             optimizer.step()
-            if i % 10 == 0:
+            if i % 25 == 0:
                 print("Epoch number {}\n Current loss {}\n".format(epoch, loss_contrastive.data[0]))
-                iteration_number += 10
+                iteration_number += 25
                 counter.append(iteration_number)
                 loss_history.append(loss_contrastive.data[0])
     end = time.time()
@@ -62,7 +68,10 @@ def run():
     train_counts = []
     for i, data in enumerate(tr_data_loader, 0):
         (img1, img2), label = data
-        img, label = (Variable(img1), Variable(img2)), Variable(label)
+        if config.cuda:
+            img, label = (Variable(img1).cuda(), Variable(img2).cuda()), Variable(label).cuda()
+        else:
+            img, label = (Variable(img1), Variable(img2)), Variable(label)
         output = net(img)
         euclidean_distance = F.pairwise_distance(output[0], output[1])
 
@@ -74,7 +83,10 @@ def run():
     test_counts = []
     for i, data in enumerate(te_data_loader, 0):
         (img1, img2), label = data
-        img, label = (Variable(img1), Variable(img2)), Variable(label)
+        if config.cuda:
+            img, label = (Variable(img1).cuda(), Variable(img2).cuda()), Variable(label).cuda()
+        else:
+            img, label = (Variable(img1), Variable(img2)), Variable(label)
         output = net(img)
         euclidean_distance = F.pairwise_distance(output[0], output[1])
 
@@ -93,10 +105,13 @@ def run():
     for i in range(25):
         (_, x1), label2 = next(dataiter)
         concatenated = torch.cat((x0, x1), 0)
-
-        output = net((Variable(x0), Variable(x1)))
+        if config.cuda:
+            output = net((Variable(x0).cuda(), Variable(x1).cuda()))
+        else:
+            output = net((Variable(x0), Variable(x1)))
         euclidean_distance = F.pairwise_distance(output[0], output[1])
         imshow(torchvision.utils.make_grid(concatenated),
                'Dissimilarity: {:.2f}'.format(euclidean_distance.cpu().data.numpy()[0][0]),
                "%s_%s" % (i, label2[0][0]))
-    ########### VISUALIZE ###########
+        ########### VISUALIZE ###########
+    torch.save(net, '%s/model.pt' % config.result_dir)
