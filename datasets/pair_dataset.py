@@ -54,7 +54,7 @@ class SiamesePairNetworkDataset(Dataset):
         img2 = copy.deepcopy(self.image_folder_dataset.imgs)
         random.shuffle(img1)
         random.shuffle(img2)
-        self.pairs = itershuffle(itertools.product(img1, img2))
+        self.pairs = itershuffle(itertools.combinations(img1, 2))
 
     def __getitem__(self, index):
         img0_tuple, img1_tuple = next(self.pairs)
@@ -78,7 +78,7 @@ class SiamesePairNetworkDataset(Dataset):
         return (img0, img1), torch.from_numpy(np.array([int(img1_tuple[1] != img0_tuple[1])], dtype=np.float32))
 
     def __len__(self):
-        return len(self.image_folder_dataset.imgs) ** 2
+        return (len(self.image_folder_dataset.imgs) ** 2) / 2
 
 
 if __name__ == '__main__':
