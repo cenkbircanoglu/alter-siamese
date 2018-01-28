@@ -9,10 +9,10 @@ import torchvision.utils
 from torch import optim
 from torch.autograd import Variable
 
+import losses
 import models
 from config import get_config
 from datasets.loaders import data_loaders
-from losses.contrastive_loss import ContrastiveLoss
 from utils.draw_plot import imshow, show_plot
 from utils.make_dirs import create_dirs
 
@@ -31,7 +31,7 @@ def run():
     net = getattr(models, config.network).get_network()(config.network_channel)
     if config.cuda:
         net = net.cuda()
-    criterion = ContrastiveLoss(margin=config.margin)
+    criterion = getattr(losses, config.loss)()
     optimizer = optim.Adam(net.parameters())
 
     ######### TRAIN #########

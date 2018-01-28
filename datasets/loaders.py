@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from torchvision import datasets
 
 from config import get_config
-from datasets.pair_dataset import SiamesePairNetworkDataset as SiameseNetworkDataset
+from datasets.dataset import  SiameseNetworkDataset
 
 random.seed(1137)
 np.random.seed(1137)
