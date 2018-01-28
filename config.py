@@ -1,9 +1,13 @@
-class Config(object):
-    training_dir = "./data/cifar/train/"
-    testing_dir = "./data/cifar/test/"
-    train_batch_size = 64
-    train_number_epochs = 100
-    margin = 1.0
-    width = 32
-    heigth = 32
-    channel = 3
+import configs
+
+Config = None
+
+
+def set_config(config):
+    global Config
+    Config = getattr(configs, config)()
+
+
+def get_config():
+    global Config
+    return Config
