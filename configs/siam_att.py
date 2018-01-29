@@ -11,4 +11,4 @@ class SiamAtt(SiamBaseConfig):
         self.width = 100
         self.heigth = 100
         self.channel = 1
-        self.network = 'siam_vgg_100'
+        self.network = 'siam_net_100'
