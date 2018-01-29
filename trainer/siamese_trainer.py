@@ -35,11 +35,10 @@ def run():
     optimizer = optim.Adam(net.parameters())
 
     ######### TRAIN #########
-    counter = []
     loss_history = []
-    iteration_number = 0
     start = time.time()
     for epoch in range(0, config.epochs):
+        epoch_loss = 0
         for i, data in enumerate(tr_data_loader, 0):
             (img1, img2), label = data
             if config.cuda:
@@ -51,18 +50,16 @@ def run():
             loss_contrastive = criterion(output, label)
             loss_contrastive.backward()
             optimizer.step()
-            if i % 25 == 0:
-                print("Epoch number {}\n Current loss {}\n".format(epoch, loss_contrastive.data[0]))
-                iteration_number += 25
-                counter.append(iteration_number)
-                loss_history.append(loss_contrastive.data[0])
+            epoch_loss += loss_contrastive.data[0]
+        print('Epoch number: %s loss:%s' % (epoch, epoch_loss))
+        loss_history.append(epoch_loss)
     end = time.time()
     print(end - start)
     with open(config.log_path, "a") as f:
 
         f.write('%s %s\n' % (str(end - start), str(loss_history[-1])))
 
-    show_plot(counter, loss_history)
+    show_plot(config.epochs, loss_history)
     ######### TRAIN #########
     ########### EVALUATE ###########
     train_counts = []

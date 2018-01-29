@@ -1,5 +1,7 @@
 import numpy as np
 
+from datasets.dataset import SiameseNetworkDataset
+
 np.random.seed(1137)
 
 import random
@@ -12,7 +14,7 @@ import torchvision.utils
 from torch.utils.data import DataLoader
 
 from config import Config
-from dataset import SiameseNetworkDataset
+
 from draw_plot import imshow
 
 import os
