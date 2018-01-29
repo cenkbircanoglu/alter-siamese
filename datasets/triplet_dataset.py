@@ -78,7 +78,7 @@ class TripletNetworkDataset(Dataset):
 
     def __len__(self):
 
-        return 10 #self.triplets.size(0)
+        return self.triplets.size(0)
 
 
 if __name__ == '__main__':

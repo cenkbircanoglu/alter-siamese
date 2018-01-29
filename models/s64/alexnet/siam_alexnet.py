@@ -4,7 +4,6 @@ from models.s64.alexnet.alexnet import AlexNet
 
 
 class SiamAlexNet(AlexNet):
-
     def forward(self, (input1, input2)):
         x = torch.cat([input1, input2], dim=0)
         output = self.forward_once(x)

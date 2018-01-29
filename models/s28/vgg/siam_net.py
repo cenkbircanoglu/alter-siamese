@@ -4,7 +4,6 @@ from models.s28.vgg.net import Net
 
 
 class SiamNet(Net):
-
     def forward(self, (input1, input2)):
         x = torch.cat([input1, input2], dim=1)
         output = self.forward_once(x)

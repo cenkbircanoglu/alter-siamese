@@ -15,7 +15,6 @@ model_urls = {
 
 
 class Net(nn.Module):
-
     def __init__(self, channel=3, embedding_size=128, **kwargs):
         super(Net, self).__init__()
         self.features = make_layers(cfg['A'], channel=channel)

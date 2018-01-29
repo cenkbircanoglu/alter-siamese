@@ -17,8 +17,6 @@ random.seed(1137)
 np.random.seed(1137)
 
 
-
-
 def itershuffle(iterable, bufsize=10000):
     """Shuffle an iterator. This works by holding `bufsize` items back
     and yielding them sometime later. This is NOT 100% random, proved or anything."""
@@ -78,7 +76,7 @@ class SiamesePairNetworkDataset(Dataset):
         return (img0, img1), torch.from_numpy(np.array([int(img1_tuple[1] != img0_tuple[1])], dtype=np.float32))
 
     def __len__(self):
-        return 10 #(len(self.image_folder_dataset.imgs) ** 2) / 2
+        return (len(self.image_folder_dataset.imgs) ** 2) / 2
 
 
 if __name__ == '__main__':

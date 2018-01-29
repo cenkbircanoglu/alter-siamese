@@ -2,8 +2,6 @@ import torch
 from graphviz import Digraph
 from torch.autograd import Variable
 
-from models.s32.vgg.net import Net
-from models.s32.vgg.siam_net import SiamNet
 from models.s32.vgg.siamese_net import SiameseNet
 
 
@@ -36,8 +34,7 @@ def make_dot(var):
 
 inputs = torch.randn(1, 3, 32, 32)
 net = SiameseNet()
-y = net((Variable(inputs),Variable(inputs)))
+y = net((Variable(inputs), Variable(inputs)))
 print (net)
 g = make_dot(y[0])
 g.view()
-

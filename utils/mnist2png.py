@@ -7,7 +7,6 @@ from array import array
 from os import path
 
 
-
 # source: http://abel.ee.ucla.edu/cvxopt/_downloads/mnist.py
 def read(dataset="training", path="."):
     if dataset is "training":

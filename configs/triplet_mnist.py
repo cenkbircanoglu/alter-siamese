@@ -14,4 +14,3 @@ class TripletMnist(BaseConfig):
         self.network = 'triplet_net_28'
         self.trainer = "triplet"
         self.loss = 'TripletMarginLoss'
-
