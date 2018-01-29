@@ -11,4 +11,6 @@ class TripletAtt(BaseConfig):
         self.width = 100
         self.heigth = 100
         self.channel = 1
-        self.network = 'triplet_vgg_100'
+        self.network = 'triplet_net_100'
+        self.trainer = "triplet"
+        self.loss = 'TripletMarginLoss'

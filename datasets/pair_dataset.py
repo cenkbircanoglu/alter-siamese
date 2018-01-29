@@ -78,7 +78,7 @@ class SiamesePairNetworkDataset(Dataset):
         return (img0, img1), torch.from_numpy(np.array([int(img1_tuple[1] != img0_tuple[1])], dtype=np.float32))
 
     def __len__(self):
-        return (len(self.image_folder_dataset.imgs) ** 2) / 2
+        return 10 #(len(self.image_folder_dataset.imgs) ** 2) / 2
 
 
 if __name__ == '__main__':

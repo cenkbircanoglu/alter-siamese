@@ -1,9 +1,9 @@
 import torch
 
-from models.s32.vgg.net import Net
+from models.s100.net import Net
 
 
-class SiamNet(Net):
+class TripNet(Net):
     def forward(self, (input1, input2, input3)):
         x = torch.cat([input1, input2, input3], dim=1)
         output = self.forward_once(x)
@@ -13,4 +13,4 @@ class SiamNet(Net):
 
 
 def get_network():
-    return SiamNet
+    return TripNet

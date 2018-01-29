@@ -5,6 +5,7 @@ import numpy as np
 import torch
 from torch import optim
 from torch.autograd import Variable
+from tqdm import tqdm
 
 import losses
 import models
@@ -47,7 +48,7 @@ def train(net, loader):
     start = time.time()
     for epoch in range(0, config.epochs):
         epoch_loss = 0
-        for i, data in enumerate(loader, 0):
+        for i, data in tqdm(enumerate(loader, 0)):
             anchor, pos, neg = data
             if config.cuda:
                 img = (Variable(anchor).cuda(), Variable(pos).cuda(), Variable(neg).cuda())
@@ -70,7 +71,7 @@ def train(net, loader):
 
 
 def create_embeddings(loader, net, outputfile):
-    for i, data in enumerate(loader, 0):
+    for i, data in tqdm(enumerate(loader, 0)):
         img1, label = data
         if config.cuda:
             img = (Variable(img1).cuda(), Variable(img1).cuda(), Variable(img1).cuda())

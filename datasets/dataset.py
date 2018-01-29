@@ -35,4 +35,4 @@ class NetworkDataset(Dataset):
         return img0, img0_tuple[1]
 
     def __len__(self):
-        return len(self.image_folder_dataset.imgs)
+        return 10 # len(self.image_folder_dataset.imgs)

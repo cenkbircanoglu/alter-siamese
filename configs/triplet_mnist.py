@@ -12,3 +12,6 @@ class TripletMnist(BaseConfig):
         self.heigth = 28
         self.channel = 1
         self.network = 'triplet_net_28'
+        self.trainer = "triplet"
+        self.loss = 'TripletMarginLoss'
+

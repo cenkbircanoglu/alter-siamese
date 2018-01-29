@@ -12,3 +12,5 @@ class TripletCifar(BaseConfig):
         self.heigth = 32
         self.channel = 3
         self.network = 'triplet_vgg_32'
+        self.trainer = "triplet"
+        self.loss = 'TripletMarginLoss'
