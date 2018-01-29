@@ -11,4 +11,4 @@ class SiamMnist(SiamBaseConfig):
         self.width = 28
         self.heigth = 28
         self.channel = 1
-        self.network = 'siam_net_28'
+        self.network = 'siam_vgg_28'

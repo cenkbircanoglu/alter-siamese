@@ -11,4 +11,4 @@ class SiameseCifar(BaseConfig):
         self.width = 32
         self.heigth = 32
         self.channel = 3
-        self.network = 'siamese_net_32'
+        self.network = 'siamese_vgg_32'
