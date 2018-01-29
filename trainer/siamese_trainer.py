@@ -43,7 +43,7 @@ def run():
 
     tr_data_loader, te_data_loader = data_loaders()
 
-    create_embeddings(loader=tr_data_loader, net=net, outputfile='training')
+    create_embeddings(loader=tr_data_loader, net=net, outputfile='train')
     create_embeddings(loader=te_data_loader, net=net, outputfile='test')
 
 
@@ -89,7 +89,7 @@ def train(net, loader):
     with open(config.log_path, "a") as f:
         f.write('%s %s\n' % (str(end - start), str(loss_history[-1])))
 
-    show_plot(config.epochs, loss_history)
+    show_plot(range(config.epochs), loss_history)
     return net
 
 
