@@ -11,4 +11,4 @@ class SiameseMnist(BaseConfig):
         self.width = 28
         self.heigth = 28
         self.channel = 1
-        self.network = 'siamese_net_28'
+        self.network = 'siamese_vgg_28'
