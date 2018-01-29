@@ -104,9 +104,5 @@ ENV/
 .DS_Store
 
 pairs/
-!/results/siamesecifar.log
-!/results/siamesemnist.log
-!/results/siameseatt.log
-!/results/siamatt.log
-!/results/siamcifar.log
-!/results/siammnist.log
+/data/
+/results/

@@ -16,7 +16,7 @@ from config import get_config, set_config
 random.seed(1137)
 np.random.seed(1137)
 
-import random
+
 
 
 def itershuffle(iterable, bufsize=10000):

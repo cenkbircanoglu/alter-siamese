@@ -116,7 +116,7 @@ def create_embeddings(loader, net, outputfile):
     for i, data in enumerate(loader, 0):
         img1, label = data
         if config.cuda:
-            img, label = (Variable(img1).cuda(), Variable(img1).cuda()), Variable(label).cuda()
+            img = (Variable(img1).cuda(), Variable(img1).cuda())
         else:
             img = (Variable(img1), Variable(img1))
         output = net(img)

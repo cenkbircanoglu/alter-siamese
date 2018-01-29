@@ -23,8 +23,10 @@ def classify(data_path):
     tr_score = clf.score(tr_embeddings, tr_labels)
 
     te_score = clf.score(te_embeddings, te_labels)
-    print "tr_score %s" % (tr_score)
-    print "te_score %s" % (te_score)
+    print("tr_score %s" % (tr_score))
+    print("te_score %s" % (te_score))
+    with open('%s/results.txt' % data_path, mode='a') as f:
+        f.write('Train Accuracy:%s\nTest Accuracy:%s\n' % (tr_score, te_score))
 
 
 if __name__ == '__main__':
