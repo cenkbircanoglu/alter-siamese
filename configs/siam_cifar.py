@@ -11,4 +11,4 @@ class SiamCifar(SiamBaseConfig):
         self.width = 32
         self.heigth = 32
         self.channel = 3
-        self.network = 'siam_net_32'
+        self.network = 'siam_vgg_32'
