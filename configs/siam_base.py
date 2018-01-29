@@ -4,6 +4,7 @@ from configs.base import BaseConfig
 class SiamBaseConfig(BaseConfig):
     def __init__(self):
         super(SiamBaseConfig, self).__init__()
+        self.embedding = 128 * 2
 
     @property
     def network_channel(self):

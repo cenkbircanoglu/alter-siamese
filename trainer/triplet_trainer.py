@@ -9,7 +9,7 @@ from torch.autograd import Variable
 import losses
 import models
 from config import get_config
-from datasets.loaders import data_loaders
+from datasets.loaders import data_loaders, triplet_loaders
 from utils.draw_plot import show_plot
 from utils.make_dirs import create_dirs
 
@@ -26,7 +26,7 @@ def run():
 
     tr_triplet_loader, te_triplet_loader = triplet_loaders()
 
-    net = getattr(models, config.network).get_network()(config.network_channel)
+    net = getattr(models, config.network).get_network()(channel=config.network_channel, embedding_size=config.embedding)
     if config.cuda:
         net = net.cuda()
 

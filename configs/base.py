@@ -16,6 +16,8 @@ class BaseConfig(object):
         self.log_path = os.path.join(PAR, './results/%s.log' % self.__class__.__name__.lower())
         self.cuda = False
         self.loss = 'ContrastiveLoss'
+        self.embedding = 128 * 1
+        self.trainer = "siamese"
 
     @property
     def network_channel(self):

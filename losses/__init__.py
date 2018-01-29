@@ -15,9 +15,9 @@ from torch.nn.modules.loss import NLLLoss2d
 from torch.nn.modules.loss import PoissonNLLLoss
 from torch.nn.modules.loss import SmoothL1Loss
 from torch.nn.modules.loss import SoftMarginLoss
-from torch.nn.modules.loss import TripletMarginLoss
 
 from contrastive_loss import ContrastiveLoss
+from triplet import TripletMarginLoss
 
 __all__ = ['ContrastiveLoss', 'L1Loss', 'NLLLoss', 'KLDivLoss', 'MSELoss', 'BCELoss', 'BCEWithLogitsLoss', 'NLLLoss2d',
            'CosineEmbeddingLoss', 'HingeEmbeddingLoss', 'MarginRankingLoss', 'MultiLabelMarginLoss',

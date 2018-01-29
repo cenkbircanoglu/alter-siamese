@@ -8,6 +8,7 @@ from torchvision import datasets
 from config import get_config
 from datasets.dataset import NetworkDataset
 from datasets.siamese_dataset import SiameseNetworkDataset
+from datasets.triplet_dataset import TripletNetworkDataset
 
 random.seed(1137)
 np.random.seed(1137)
@@ -76,6 +77,40 @@ def pair_loaders():
     )
 
     te_data_loader = DataLoader(te_siamese_dataset,
+                                shuffle=True,
+                                num_workers=config.num_workers,
+                                batch_size=config.te_batch_size)
+
+    return tr_data_loader, te_data_loader
+
+
+def triplet_loaders():
+    tr_triplet_dataset = TripletNetworkDataset(
+        image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
+        transform=transforms.Compose([
+            transforms.Scale((config.heigth, config.width)),
+            transforms.ToTensor()
+        ]),
+        should_invert=False,
+        channel=config.channel
+    )
+
+    tr_data_loader = DataLoader(tr_triplet_dataset,
+                                shuffle=True,
+                                num_workers=config.num_workers,
+                                batch_size=config.tr_batch_size)
+
+    te_triplet_dataset = TripletNetworkDataset(
+        image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
+        transform=transforms.Compose([
+            transforms.Scale((config.heigth, config.width)),
+            transforms.ToTensor()
+        ]),
+        should_invert=False,
+        channel=config.channel
+    )
+
+    te_data_loader = DataLoader(te_triplet_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
                                 batch_size=config.te_batch_size)
