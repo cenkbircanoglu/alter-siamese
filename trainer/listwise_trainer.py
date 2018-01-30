@@ -34,8 +34,8 @@ def run():
 
     net = train(net=net, loader=tr_data_loader)
 
-    evaluate(net, tr_data_loader)
-    evaluate(net, te_data_loader)
+    #evaluate(net, tr_data_loader)
+    #evaluate(net, te_data_loader)
 
     torch.save(net, '%s/model.pt' % config.result_dir)
 
@@ -81,7 +81,8 @@ def evaluate(net, loader):
         else:
             img, label = Variable(img), Variable(label)
         output = net(img)
-        for j, boolean in enumerate((output.data), 0):
+        # TODO
+        for j, boolean in enumerate((output.data.numpy()), 0):
             counts.append(boolean[0] == bool(label.data[j][0]))
 
     counter = Counter(counts)

@@ -25,7 +25,7 @@ if not os.path.exists("pairs/my_siamese"):
     os.makedirs("pairs/my_siamese")
 folder_dataset = dset.ImageFolder(root=Config.training_dir)
 siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
-                                        transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
+                                        transform=transforms.Compose([transforms.Scale((Config.height, Config.width)),
                                                                       transforms.ToTensor()
                                                                       ])
                                         , should_invert=False, channel=Config.channel,
@@ -41,7 +41,7 @@ for i, example_batch in enumerate(vis_dataloader, 0):
     imshow(torchvision.utils.make_grid(concatenated), name="pairs/siamese", i=i)
 
 siamese_dataset = SiameseNetworkDataset(imageFolderDataset=folder_dataset,
-                                        transform=transforms.Compose([transforms.Scale((Config.heigth, Config.width)),
+                                        transform=transforms.Compose([transforms.Scale((Config.height, Config.width)),
                                                                       transforms.ToTensor()
                                                                       ])
                                         , should_invert=False, channel=Config.channel,

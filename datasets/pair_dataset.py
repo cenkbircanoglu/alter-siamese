@@ -85,7 +85,7 @@ if __name__ == '__main__':
     tr_siamese_dataset = SiamesePairNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transforms.Compose([
-            transforms.Scale((config.heigth, config.width)),
+            transforms.Scale((config.height, config.width)),
             transforms.ToTensor()
         ]),
         should_invert=False,

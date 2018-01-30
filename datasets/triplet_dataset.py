@@ -90,7 +90,7 @@ if __name__ == '__main__':
     tr_dataset = TripletNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transforms.Compose([
-            transforms.Scale((config.heigth, config.width)),
+            transforms.Scale((config.height, config.width)),
             transforms.ToTensor()
         ]),
         should_invert=False,
@@ -105,7 +105,7 @@ if __name__ == '__main__':
     te_dataset = TripletNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transforms.Compose([
-            transforms.Scale((config.heigth, config.width)),
+            transforms.Scale((config.height, config.width)),
             transforms.ToTensor()
         ]),
         should_invert=False,

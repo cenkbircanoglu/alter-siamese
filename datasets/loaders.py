@@ -20,7 +20,7 @@ def data_loaders():
     tr_dataset = NetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transforms.Compose([
-            transforms.Scale((config.heigth, config.width)),
+            transforms.Scale((config.height, config.width)),
             transforms.ToTensor()
         ]),
         should_invert=False,
@@ -35,7 +35,7 @@ def data_loaders():
     te_dataset = NetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transforms.Compose([
-            transforms.Scale((config.heigth, config.width)),
+            transforms.Scale((config.height, config.width)),
             transforms.ToTensor()
         ]),
         should_invert=False,
@@ -54,7 +54,7 @@ def pair_loaders():
     tr_siamese_dataset = SiameseNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transforms.Compose([
-            transforms.Scale((config.heigth, config.width)),
+            transforms.Scale((config.height, config.width)),
             transforms.ToTensor()
         ]),
         should_invert=False,
@@ -69,7 +69,7 @@ def pair_loaders():
     te_siamese_dataset = SiameseNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transforms.Compose([
-            transforms.Scale((config.heigth, config.width)),
+            transforms.Scale((config.height, config.width)),
             transforms.ToTensor()
         ]),
         should_invert=False,
@@ -88,7 +88,7 @@ def triplet_loaders():
     tr_triplet_dataset = TripletNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transforms.Compose([
-            transforms.Scale((config.heigth, config.width)),
+            transforms.Scale((config.height, config.width)),
             transforms.ToTensor()
         ]),
         should_invert=False,
@@ -103,7 +103,7 @@ def triplet_loaders():
     te_triplet_dataset = TripletNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transforms.Compose([
-            transforms.Scale((config.heigth, config.width)),
+            transforms.Scale((config.height, config.width)),
             transforms.ToTensor()
         ]),
         should_invert=False,

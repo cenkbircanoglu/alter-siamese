@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 
-python __main__.py --config_name ListwiseAtt
+python __main__.py --config_name ListWiseAtt
 python evaluate/svm.py --data_path results/listwiseatt/
 
-python __main__.py --config_name ListwiseMnist
+python __main__.py --config_name ListWiseMnist
 python evaluate/svm.py --data_path results/listwisemnist/
 
-python __main__.py --config_name ListwiseCifar
+python __main__.py --config_name ListWiseCifar
 python evaluate/svm.py --data_path results/listwisecifar/
 
 
