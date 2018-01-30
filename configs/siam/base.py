@@ -1,4 +1,4 @@
-from configs.siamese_base import SiameseBaseConfig
+from configs.siamese.base import SiameseBaseConfig
 
 
 class SiamBaseConfig(SiameseBaseConfig):

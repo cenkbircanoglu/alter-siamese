@@ -4,16 +4,15 @@ from collections import Counter
 
 import numpy as np
 import torch
-import torch.nn.functional as F
-import torchvision.utils
 from torch import optim
 from torch.autograd import Variable
+from tqdm import tqdm
 
 import losses
 import models
 from config import get_config
-from datasets.loaders import pair_loaders, data_loaders
-from utils.draw_plot import imshow, show_plot
+from datasets.loaders import data_loaders
+from utils.draw_plot import show_plot
 from utils.make_dirs import create_dirs
 
 random.seed(1137)
@@ -40,7 +39,6 @@ def run():
 
     torch.save(net, '%s/model.pt' % config.result_dir)
 
-
     create_embeddings(loader=tr_data_loader, net=net, outputfile='train')
     create_embeddings(loader=te_data_loader, net=net, outputfile='test')
 
@@ -52,7 +50,7 @@ def train(net, loader):
     start = time.time()
     for epoch in range(0, config.epochs):
         epoch_loss = 0
-        for i, data in enumerate(loader, 0):
+        for i, data in tqdm(enumerate(loader, 0), total=loader.__len__()):
             img, label = data
             if config.cuda:
                 img, label = Variable(img).cuda(), Variable(label).cuda()
@@ -76,7 +74,7 @@ def train(net, loader):
 
 def evaluate(net, loader):
     counts = []
-    for i, data in enumerate(loader, 0):
+    for i, data in tqdm(enumerate(loader, 0), total=loader.__len__()):
         img, label = data
         if config.cuda:
             img, label = Variable(img).cuda(), Variable(label).cuda()
@@ -92,7 +90,7 @@ def evaluate(net, loader):
 
 
 def create_embeddings(loader, net, outputfile):
-    for i, data in enumerate(loader, 0):
+    for i, data in tqdm(enumerate(loader, 0), total=loader.__len__()):
         img, label = data
         if config.cuda:
             img, label = Variable(img).cuda(), Variable(label).cuda()

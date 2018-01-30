@@ -1,6 +1,6 @@
 import os
 
-from configs.triplet_base import TripletBaseConfig
+from configs.triplet.base import TripletBaseConfig
 
 
 class TripletMnist(TripletBaseConfig):
@@ -9,6 +9,6 @@ class TripletMnist(TripletBaseConfig):
         self.tr_dir = os.path.join(self.data_dir, 'mnist/train/')
         self.te_dir = os.path.join(self.data_dir, 'mnist/test/')
         self.width = 28
-        self.heigth = 28
+        self.height = 28
         self.channel = 1
         self.network = 'triplet_net_28'

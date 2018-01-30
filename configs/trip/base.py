@@ -1,4 +1,4 @@
-from configs.triplet_base import TripletBaseConfig
+from configs.triplet.base import TripletBaseConfig
 
 
 class TripBaseConfig(TripletBaseConfig):

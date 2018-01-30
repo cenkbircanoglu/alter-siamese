@@ -1,14 +1,14 @@
 import os
 
-from configs.base import BaseConfig
+from configs.siam.base import SiamBaseConfig
 
 
-class ListwiseAtt(BaseConfig):
+class SiamAtt(SiamBaseConfig):
     def __init__(self):
-        super(ListwiseAtt, self).__init__()
+        super(SiamAtt, self).__init__()
         self.tr_dir = os.path.join(self.data_dir, 'att/train/')
         self.te_dir = os.path.join(self.data_dir, 'att/test/')
         self.width = 100
-        self.heigth = 100
+        self.height = 100
         self.channel = 1
-        self.network = 'vgg_100'
+        self.network = 'siam_vgg_100'

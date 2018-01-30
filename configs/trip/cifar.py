@@ -1,14 +1,14 @@
 import os
 
-from configs.base import BaseConfig
+from configs.trip.base import TripBaseConfig
 
 
-class ListwiseCifar(BaseConfig):
+class TripCifar(TripBaseConfig):
     def __init__(self):
-        super(ListwiseCifar, self).__init__()
+        super(TripCifar, self).__init__()
         self.tr_dir = os.path.join(self.data_dir, 'cifar/train/')
         self.te_dir = os.path.join(self.data_dir, 'cifar/test/')
         self.width = 32
-        self.heigth = 32
+        self.height = 32
         self.channel = 3
-        self.network = 'vgg_32'
+        self.network = 'trip_vgg_32'

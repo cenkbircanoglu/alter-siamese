@@ -1,14 +1,14 @@
 import os
 
-from configs.triplet_base import TripletBaseConfig
+from configs.base import BaseConfig
 
 
-class TripletAtt(TripletBaseConfig):
+class SiameseAtt(BaseConfig):
     def __init__(self):
-        super(TripletAtt, self).__init__()
+        super(SiameseAtt, self).__init__()
         self.tr_dir = os.path.join(self.data_dir, 'att/train/')
         self.te_dir = os.path.join(self.data_dir, 'att/test/')
         self.width = 100
-        self.heigth = 100
+        self.height = 100
         self.channel = 1
-        self.network = 'triplet_net_100'
+        self.network = 'siamese_vgg_100'

@@ -3,7 +3,7 @@ import torch
 from PIL import Image
 from torch.utils.data import Dataset
 
-from configs.siam_att import SiamAtt
+from configs.siam.att import SiamAtt
 
 
 class TripletNetworkDataset(Dataset):
