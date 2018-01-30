@@ -1,7 +1,7 @@
-from configs.base import BaseConfig
+from configs.siamese_base import SiameseBaseConfig
 
 
-class SiamBaseConfig(BaseConfig):
+class SiamBaseConfig(SiameseBaseConfig):
     def __init__(self):
         super(SiamBaseConfig, self).__init__()
         self.embedding = 128 * 2

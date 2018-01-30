@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 
 
+python __main__.py --config_name ListwiseAtt
+python evaluate/svm.py --data_path results/listwiseatt/
+
+python __main__.py --config_name ListwiseMnist
+python evaluate/svm.py --data_path results/listwisemnist/
+
+python __main__.py --config_name ListwiseCifar
+python evaluate/svm.py --data_path results/listwisecifar/
+
+
 python __main__.py --config_name SiamAtt
 python evaluate/svm.py --data_path results/siamatt/
 python __main__.py --config_name SiameseAtt

@@ -35,6 +35,9 @@ class Net(nn.Module):
         x = self.classifier(x)
         return x
 
+    def forward(self, x):
+        return self.forward_once(x)
+
     def _initialize_weights(self):
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -72,3 +75,7 @@ cfg = {
     'D': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512, 'M', 512, 512, 512, 'M'],
     'E': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 256, 'M', 512, 512, 512, 512, 'M', 512, 512, 512, 512, 'M'],
 }
+
+
+def get_network():
+    return Net

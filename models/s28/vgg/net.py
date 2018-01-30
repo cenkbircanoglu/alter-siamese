@@ -29,6 +29,9 @@ class Net(nn.Module):
         )
         self._initialize_weights()
 
+    def forward(self, x):
+        return self.forward_once(x)
+
     def forward_once(self, x):
         x = self.features(x)
         x = x.view(x.size(0), -1)
@@ -73,3 +76,7 @@ cfg = {
     'E': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 256, 'M', 512, 512, 512, 512, 'M', 512, 512, 512, 512, 'M'],
     'F': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512],
 }
+
+
+def get_network():
+    return Net

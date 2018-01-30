@@ -9,15 +9,14 @@ class BaseConfig(object):
         self.tr_batch_size = 128
         self.te_batch_size = 1
         self.epochs = 100
-        self.margin = 2.0
         self.num_workers = 1
         self.channel = None
         self.result_dir = os.path.join(PAR, './results/%s' % self.__class__.__name__.lower())
         self.log_path = os.path.join(PAR, './results/%s.log' % self.__class__.__name__.lower())
         self.cuda = False
-        self.loss = 'ContrastiveLoss'
+        self.loss = 'CrossEntropyLoss'
         self.embedding = 128 * 1
-        self.trainer = "siamese"
+        self.trainer = "listwise"
 
     @property
     def network_channel(self):
