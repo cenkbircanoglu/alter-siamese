@@ -11,4 +11,4 @@ class SiameseAtt(BaseConfig):
         self.width = 100
         self.heigth = 100
         self.channel = 1
-        self.network = 'siamese_net_100'
+        self.network = 'siamese_vgg_100'
