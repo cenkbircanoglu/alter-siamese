@@ -99,6 +99,6 @@ def create_embeddings(loader, net, outputfile):
             img, label = Variable(img), Variable(label)
         output = net(img)
         with open('%s/%s_embeddings.csv' % (config.result_dir, outputfile), 'a') as f:
-            np.savetxt(f, output[0].data.numpy())
+            np.savetxt(f, output.data.numpy())
         with open('%s/%s_labels.csv' % (config.result_dir, outputfile), 'a') as f:
             np.savetxt(f, label.numpy())
