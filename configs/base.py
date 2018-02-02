@@ -8,7 +8,7 @@ class BaseConfig(object):
         self.data_dir = os.path.join(PAR, 'data')
         self.tr_batch_size = 32
         self.te_batch_size = 1
-        self.epochs = 20
+        self.epochs = 1
         self.num_workers = 1
         self.channel = None
         self.result_dir = os.path.join(PAR, './results/%s' % self.__class__.__name__.lower())
