@@ -61,7 +61,7 @@ def train(net, loader):
             optimizer.step()
             epoch_loss += loss_contrastive.data[0]
         print('Epoch number: %s loss:%s' % (epoch, epoch_loss))
-        loss_history.append(epoch_loss)
+        loss_history.append(epoch_loss / loader.__len__())
     end = time.time()
     with open(config.log_path, "a") as f:
         f.write('%s %s\n' % (str(end - start), str(loss_history[-1])))

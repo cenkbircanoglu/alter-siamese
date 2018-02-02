@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+python __main__.py --config_name ListWiseMini
+python evaluate/svm.py --data_path results/listwisemini/
+
 python __main__.py --config_name ListWiseMnist
 python evaluate/svm.py --data_path results/listwisemnist/
 python __main__.py --config_name SiamMnist

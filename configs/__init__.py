@@ -1,5 +1,6 @@
 from configs.listwise.att import ListWiseAtt
 from configs.listwise.cifar import ListWiseCifar
+from configs.listwise.mini import ListWiseMini
 from configs.listwise.mnist import ListWiseMnist
 from configs.siam.att import SiamAtt
 from configs.siam.cifar import SiamCifar
@@ -16,4 +17,4 @@ from configs.triplet.mnist import TripletMnist
 
 __all__ = ['SiamMnist', 'SiamCifar', 'SiameseAtt', 'SiamAtt', 'SiameseMnist', 'SiameseCifar', 'TripMnist',
            'TripletMnist', 'TripletAtt', 'TripCifar', 'TripAtt', 'TripletCifar', 'ListWiseCifar', 'ListWiseMnist',
-           'ListWiseMnist']
+           'ListWiseMnist', 'ListWiseMini']

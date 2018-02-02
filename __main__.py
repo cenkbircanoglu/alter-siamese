@@ -5,7 +5,7 @@ import torch
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
-    parser.add_argument('--config_name', type=str, default="TripletMnist")
+    parser.add_argument('--config_name', type=str, default="ListWiseCifar")
 
     torch.manual_seed(1137)
     np.random.seed(1137)

@@ -21,7 +21,8 @@ def data_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transforms.Compose([
             transforms.Scale((config.height, config.width)),
-            transforms.ToTensor()
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: x / 255.)
         ]),
         should_invert=False,
         channel=config.channel
@@ -36,7 +37,8 @@ def data_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transforms.Compose([
             transforms.Scale((config.height, config.width)),
-            transforms.ToTensor()
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: x / 255.)
         ]),
         should_invert=False,
         channel=config.channel
@@ -55,7 +57,8 @@ def pair_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transforms.Compose([
             transforms.Scale((config.height, config.width)),
-            transforms.ToTensor()
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: x / 255.)
         ]),
         should_invert=False,
         channel=config.channel
@@ -70,7 +73,8 @@ def pair_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transforms.Compose([
             transforms.Scale((config.height, config.width)),
-            transforms.ToTensor()
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: x / 255.)
         ]),
         should_invert=False,
         channel=config.channel
@@ -89,7 +93,8 @@ def triplet_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transforms.Compose([
             transforms.Scale((config.height, config.width)),
-            transforms.ToTensor()
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: x / 255.)
         ]),
         should_invert=False,
         channel=config.channel
@@ -104,7 +109,8 @@ def triplet_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transforms.Compose([
             transforms.Scale((config.height, config.width)),
-            transforms.ToTensor()
+            transforms.ToTensor(),
+            transforms.Lambda(lambda x: x / 255.)
         ]),
         should_invert=False,
         channel=config.channel
