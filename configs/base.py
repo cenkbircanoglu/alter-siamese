@@ -6,7 +6,7 @@ PAR = os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), '../'))
 class BaseConfig(object):
     def __init__(self):
         self.data_dir = os.path.join(PAR, 'data')
-        self.tr_batch_size = 128
+        self.tr_batch_size = 32
         self.te_batch_size = 1
         self.epochs = 20
         self.num_workers = 1

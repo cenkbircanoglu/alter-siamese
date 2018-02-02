@@ -45,7 +45,7 @@ def run():
 
 def train(net, loader):
     criterion = getattr(losses, config.loss)()
-    optimizer = optim.Adam(net.parameters())
+    optimizer = optim.RMSprop(net.parameters())
     loss_history = []
     start = time.time()
     for epoch in range(0, config.epochs):
@@ -101,4 +101,4 @@ def create_embeddings(loader, net, outputfile):
         with open('%s/%s_embeddings.csv' % (config.result_dir, outputfile), 'a') as f:
             np.savetxt(f, output.data.numpy())
         with open('%s/%s_labels.csv' % (config.result_dir, outputfile), 'a') as f:
-            np.savetxt(f, label.numpy())
+            np.savetxt(f, label.data.numpy())
