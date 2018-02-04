@@ -1,85 +1,112 @@
 #!/usr/bin/env bash
 
 
-EPOCHS=10
+EPOCHS=50
 for data in mnist
 do
     # Listwise
-    for loss in CrossEntropyLoss MultiMarginLoss NLLLoss FocalLoss SoftmaxLoss
+    for loss in CrossEntropyLoss MultiMarginLoss NLLLoss FocalLoss SoftmaxLoss CenterLoss CenterLoss2  \
+        MultiClassHingeLoss #HistogramLoss
     do
-        echo python __main__.py listwise --data_name $data --width 28 --height 28 --channel 1 \
+         python __main__.py listwise --data_name $data --width 28 --height 28 --channel 1 \
             --network net_28 --embedding 10 --epochs $EPOCHS --loss $loss
-        echo python evaluate/svm.py --data_path results/${data}/${loss}/ &
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
     done
 
     # Siamese
     for loss in  ContrastiveLoss
     do
-        echo python __main__.py siamese --data_name $data  --width 28 --height 28 --channel 1 \
+         python __main__.py siamese --data_name $data  --width 28 --height 28 --channel 1 \
             --network siamese_net_28 --embedding 128 --epochs $EPOCHS --loss $loss --negative 1 --positive 0
-        echo python evaluate/svm.py --data_path results/${data}/${loss}/ &
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
     done
-    for loss in  CosineEmbeddingLoss
+    for loss in  CosineEmbeddingLoss MarginRankingLoss
     do
-        echo python __main__.py siamese --data_name $data  --width 28 --height 28 --channel 1 \
+         python __main__.py siamese --data_name $data  --width 28 --height 28 --channel 1 \
             --network siamese_net_28 --embedding 128 --epochs $EPOCHS --loss $loss --negative -1 --positive 1
-        echo python evaluate/svm.py --data_path results/${data}/${loss}/ &
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
     done
 
     # Triplet
     for loss in TripletMarginLoss
     do
-        echo python __main__.py triplet --data_name $data  --width 28 --height 28 --channel 1 \
+         python __main__.py triplet --data_name $data  --width 28 --height 28 --channel 1 \
             --network triplet_net_28 --embedding 128 --epochs $EPOCHS --loss $loss
-        echo python evaluate/svm.py --data_path results/${data}/${loss}/ &
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
     done
 done
 
 
-#for data in mnist
-#do
-#    # Listwise
-#    for loss in CrossEntropyLoss  MultiLabelMarginLoss MultiLabelSoftMarginLoss \
-#     MultiMarginLoss NLLLoss PoissonNLLLoss SoftMarginLoss CenterLoss CenterLoss2 FocalLoss HistogramLoss \
-#           LSoftmaxLinear soft_nll_loss multiClassHingeLoss tsne_loss NEG_loss MVNLoss MGLoss SoftmaxLoss
-#    do
-#        python __main__.py listwise --data_name $data --width 28 --height 28 --channel 1 \
-#            --network net_28 --embedding 10 --epochs $EPOCHS --loss $loss
-#        python evaluate/svm.py --data_path results/${loss}_${data}/ &
-#    done
-#
-#    # Siamese
-#    for loss in  ContrastiveLoss
-#    do
-#        #python __main__.py siam --data_name $data  --width 28 --height 28 --channel 1 \
-#        #    --network siam_net_28 --embedding 256 --epochs $EPOCHS --loss $loss
-#        #python evaluate/svm.py --data_path results/${loss}_${data}/ &
-#        python __main__.py siamese --data_name $data  --width 28 --height 28 --channel 1 \
-#            --network siamese_net_28 --embedding 128 --epochs $EPOCHS --loss $loss
-#        python evaluate/svm.py --data_path results/${loss}_${data}/ &
-#    done
-#    for loss in  MarginRankingLoss CosineEmbeddingLoss
-#    do
-#        #python __main__.py siam --data_name $data  --width 28 --height 28 --channel 1 \
-#        #    --network siam_net_28 --embedding 256 --epochs $EPOCHS --loss $loss --negative -1
-#        #python evaluate/svm.py --data_path results/${loss}_${data}/ &
-#        python __main__.py siamese --data_name $data  --width 28 --height 28 --channel 1 \
-#            --network siamese_net_28 --embedding 128 --epochs $EPOCHS --loss $loss --negative -1
-#        python evaluate/svm.py --data_path results/${loss}_${data}/ &
-#    done
-#
-#    # Triplet
-#    for loss in TripletMarginLoss
-#    do
-#        #python __main__.py trip --data_name $data  --width 28 --height 28 --channel 1 \
-#        #    --network trip_net_28 --embedding 384 --epochs $EPOCHS --loss $loss
-#        #python evaluate/svm.py --data_path results/${loss}_${data}/ &
-#        python __main__.py triplet --data_name $data  --width 28 --height 28 --channel 1 \
-#            --network triplet_net_28 --embedding 128 --epochs $EPOCHS --loss $loss
-#        python evaluate/svm.py --data_path results/${loss}_${data}/ &
-#    done
-#done
-#
+for data in cifar10
+do
+    # Listwise
+    for loss in CrossEntropyLoss MultiMarginLoss NLLLoss FocalLoss SoftmaxLoss CenterLoss CenterLoss2 \
+        MultiClassHingeLoss #HistogramLoss
+    do
+         python __main__.py listwise --data_name $data --width 32 --height 32 --channel 3 \
+            --network net_28 --embedding 10 --epochs $EPOCHS --loss $loss
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
+    done
+
+    # Siamese
+    for loss in  ContrastiveLoss
+    do
+         python __main__.py siamese --data_name $data  --width 32 --height 32 --channel 3 \
+            --network siamese_net_28 --embedding 128 --epochs $EPOCHS --loss $loss --negative 1 --positive 0
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
+    done
+    for loss in  CosineEmbeddingLoss MarginRankingLoss
+    do
+         python __main__.py siamese --data_name $data  --width 32 --height 32 --channel 3 \
+            --network siamese_net_28 --embedding 128 --epochs $EPOCHS --loss $loss --negative -1 --positive 1
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
+    done
+
+    # Triplet
+    for loss in TripletMarginLoss
+    do
+         python __main__.py triplet --data_name $data  --width 32 --height 32 --channel 3 \
+            --network triplet_net_28 --embedding 128 --epochs $EPOCHS --loss $loss
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
+    done
+done
+
+
+
+for data in cifar100
+do
+    # Listwise
+    for loss in CrossEntropyLoss MultiMarginLoss NLLLoss FocalLoss SoftmaxLoss CenterLoss CenterLoss2 \
+        MultiClassHingeLoss #HistogramLoss
+    do
+         python __main__.py listwise --data_name $data --width 32 --height 32 --channel 3 \
+            --network net_28 --embedding 100 --epochs $EPOCHS --loss $loss
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
+    done
+
+    # Siamese
+    for loss in  ContrastiveLoss
+    do
+         python __main__.py siamese --data_name $data  --width 32 --height 32 --channel 3 \
+            --network siamese_net_28 --embedding 128 --epochs $EPOCHS --loss $loss --negative 1 --positive 0
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
+    done
+    for loss in  CosineEmbeddingLoss MarginRankingLoss
+    do
+         python __main__.py siamese --data_name $data  --width 32 --height 32 --channel 3 \
+            --network siamese_net_28 --embedding 128 --epochs $EPOCHS --loss $loss --negative -1 --positive 1
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
+    done
+
+    # Triplet
+    for loss in TripletMarginLoss
+    do
+         python __main__.py triplet --data_name $data  --width 32 --height 32 --channel 3 \
+            --network triplet_net_28 --embedding 128 --epochs $EPOCHS --loss $loss
+         python evaluate/svm.py --data_path results/${data}/${loss}/ &
+    done
+done
+
 
 
 #python __main__.py listwise --data_name att  --width 100 --height 100 --channel 1 --network vgg_100 --embedding 40  --epochs $EPOCHS --loss NLLLoss

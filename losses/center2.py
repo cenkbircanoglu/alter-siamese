@@ -1,14 +1,16 @@
 import torch
 import torch.nn as nn
 
+from config import get_config
+
 
 class CenterLoss2(nn.Module):
-    def __init__(self, dim_hidden, num_classes, lambda_c=1.0, use_cuda=True):
+    def __init__(self, lambda_c=1.0, use_cuda=True):
         super(CenterLoss2, self).__init__()
-        self.dim_hidden = dim_hidden
-        self.num_classes = num_classes
+        self.dim_hidden = get_config().embedding
+        self.num_classes = get_config().embedding
         self.lambda_c = lambda_c
-        self.centers = nn.Parameter(torch.randn(num_classes, dim_hidden))
+        self.centers = nn.Parameter(torch.randn(self.num_classes, self.dim_hidden))
         self.use_cuda = use_cuda
 
     def forward(self, hidden, y):

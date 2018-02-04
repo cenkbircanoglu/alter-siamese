@@ -27,9 +27,6 @@ def data_loaders():
         should_invert=False,
         channel=config.channel
     )
-
-    # tr_dataset = torchvision.datasets.MNIST(root='./data', train=True,
-    #                                        download=True, transform=transform)
     tr_data_loader = DataLoader(tr_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
@@ -41,8 +38,6 @@ def data_loaders():
         should_invert=False,
         channel=config.channel
     )
-    # te_dataset = torchvision.datasets.MNIST(root='./data', train=False,
-    #                                        download=True, transform=transform)
     te_data_loader = DataLoader(te_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
@@ -60,7 +55,6 @@ def pair_loaders():
         negative=config.negative,
         positive=config.positive
     )
-
     tr_data_loader = DataLoader(tr_siamese_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
@@ -74,7 +68,6 @@ def pair_loaders():
         negative=config.negative,
         positive=config.positive
     )
-
     te_data_loader = DataLoader(te_siamese_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
@@ -90,7 +83,6 @@ def triplet_loaders():
         should_invert=False,
         channel=config.channel
     )
-
     tr_data_loader = DataLoader(tr_triplet_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
@@ -102,7 +94,6 @@ def triplet_loaders():
         should_invert=False,
         channel=config.channel
     )
-
     te_data_loader = DataLoader(te_triplet_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,

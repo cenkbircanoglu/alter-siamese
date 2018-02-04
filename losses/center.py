@@ -1,14 +1,17 @@
 import torch
 import torch.nn as nn
+from torch.autograd import Variable
+
+from config import get_config
 
 
 class CenterLoss(nn.Module):
-    def __init__(self, num_classes, embedding, loss_weight=1.0, **kwargs):
+    def __init__(self, loss_weight=1.0, **kwargs):
         super(CenterLoss, self).__init__()
-        self.num_classes = num_classes
-        self.feat_dim = embedding
+        self.num_classes = get_config().embedding
+        self.feat_dim = get_config().embedding
         self.loss_weight = loss_weight
-        self.centers = nn.Parameter(torch.randn(num_classes, embedding))
+        self.centers = nn.Parameter(torch.randn(self.num_classes, self.feat_dim))
         self.use_cuda = False
 
     def forward(self, x, y):
@@ -47,8 +50,6 @@ class CenterLoss(nn.Module):
 
 
 if __name__ == '__main__':
-    from torch.autograd import Variable
-
     ct = CenterLoss(10, 2)
     # ct = ct.cuda()
     print list(ct.parameters())

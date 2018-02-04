@@ -1,6 +1,7 @@
 from __future__ import division
 
 import torch
+from torch.autograd import Variable
 
 
 class HistogramLoss(torch.nn.Module):
@@ -52,8 +53,6 @@ class HistogramLoss(torch.nn.Module):
 
 
 if __name__ == '__main__':
-    from torch.autograd import Variable
-
     ct = HistogramLoss()
     # ct = ct.cuda()
     print list(ct.parameters())
