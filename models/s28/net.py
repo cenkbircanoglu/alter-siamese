@@ -3,7 +3,7 @@ import torch.nn.functional as F
 
 
 class Net(nn.Module):
-    def __init__(self, channel=1, embedding_size=128, **kwargs):
+    def __init__(self, channel=1, embedding_size=10, **kwargs):
         super(Net, self).__init__()
         self.conv1 = nn.Conv2d(channel, 10, kernel_size=5)
         self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
@@ -24,3 +24,7 @@ class Net(nn.Module):
     def forward(self, x):
         x = self.forward_once(x)
         return F.log_softmax(x)
+
+
+def get_network():
+    return Net

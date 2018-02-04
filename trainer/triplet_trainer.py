@@ -32,7 +32,8 @@ def run():
         net = net.cuda()
 
     net = train(net=net, loader=tr_triplet_loader)
-
+    with open('%s/network.txt' % config.result_dir, 'a') as f:
+        f.write(str(net))
     torch.save(net, '%s/model.pt' % config.result_dir)
 
     tr_data_loader, te_data_loader = data_loaders()
@@ -42,6 +43,7 @@ def run():
 
 
 def train(net, loader):
+    net.train()
     criterion = getattr(losses, config.loss)()
     optimizer = optim.Adam(net.parameters())
     loss_history = []
@@ -54,8 +56,8 @@ def train(net, loader):
                 img = (Variable(anchor).cuda(), Variable(pos).cuda(), Variable(neg).cuda())
             else:
                 img = (Variable(anchor), Variable(pos), Variable(neg))
-            output = net(img)
             optimizer.zero_grad()
+            output = net(img)
             loss_contrastive = criterion(output)
             loss_contrastive.backward()
             optimizer.step()
@@ -71,6 +73,7 @@ def train(net, loader):
 
 
 def create_embeddings(loader, net, outputfile):
+    net.eval()
     for i, data in tqdm(enumerate(loader, 0), total=loader.__len__()):
         img1, label = data
         if config.cuda:

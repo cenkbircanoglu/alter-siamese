@@ -30,12 +30,12 @@ def run():
 
     tr_pair_loader, te_pair_loader = pair_loaders()
 
-    net = getattr(models, config.network).get_network()(config.network_channel)
+    net = getattr(models, config.network).get_network()(channel=config.network_channel, embedding_size=config.embedding)
     if config.cuda:
         net = net.cuda()
-
+    with open('%s/network.txt' % config.result_dir, 'a') as f:
+        f.write(str(net))
     net = train(net=net, loader=tr_pair_loader)
-
     evaluate(net, tr_pair_loader)
     evaluate(net, te_pair_loader)
 
@@ -49,6 +49,7 @@ def run():
 
 
 def visualize_distances(net, loader):
+    net.eval()
     dataiter = iter(loader)
     (x0, _), _ = next(dataiter)
 
@@ -66,6 +67,7 @@ def visualize_distances(net, loader):
 
 
 def train(net, loader):
+    net.train()
     criterion = getattr(losses, config.loss)()
     optimizer = optim.Adam(net.parameters())
     loss_history = []
@@ -78,8 +80,8 @@ def train(net, loader):
                 img, label = (Variable(img1).cuda(), Variable(img2).cuda()), Variable(label).cuda()
             else:
                 img, label = (Variable(img1), Variable(img2)), Variable(label)
-            output = net(img)
             optimizer.zero_grad()
+            output = net(img)
             loss_contrastive = criterion(output, label)
             loss_contrastive.backward()
             optimizer.step()
@@ -95,6 +97,7 @@ def train(net, loader):
 
 
 def evaluate(net, loader):
+    net.eval()
     counts = []
     for i, data in tqdm(enumerate(loader, 0), total=loader.__len__()):
         (img1, img2), label = data
@@ -114,6 +117,7 @@ def evaluate(net, loader):
 
 
 def create_embeddings(loader, net, outputfile):
+    net.eval()
     for i, data in tqdm(enumerate(loader, 0), total=loader.__len__()):
         img1, label = data
         if config.cuda:

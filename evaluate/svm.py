@@ -16,7 +16,7 @@ def classify(data_path):
 
     fname = "{}/test_embeddings.csv".format(data_path)
     te_embeddings = np.loadtxt(fname)
-
+    print(tr_embeddings.shape)
     clf = svm.SVC(kernel='linear', C=1, max_iter=200000000)
     clf.fit(tr_embeddings, tr_labels)
 

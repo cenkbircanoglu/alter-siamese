@@ -1,6 +1,7 @@
 import math
 
 import torch.nn as nn
+import torch.nn.functional as F
 
 model_urls = {
     'vgg11': 'https://download.pytorch.org/models/vgg11-bbd30ac9.pth',
@@ -36,7 +37,7 @@ class Net(nn.Module):
         return x
 
     def forward(self, x):
-        return self.forward_once(x)
+        return F.log_softmax(self.forward_once(x))
 
     def _initialize_weights(self):
         for m in self.modules():

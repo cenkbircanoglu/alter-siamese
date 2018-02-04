@@ -1,13 +1,17 @@
+import random
+
 import numpy as np
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
 
-from configs.siam.att import SiamAtt
+random.seed(1137)
+np.random.seed(1137)
 
 
 class TripletNetworkDataset(Dataset):
     def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1):
+        random.shuffle(image_folder_dataset.imgs)
         self.image_folder_dataset = image_folder_dataset
         self.transform = transform
         self.should_invert = should_invert
@@ -79,43 +83,3 @@ class TripletNetworkDataset(Dataset):
     def __len__(self):
 
         return self.triplets.size(0)
-
-
-if __name__ == '__main__':
-    from torchvision import datasets
-    from torchvision import transforms
-    from torch.utils.data import DataLoader
-
-    config = SiamAtt()
-    tr_dataset = TripletNetworkDataset(
-        image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
-        transform=transforms.Compose([
-            transforms.Scale((config.height, config.width)),
-            transforms.ToTensor()
-        ]),
-        should_invert=False,
-        channel=config.channel
-    )
-
-    tr_data_loader = DataLoader(tr_dataset,
-                                shuffle=True,
-                                num_workers=config.num_workers,
-                                batch_size=config.tr_batch_size)
-
-    te_dataset = TripletNetworkDataset(
-        image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
-        transform=transforms.Compose([
-            transforms.Scale((config.height, config.width)),
-            transforms.ToTensor()
-        ]),
-        should_invert=False,
-        channel=config.channel
-    )
-
-    te_data_loader = DataLoader(te_dataset,
-                                shuffle=True,
-                                num_workers=config.num_workers,
-                                batch_size=config.tr_batch_size)
-
-    for i in tr_data_loader:
-        print(i)

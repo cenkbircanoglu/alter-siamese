@@ -1,6 +1,7 @@
 import math
 
 import torch.nn as nn
+import torch.nn.functional as F
 
 model_urls = {
     'vgg11': 'https://download.pytorch.org/models/vgg11-bbd30ac9.pth',
@@ -17,9 +18,9 @@ model_urls = {
 class Net(nn.Module):
     def __init__(self, channel=3, embedding_size=128, **kwargs):
         super(Net, self).__init__()
-        self.features = make_layers(cfg['F'], channel=channel)
+        self.features = make_layers(channel=channel)
         self.classifier = nn.Sequential(
-            nn.Linear(512 * 1 * 1, 4096),
+            nn.Linear(512 * 3 * 3, 4096),
             nn.ReLU(True),
             nn.Dropout(),
             nn.Linear(4096, 4096),
@@ -30,7 +31,7 @@ class Net(nn.Module):
         self._initialize_weights()
 
     def forward(self, x):
-        return self.forward_once(x)
+        return F.log_softmax(self.forward_once(x))
 
     def forward_once(self, x):
         x = self.features(x)
@@ -53,10 +54,10 @@ class Net(nn.Module):
                 m.bias.data.zero_()
 
 
-def make_layers(cfg, batch_norm=False, channel=3):
+def make_layers(batch_norm=False, channel=3):
     layers = []
     in_channels = channel
-    for v in cfg:
+    for v in [128, 'M', 256, 'M', 512, 'M']:
         if v == 'M':
             layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
         else:
@@ -67,15 +68,6 @@ def make_layers(cfg, batch_norm=False, channel=3):
                 layers += [conv2d, nn.ReLU(inplace=True)]
             in_channels = v
     return nn.Sequential(*layers)
-
-
-cfg = {
-    'A': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
-    'B': [64, 64, 'M', 128, 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
-    'D': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 'M', 512, 512, 512, 'M', 512, 512, 512, 'M'],
-    'E': [64, 64, 'M', 128, 128, 'M', 256, 256, 256, 256, 'M', 512, 512, 512, 512, 'M', 512, 512, 512, 512, 'M'],
-    'F': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512],
-}
 
 
 def get_network():

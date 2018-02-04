@@ -41,6 +41,7 @@ def itershuffle(iterable, bufsize=10000):
 
 class SiamesePairNetworkDataset(Dataset):
     def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1):
+        random.shuffle(image_folder_dataset.imgs)
         self.image_folder_dataset = image_folder_dataset
         self.transform = transform
         self.should_invert = should_invert
@@ -76,7 +77,7 @@ class SiamesePairNetworkDataset(Dataset):
         return (img0, img1), torch.from_numpy(np.array([int(img1_tuple[1] != img0_tuple[1])], dtype=np.float32))
 
     def __len__(self):
-        return (len(self.image_folder_dataset.imgs) ** 2) / 2
+        return (len(self.image_folder_dataset.imgs) ** 2)
 
 
 if __name__ == '__main__':
