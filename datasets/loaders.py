@@ -1,7 +1,6 @@
 import random
 
 import numpy as np
-import torchvision
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision import datasets
@@ -29,7 +28,7 @@ def data_loaders():
         channel=config.channel
     )
 
-    #tr_dataset = torchvision.datasets.MNIST(root='./data', train=True,
+    # tr_dataset = torchvision.datasets.MNIST(root='./data', train=True,
     #                                        download=True, transform=transform)
     tr_data_loader = DataLoader(tr_dataset,
                                 shuffle=True,
@@ -42,7 +41,7 @@ def data_loaders():
         should_invert=False,
         channel=config.channel
     )
-    #te_dataset = torchvision.datasets.MNIST(root='./data', train=False,
+    # te_dataset = torchvision.datasets.MNIST(root='./data', train=False,
     #                                        download=True, transform=transform)
     te_data_loader = DataLoader(te_dataset,
                                 shuffle=True,
@@ -57,7 +56,9 @@ def pair_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transform,
         should_invert=False,
-        channel=config.channel
+        channel=config.channel,
+        negative=config.negative,
+        positive=config.positive
     )
 
     tr_data_loader = DataLoader(tr_siamese_dataset,
@@ -69,7 +70,9 @@ def pair_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transform,
         should_invert=False,
-        channel=config.channel
+        channel=config.channel,
+        negative=config.negative,
+        positive=config.positive
     )
 
     te_data_loader = DataLoader(te_siamese_dataset,

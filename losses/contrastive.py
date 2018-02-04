@@ -18,3 +18,22 @@ class ContrastiveLoss(torch.nn.Module):
                                       (label) * torch.pow(torch.clamp(self.margin - euclidean_distance, min=0.0), 2))
 
         return loss_contrastive
+
+
+if __name__ == '__main__':
+    from torch.autograd import Variable
+
+    ct = ContrastiveLoss(2)
+    # ct = ct.cuda()
+    print list(ct.parameters())
+
+    print ct.centers.grad
+
+    y = Variable(torch.Tensor([0, 0, 0, 1]))  # .cuda()
+    # print y
+    feat = Variable(torch.zeros(4, 2), requires_grad=True)  # .cuda()
+    # print feat
+
+    out = ct(feat, y)
+    out.backward()
+    print ct.centers.grad

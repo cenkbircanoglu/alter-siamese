@@ -14,6 +14,8 @@ if __name__ == '__main__':
     parser.add_argument('--embedding', type=int)
     parser.add_argument('--loss', type=str, default=None)
     parser.add_argument('--epochs', type=int, default=10)
+    parser.add_argument('--negative', type=int, default=0)
+    parser.add_argument('--positive', type=int, default=1)
 
     torch.manual_seed(1137)
     np.random.seed(1137)

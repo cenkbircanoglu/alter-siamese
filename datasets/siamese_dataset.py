@@ -11,12 +11,14 @@ np.random.seed(1137)
 
 
 class SiameseNetworkDataset(Dataset):
-    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1):
+    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, negative=0, positive=1):
         self.image_folder_dataset = image_folder_dataset
         self.transform = transform
         self.should_invert = should_invert
         self.channel = channel
-        self.counter = 0
+        self.counter = 0,
+        self.negative = negative
+        self.positive = positive
 
     def __getitem__(self, index):
         img0_tuple = random.choice(self.image_folder_dataset.imgs)
@@ -47,8 +49,11 @@ class SiameseNetworkDataset(Dataset):
         if self.transform is not None:
             img0 = self.transform(img0)
             img1 = self.transform(img1)
-
-        return (img0, img1), torch.from_numpy(np.array([int(img1_tuple[1] != img0_tuple[1])], dtype=np.float32))
+        if img1_tuple[1] != img0_tuple[1]:
+            label = self.negative
+        else:
+            label = self.positive
+        return (img0, img1), torch.from_numpy(np.array([int(label)], dtype=np.float32))
 
     def __len__(self):
         return len(self.image_folder_dataset.imgs)
