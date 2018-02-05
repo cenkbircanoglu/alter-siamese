@@ -25,9 +25,9 @@ def classify(data_path):
     tr_score = clf.score(tr_embeddings, tr_labels)
 
     te_score = clf.score(te_embeddings, te_labels)
-    print("tr_score %s" % (tr_score))
-    print("te_score %s" % (te_score))
-    with open('%s/results.txt' % os.path.dirname(data_path), mode='a') as f:
+    print("tr_score %s" % tr_score)
+    print("te_score %s" % te_score)
+    with open('%s/results.txt' % os.path.abspath(os.path.join(os.path.dirname(data_path), os.pardir)), mode='a') as f:
         f.write('Data Path: %s\tTrain Accuracy:%s\tTest Accuracy:%s\n' % (data_path, tr_score, te_score))
 
 

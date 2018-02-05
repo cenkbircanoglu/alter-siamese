@@ -8,6 +8,7 @@ class HistogramLoss(torch.nn.Module):
     def __init__(self, num_steps=150., use_gpu=False):
         super(HistogramLoss, self).__init__()
         self.step = 2 / (num_steps - 1)
+        print(self.step)
         self.use_gpu = use_gpu
         self.t = torch.range(-1, 1, self.step).view(-1, 1)
         self.tsize = self.t.size()[0]
@@ -57,13 +58,12 @@ if __name__ == '__main__':
     # ct = ct.cuda()
     print list(ct.parameters())
 
-    print ct.centers.grad
 
-    y = Variable(torch.Tensor([0, 0, 0, 1]))  # .cuda()
+    y = Variable(torch.FloatTensor([0, 0, 0, 1]))  # .cuda()
     # print y
-    feat = Variable(torch.zeros(4, 2), requires_grad=True)  # .cuda()
+    feat = Variable(torch.rand(4, 2), requires_grad=True)  # .cuda()
     # print feat
 
-    out = ct((feat, feat), y)
+    out = ct(feat, y)
     out.backward()
     print ct.centers.grad
