@@ -9,6 +9,7 @@ sh run_scripts/cacd2000_name.sh
 sh run_scripts/cats_dogs.sh
 sh run_scripts/cifar10.sh
 sh run_scripts/cifar100.sh
+sh run_scripts/fashion.sh
 sh run_scripts/mnist.sh
 sh run_scripts/utkface_age.sh
 sh run_scripts/utkface_age_gender_race.sh
