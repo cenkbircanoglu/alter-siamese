@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 EPOCHS=1
+
 for data in fashion
 do
     # Listwise

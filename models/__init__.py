@@ -7,11 +7,11 @@ from models.s100.vgg import siam_net as siam_vgg_100
 from models.s100.vgg import siamese_net as siamese_vgg_100
 from models.s100.vgg import trip_net as trip_vgg_100
 from models.s100.vgg import triplet_net as triplet_vgg_100
-from models.s224.alexnet.net import AlexNet as alexnet_224
-from models.s224.alexnet.siam_net import SiamAlexNet as siam_alexnet_224
-from models.s224.alexnet.siamese_net import SiameseAlexNet as siamese_alexnet_224
-from models.s224.alexnet.trip_net import TripAlexNet as trip_alexnet_224
-from models.s224.alexnet.triplet_net import TripletAlexNet as triplet_alexnet_224
+from models.s224.alexnet import net as alexnet_224
+from models.s224.alexnet import siam_net as siam_alexnet_224
+from models.s224.alexnet import siamese_net as siamese_alexnet_224
+from models.s224.alexnet import trip_net as trip_alexnet_224
+from models.s224.alexnet import triplet_net as triplet_alexnet_224
 from models.s28 import net as net_28
 from models.s28 import siam_net as siam_net_28
 from models.s28 import siamese_net as siamese_net_28
