@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 from sklearn import svm
 
@@ -25,8 +27,8 @@ def classify(data_path):
     te_score = clf.score(te_embeddings, te_labels)
     print("tr_score %s" % (tr_score))
     print("te_score %s" % (te_score))
-    with open('%s/results.txt' % data_path, mode='a') as f:
-        f.write('Train Accuracy:%s\nTest Accuracy:%s\n' % (tr_score, te_score))
+    with open('%s/results.txt' % os.path.dirname(data_path), mode='a') as f:
+        f.write('Data Path: %s\tTrain Accuracy:%s\tTest Accuracy:%s\n' % (data_path, tr_score, te_score))
 
 
 if __name__ == '__main__':

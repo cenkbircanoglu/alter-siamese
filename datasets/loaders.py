@@ -16,7 +16,8 @@ np.random.seed(1137)
 config = get_config()
 
 transform = transforms.Compose(
-    [transforms.ToTensor(),
+    [transforms.Scale((config.height, config.width)),
+     transforms.ToTensor(),
      transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
 
