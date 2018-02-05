@@ -7,6 +7,11 @@ from models.s100.vgg import siam_net as siam_vgg_100
 from models.s100.vgg import siamese_net as siamese_vgg_100
 from models.s100.vgg import trip_net as trip_vgg_100
 from models.s100.vgg import triplet_net as triplet_vgg_100
+from models.s224.alexnet.net import AlexNet as alexnet_224
+from models.s224.alexnet.siam_net import SiamAlexNet as siam_alexnet_224
+from models.s224.alexnet.siamese_net import SiameseAlexNet as siamese_alexnet_224
+from models.s224.alexnet.trip_net import TripAlexNet as trip_alexnet_224
+from models.s224.alexnet.triplet_net import TripletAlexNet as triplet_alexnet_224
 from models.s28 import net as net_28
 from models.s28 import siam_net as siam_net_28
 from models.s28 import siamese_net as siamese_net_28
@@ -40,4 +45,5 @@ __all__ = ['siam_alexnet_64', 'siamese_alexnet_64', 'siam_net_28', 'siamese_net_
            'siam_vgg_28', 'siamese_vgg_28', 'trip_net_28', 'triplet_net_28', 'trip_vgg_28', 'triplet_vgg_28',
            'trip_vgg_32', 'trip_vgg_100', 'triplet_vgg_32', 'triplet_vgg_100', 'trip_net_100', 'triplet_net_100',
            'vgg_28', 'vgg_32', 'vgg_100', 'net_28', 'net_32', 'net_64', 'siam_net_64', 'siamese_net_64', 'trip_net_32',
-           'trip_net_64', 'triplet_net_32', 'triplet_net_64']
+           'trip_net_64', 'triplet_net_32', 'triplet_net_64', 'alexnet_224', 'trip_alexnet_224', 'triplet_alexnet_224',
+           'siam_alexnet_224', 'siamese_alexnet_224']
