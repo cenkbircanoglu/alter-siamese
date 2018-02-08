@@ -19,6 +19,8 @@ class TripletNetworkDataset(Dataset):
         self.data = [x[0] for x in image_folder_dataset.imgs]
         labels = [x[1] for x in image_folder_dataset.imgs]
         self.triplets = self.generate_triplets(labels, len(image_folder_dataset.imgs))
+        self.num_inputs = 3
+        self.num_targets = 0
 
     @staticmethod
     def generate_triplets(labels, num_triplets):
@@ -81,5 +83,4 @@ class TripletNetworkDataset(Dataset):
         return img_a, img_p, img_n
 
     def __len__(self):
-
         return self.triplets.size(0)

@@ -1,6 +1,6 @@
 import os
 
-from config import Config
+from config import get_config
 
 
 def create_dir(path):
@@ -9,5 +9,5 @@ def create_dir(path):
 
 
 def create_dirs():
-    for path in [Config.result_dir]:
+    for path in [get_config().result_dir]:
         create_dir(path)

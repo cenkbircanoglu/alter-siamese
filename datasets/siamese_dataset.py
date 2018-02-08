@@ -16,9 +16,11 @@ class SiameseNetworkDataset(Dataset):
         self.transform = transform
         self.should_invert = should_invert
         self.channel = channel
-        self.counter = 0,
+        self.counter = 0
         self.negative = negative
         self.positive = positive
+        self.num_inputs = 2
+        self.num_targets = 1
 
     def __getitem__(self, index):
         img0_tuple = random.choice(self.image_folder_dataset.imgs)

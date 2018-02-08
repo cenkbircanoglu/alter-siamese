@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 EPOCHS=1
-
+# TODO train ve test label sayıları tutmuyor
 for data in utkface_age
 do
     # Listwise

@@ -13,15 +13,14 @@ from datasets.triplet_dataset import TripletNetworkDataset
 random.seed(1137)
 np.random.seed(1137)
 
-config = get_config()
-
-transform = transforms.Compose(
-    [transforms.Scale((config.height, config.width)),
-     transforms.ToTensor(),
-     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-
 
 def data_loaders():
+    config = get_config()
+    transform = transforms.Compose(
+        [transforms.Scale((config.height, config.width)),
+         transforms.ToTensor(),
+         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+
     tr_dataset = NetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transform,
@@ -48,6 +47,12 @@ def data_loaders():
 
 
 def pair_loaders():
+    config = get_config()
+    transform = transforms.Compose(
+        [transforms.Scale((config.height, config.width)),
+         transforms.ToTensor(),
+         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+
     tr_siamese_dataset = SiameseNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transform,
@@ -78,6 +83,12 @@ def pair_loaders():
 
 
 def triplet_loaders():
+    config = get_config()
+    transform = transforms.Compose(
+        [transforms.Scale((config.height, config.width)),
+         transforms.ToTensor(),
+         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+
     tr_triplet_dataset = TripletNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transform,

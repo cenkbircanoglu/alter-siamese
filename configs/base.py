@@ -5,7 +5,7 @@ PAR = os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), '../'))
 
 class BaseConfig(object):
     def __init__(self, data_name=None, batch_size=32, epochs=20, num_workers=1, channel=1, cuda=False, loss=None,
-                 embedding=128, **kwargs):
+                 embedding=128, loader_name=None, **kwargs):
         self.data_dir = os.path.join(PAR, 'data')
         self.result_dir = os.path.join(PAR, './results/%s/%s' % (data_name, loss))
         self.log_path = os.path.join(PAR, './results/%s/%s.log' % (data_name, loss))
@@ -19,6 +19,7 @@ class BaseConfig(object):
         self.loss = loss
         self.embedding = embedding
         self.trainer = None
+        self.loader_name = loader_name
 
     @property
     def network_channel(self):

@@ -3,6 +3,8 @@ import argparse
 import numpy as np
 import torch
 
+from trainer import module_trainer
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('trainer')
@@ -16,6 +18,7 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', type=int, default=10)
     parser.add_argument('--negative', type=int, default=0)
     parser.add_argument('--positive', type=int, default=1)
+    parser.add_argument('--loader_name', type=str, default="data_loaders")
 
     torch.manual_seed(1137)
     np.random.seed(1137)
@@ -28,9 +31,9 @@ if __name__ == '__main__':
     kwargs.pop('trainer')
 
     set_config(trainer_name, **kwargs)
-    import trainer as trainer_module
+    #import trainer as trainer_module
 
-    trainer = getattr(trainer_module, trainer_name)
+    #trainer = getattr(trainer_module, trainer_name)
 
     print(get_config().__dict__)
-    trainer.run()
+    module_trainer.run()

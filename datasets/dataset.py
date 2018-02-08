@@ -17,6 +17,8 @@ class NetworkDataset(Dataset):
         self.should_invert = should_invert
         self.channel = channel
         self.counter = 0
+        self.num_inputs = 1
+        self.num_targets = 1
 
     def __getitem__(self, index):
         img0_tuple = self.image_folder_dataset.imgs[self.counter]
