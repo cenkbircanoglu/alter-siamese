@@ -5,6 +5,7 @@ import numpy as np
 from torchsample.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
 from torchsample.metrics import CategoricalAccuracy
 from torchsample.modules import ModuleTrainer
+from torchvision.models import DenseNet
 from tqdm import tqdm
 
 from datasets.loaders import data_loaders
@@ -23,7 +24,8 @@ def run():
 
     model = getattr(models, config.network).get_network()(channel=config.network_channel,
                                                           embedding_size=config.embedding)
-
+    #model = DenseNet(num_classes=10)
+    model.cuda()
     trainer = ModuleTrainer(model)
 
     callbacks = [EarlyStopping(monitor='val_loss', patience=5), ModelCheckpoint(config.result_dir),
@@ -34,16 +36,16 @@ def run():
     trainer.compile(loss=getattr(losses, config.loss)(), optimizer='adam', metrics=metrics)
     trainer.set_callbacks(callbacks)
 
-    trainer.fit_loader(tr_data_loader, val_loader=te_data_loader, num_epoch=config.epochs, verbose=2)
+    trainer.fit_loader(tr_data_loader, val_loader=te_data_loader, num_epoch=config.epochs, verbose=2, cuda_device=0)
 
-    tr_loss = trainer.evaluate_loader(tr_data_loader)
+    tr_loss = trainer.evaluate_loader(tr_data_loader, cuda_device=0)
     print(tr_loss)
-    te_loss = trainer.evaluate_loader(te_data_loader)
+    te_loss = trainer.evaluate_loader(te_data_loader, cuda_device=0)
     print(te_loss)
 
     tr_data_loader, te_data_loader = data_loaders()
-    tr_y_pred = trainer.predict_loader(tr_data_loader)
-    te_y_pred = trainer.predict_loader(te_data_loader)
+    tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=0)
+    te_y_pred = trainer.predict_loader(te_data_loader, cuda_device=0)
     with open(config.log_path, "a") as f:
         f.write('Train: %s\nTest: %s\n' % (str(tr_loss), te_loss))
 

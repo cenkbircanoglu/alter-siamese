@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-EPOCHS=1
+EPOCHS=20
 
 for data in aloi_red2_ill
 do

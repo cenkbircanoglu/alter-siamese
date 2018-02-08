@@ -12,6 +12,11 @@ from models.s224.alexnet import siam_net as siam_alexnet_224
 from models.s224.alexnet import siamese_net as siamese_alexnet_224
 from models.s224.alexnet import trip_net as trip_alexnet_224
 from models.s224.alexnet import triplet_net as triplet_alexnet_224
+from models.s224.dense import net as densenet_224
+from models.s224.dense import siam_net as siam_densenet_224
+from models.s224.dense import siamese_net as siamese_densenet_224
+from models.s224.dense import trip_net as trip_densenet_224
+from models.s224.dense import triplet_net as triplet_densenet_224
 from models.s28 import net as net_28
 from models.s28 import siam_net as siam_net_28
 from models.s28 import siamese_net as siamese_net_28
@@ -46,4 +51,5 @@ __all__ = ['siam_alexnet_64', 'siamese_alexnet_64', 'siam_net_28', 'siamese_net_
            'trip_vgg_32', 'trip_vgg_100', 'triplet_vgg_32', 'triplet_vgg_100', 'trip_net_100', 'triplet_net_100',
            'vgg_28', 'vgg_32', 'vgg_100', 'net_28', 'net_32', 'net_64', 'siam_net_64', 'siamese_net_64', 'trip_net_32',
            'trip_net_64', 'triplet_net_32', 'triplet_net_64', 'alexnet_224', 'trip_alexnet_224', 'triplet_alexnet_224',
-           'siam_alexnet_224', 'siamese_alexnet_224']
+           'siam_alexnet_224', 'siamese_alexnet_224', 'densenet_224', 'siam_densenet_224', 'siamese_densenet_224',
+           'trip_densenet_224', 'triplet_densenet_224']
