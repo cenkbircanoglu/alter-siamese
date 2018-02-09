@@ -12,7 +12,7 @@ do
         MultiClassHingeLoss #HistogramLoss
     do
           python __main__.py listwise --data_name $data --width 224 --height 224 --channel 3 \
-            --network densenet_224 --embedding 10 --epochs $EPOCHS --loss $loss
+            --network dense_224 --embedding 10 --epochs $EPOCHS --loss $loss
           python evaluate/svm.py --data_path results/${data}/${loss}/ &
     done
 
@@ -20,13 +20,13 @@ do
     for loss in  ContrastiveLoss
     do
           python __main__.py siamese --data_name $data  --width 224 --height 224 --channel 3 \
-            --network siamese_densenet_224 --embedding 128 --epochs $EPOCHS --loss $loss --negative 1 --positive 0
+            --network siamese_dense_224 --embedding 128 --epochs $EPOCHS --loss $loss --negative 1 --positive 0
           python evaluate/svm.py --data_path results/${data}/${loss}/ &
     done
     for loss in  CosineEmbeddingLoss MarginRankingLoss
     do
           python __main__.py siamese --data_name $data  --width 224 --height 224 --channel 3 \
-            --network siamese_densenet_224 --embedding 128 --epochs $EPOCHS --loss $loss --negative -1 --positive 1
+            --network siamese_dense_224 --embedding 128 --epochs $EPOCHS --loss $loss --negative -1 --positive 1
           python evaluate/svm.py --data_path results/${data}/${loss}/ &
     done
 
@@ -34,7 +34,7 @@ do
     for loss in TripletMarginLoss
     do
           python __main__.py triplet --data_name $data  --width 224 --height 224 --channel 3 \
-            --network triplet_densenet_224 --embedding 128 --epochs $EPOCHS --loss $loss
+            --network triplet_dense_224 --embedding 128 --epochs $EPOCHS --loss $loss
           python evaluate/svm.py --data_path results/${data}/${loss}/ &
     done
 done

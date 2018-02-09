@@ -2,9 +2,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class AlexNet(nn.Module):
+class Net(nn.Module):
     def __init__(self, channel, embedding_size=128, **kwargs):
-        super(AlexNet, self).__init__()
+        super(Net, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(channel, 64, kernel_size=11, stride=4, padding=2),
             nn.ReLU(inplace=True),
