@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+
+# 29985
+
 EPOCHS=20
 
 for data in fashion

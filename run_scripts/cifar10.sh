@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# 50000
+
 EPOCHS=1
 
 for data in cifar10

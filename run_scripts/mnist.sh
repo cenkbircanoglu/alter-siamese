@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
+# 70000
+
 EPOCHS=1
+
 for data in mnist
 do
     # Listwise

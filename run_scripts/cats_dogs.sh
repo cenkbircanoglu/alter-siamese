@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+
+# 24998
 EPOCHS=1
 
 for data in cats_dogs
