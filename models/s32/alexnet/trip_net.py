@@ -1,6 +1,6 @@
 import torch
 
-from models.s28.vgg.net import Net
+from models.s32.alexnet.net import Net
 
 
 class TripNet(Net):

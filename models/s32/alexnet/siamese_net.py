@@ -1,4 +1,4 @@
-from models.s100.vgg.net import Net
+from models.s32.alexnet.net import Net
 
 
 class SiameseNet(Net):

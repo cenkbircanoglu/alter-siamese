@@ -6,7 +6,7 @@ class Net(nn.Module):
     def __init__(self, channel, embedding_size=1000, **kwargs):
         super(Net, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(channel, 64, kernel_size=11, stride=4, padding=2),
+            nn.Conv2d(channel, 64, kernel_size=7, stride=2, padding=2),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=3, stride=2),
             nn.Conv2d(64, 192, kernel_size=5, padding=2),
@@ -22,7 +22,7 @@ class Net(nn.Module):
         )
         self.classifier = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(256 * 6 * 6, 4096),
+            nn.Linear(256 * 1 * 1, 4096),
             nn.ReLU(inplace=True),
             nn.Dropout(),
             nn.Linear(4096, 4096),
@@ -32,7 +32,8 @@ class Net(nn.Module):
 
     def forward_once(self, x):
         x = self.features(x)
-        x = x.view(x.size(0), 256 * 6 * 6)
+        print(x.size())
+        x = x.view(x.size(0), 256 * 1 * 1)
         x = self.classifier(x)
         return x
 
@@ -49,7 +50,7 @@ if __name__ == '__main__':
     from torch.autograd import Variable
 
     N = 4
-    input_dim = 224
+    input_dim = 32
     output_dim = 10
     channel = 3
     model = get_network()(channel=channel, embedding_size=output_dim)
