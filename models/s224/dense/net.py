@@ -167,3 +167,31 @@ class DenseNet(nn.Module):
 
 def get_network():
     return DenseNet
+
+
+
+
+if __name__ == '__main__':
+    import torch
+    from torch.autograd import Variable
+
+    N = 4
+    input_dim = 224
+    output_dim = 10
+    channel = 3
+    model = get_network()(channel=channel, embedding_size=output_dim)
+
+    x = Variable(torch.randn(N, channel, input_dim, input_dim))
+    y = Variable(torch.randn(N, output_dim), requires_grad=False)
+
+    criterion = torch.nn.MSELoss(size_average=False)
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-4)
+    for t in range(5):
+        y_pred = model(x)
+
+        loss = criterion(y_pred, y)
+        print(t, loss.data[0])
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()

@@ -1,7 +1,7 @@
-from models.s224.alexnet.net import AlexNet
+from models.s224.alexnet.net import Net
 
 
-class TripletAlexNet(AlexNet):
+class TripletNet(Net):
     def forward(self, (input1, input2, input3)):
         output1 = self.forward_once(input1)
         output2 = self.forward_once(input2)
@@ -10,4 +10,4 @@ class TripletAlexNet(AlexNet):
 
 
 def get_network():
-    return TripletAlexNet
+    return TripletNet

@@ -1,9 +1,9 @@
 import torch
 
-from models.s224.alexnet.net import AlexNet
+from models.s224.alexnet.net import Net
 
 
-class TripAlexNet(AlexNet):
+class TripNet(Net):
     def forward(self, (input1, input2, input3)):
         x = torch.cat([input1, input2, input3], dim=1)
         output = self.forward_once(x)
@@ -13,4 +13,4 @@ class TripAlexNet(AlexNet):
 
 
 def get_network():
-    return TripAlexNet
+    return TripNet

@@ -1,9 +1,9 @@
 import torch
 
-from models.s224.alexnet.net import AlexNet
+from models.s224.alexnet.net import Net
 
 
-class SiamAlexNet(AlexNet):
+class SiamNet(Net):
     def forward(self, (input1, input2)):
         x = torch.cat([input1, input2], dim=1)
         output = self.forward_once(x)
@@ -13,4 +13,4 @@ class SiamAlexNet(AlexNet):
 
 
 def get_network():
-    return SiamAlexNet
+    return SiamNet
