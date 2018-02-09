@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 EPOCHS=1
-# TODO train ve test label sayıları tutmuyor
 
 for data in utkface_age_gender_race
 do
@@ -10,7 +9,7 @@ do
         MultiClassHingeLoss #HistogramLoss
     do
           python __main__.py listwise --data_name $data --width 64 --height 64 --channel 3 \
-            --network net_64 --embedding 733 --epochs $EPOCHS --loss $loss
+            --network net_64 --embedding 616 --epochs $EPOCHS --loss $loss
           python evaluate/svm.py --data_path results/${data}/${loss}/ &
     done
 
