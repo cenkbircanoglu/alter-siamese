@@ -11,7 +11,7 @@ np.random.seed(1137)
 
 class NetworkDataset(Dataset):
     def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, train=True):
-        self.train = True
+        self.train = train
         if self.train:
             random.shuffle(image_folder_dataset.imgs)
         self.image_folder_dataset = image_folder_dataset

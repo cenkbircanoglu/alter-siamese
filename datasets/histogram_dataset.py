@@ -29,5 +29,4 @@ class HistogramSampler(Sampler):
             yield list(inds)
 
     def __len__(self):
-        print( len(self.labels) // self.batch_size)
         return len(self.labels) // self.batch_size
