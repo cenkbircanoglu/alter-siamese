@@ -4,7 +4,8 @@ from models.s224.alexnet.net import Net
 
 
 class SiamNet(Net):
-    def forward(self, (input1, input2)):
+    def forward(self, input):
+        input1, input2 = input
         x = torch.cat([input1, input2], dim=1)
         output = self.forward_once(x)
         output = output.view(-1, 2, int(output.size()[1] / 2))

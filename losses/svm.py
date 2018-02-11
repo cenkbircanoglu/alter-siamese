@@ -15,17 +15,24 @@ class MultiClassHingeLoss(nn.Module):
         self.margin = margin
         self.weight = weight  # weight for each class, size=n_class, variable containing FloatTensor,cuda,reqiures_grad=False
         self.size_average = size_average
+        self.use_cuda = False
 
     def forward(self, output, y):  # output: batchsize*n_class
         # print(output.requires_grad)
         # print(y.requires_grad)
-        output_y = output[torch.arange(0, y.size()[0]).long(), y.data].view(-1, 1)  # view for transpose
+        if self.cuda:
+            output_y = output[torch.arange(0, y.size()[0]).long().cuda(), y.data].view(-1, 1)  # view for transpose
+        else:
+            output_y = output[torch.arange(0, y.size()[0]).long(), y.data].view(-1, 1)  # view for transpose
         # margin - output[y] + output[i]
         loss = output - output_y + self.margin  # contains i=y
         # remove i=y items
-        loss[torch.arange(0, y.size()[0]).long(), y.data] = 0
+        if self.use_cuda:
+            loss[torch.arange(0, y.size()[0]).long().cuda(), y.data] = 0
+        else:
+            loss[torch.arange(0, y.size()[0]).long(), y.data] = 0
         # max(0,_)
-        #loss[loss < 0] = 0
+        # loss[loss < 0] = 0
         # ^p
         if self.p != 1:
             loss = torch.pow(loss, self.p)
@@ -37,3 +44,13 @@ class MultiClassHingeLoss(nn.Module):
         if self.size_average:
             loss /= output.size()[0]  # output.size()[0]
         return loss
+
+    def cuda(self, device_id=None):
+        """Moves all model parameters and buffers to the GPU.
+
+        Arguments:
+            device_id (int, optional): if specified, all parameters will be
+                copied to that device
+        """
+        self.use_cuda = True
+        return self._apply(lambda t: t.cuda(device_id))

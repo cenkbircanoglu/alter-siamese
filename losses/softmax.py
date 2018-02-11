@@ -5,7 +5,6 @@ import time
 
 import torch
 from torch.autograd import Function
-from torch.autograd import Variable
 
 
 def test_softmax_loss_backward():
@@ -106,6 +105,15 @@ class SoftmaxLoss(Function):
         """
         grad_input = grad_output * (self.y - self.t) / self.y.size(0)
         return grad_input, None
+
+    def cuda(self, device_id=None):
+        """Moves all model parameters and buffers to the GPU.
+
+        Arguments:
+            device_id (int, optional): if specified, all parameters will be
+                copied to that device
+        """
+        self.use_cuda = True
 
 
 if __name__ == '__main__':

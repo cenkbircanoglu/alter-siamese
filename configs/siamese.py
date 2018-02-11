@@ -5,7 +5,8 @@ class SiameseConfig(BaseConfig):
     def __init__(self, width=None, height=None, network=None, channel=1, loss="ContrastiveLoss", embedding=128 * 1,
                  batch_size=32, epochs=20, num_workers=1, cuda=False, negative=0, positive=1, **kwargs):
         super(SiameseConfig, self).__init__(batch_size=batch_size, epochs=epochs, num_workers=num_workers,
-                                            channel=channel, cuda=cuda, loss=loss, embedding=embedding, **kwargs)
+                                            channel=channel, cuda=cuda, loss=loss, embedding=embedding, network=network,
+                                            **kwargs)
         self.channel = channel
         self.loss = loss
         self.embedding = embedding

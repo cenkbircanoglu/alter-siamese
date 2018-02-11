@@ -1,13 +1,10 @@
 from __future__ import division
 from __future__ import print_function
 
-import numpy as np
-from torchsample.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
-from torchsample.metrics import CategoricalAccuracy
-from torchsample.modules import ModuleTrainer
-from tqdm import tqdm
+import time
 
-from datasets.loaders import data_loaders
+import numpy as np
+from tqdm import tqdm
 
 
 def run():
@@ -17,43 +14,55 @@ def run():
     import models
     from utils.make_dirs import create_dirs
     from datasets import loaders
+    from torchsample.callbacks import EarlyStopping, ModelCheckpoint, CSVLogger
+    from torchsample.metrics import CategoricalAccuracy
+    from torchsample.modules import ModuleTrainer
     create_dirs()
     cuda_device = -1
-    tr_data_loader, te_data_loader = getattr(loaders, config.loader_name)()
+    tr_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=True)
 
     model = getattr(models, config.network).get_network()(channel=config.network_channel,
                                                           embedding_size=config.embedding)
+    criterion = getattr(losses, config.loss)()
     if config.cuda:
         model.cuda()
+        criterion.cuda()
     trainer = ModuleTrainer(model)
 
-    callbacks = [EarlyStopping(monitor='val_loss', patience=5), ModelCheckpoint(config.result_dir),
+    callbacks = [EarlyStopping(monitor='val_loss', patience=10), ModelCheckpoint(config.result_dir),
                  CSVLogger("%s/logger.csv" % config.result_dir)]
     metrics = []
     if config.loader_name == 'data_loaders':
         metrics.append(CategoricalAccuracy(top_k=1))
-    trainer.compile(loss=getattr(losses, config.loss)(), optimizer='adam', metrics=metrics)
+    trainer.compile(loss=criterion, optimizer='adam', metrics=metrics)
     trainer.set_callbacks(callbacks)
     if config.cuda:
         cuda_device = 0
+    start_time = time.time()
     trainer.fit_loader(tr_data_loader, val_loader=te_data_loader, num_epoch=config.epochs, verbose=2,
                        cuda_device=cuda_device)
-
+    end_time = time.time()
+    with open("%s/app.log" % config.result_dir, mode="a") as f:
+        f.write("%s\n" % str(model))
+        f.write("%s %s\n" % (config.loss, str(end_time - start_time)))
     tr_loss = trainer.evaluate_loader(tr_data_loader, cuda_device=cuda_device)
     print(tr_loss)
     te_loss = trainer.evaluate_loader(te_data_loader, cuda_device=cuda_device)
     print(te_loss)
 
-    tr_data_loader, te_data_loader = data_loaders()
+    tr_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False)
     tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
     te_y_pred = trainer.predict_loader(te_data_loader, cuda_device=cuda_device)
     with open(config.log_path, "a") as f:
         f.write('Train: %s\nTest: %s\n' % (str(tr_loss), te_loss))
-
     with open('%s/train_embeddings.csv' % config.result_dir, 'a') as f:
-        np.savetxt(f, tr_y_pred.data.numpy())
+        if type(tr_y_pred) == list:
+            tr_y_pred = tr_y_pred[0]
+        np.savetxt(f, tr_y_pred.data.cpu().numpy())
     with open('%s/test_embeddings.csv' % config.result_dir, 'a') as f:
-        np.savetxt(f, te_y_pred.data.numpy())
+        if type(te_y_pred) == list:
+            te_y_pred = te_y_pred[0]
+        np.savetxt(f, te_y_pred.data.cpu().numpy())
     save_labels(tr_data_loader, '%s/train_labels.csv' % config.result_dir)
     save_labels(te_data_loader, '%s/test_labels.csv' % config.result_dir)
 

@@ -9,12 +9,12 @@ from config import get_config
 from datasets.dataset import NetworkDataset
 from datasets.siamese_dataset import SiameseNetworkDataset
 from datasets.triplet_dataset import TripletNetworkDataset
-
+from histogram_dataset import HistogramSampler
 random.seed(1137)
 np.random.seed(1137)
 
 
-def data_loaders():
+def data_loaders(train=True):
     config = get_config()
     transform = transforms.Compose(
         [transforms.Scale((config.height, config.width)),
@@ -25,7 +25,8 @@ def data_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transform,
         should_invert=False,
-        channel=config.channel
+        channel=config.channel,
+        train=train
     )
     tr_data_loader = DataLoader(tr_dataset,
                                 shuffle=True,
@@ -36,7 +37,8 @@ def data_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transform,
         should_invert=False,
-        channel=config.channel
+        channel=config.channel,
+        train=train
     )
     te_data_loader = DataLoader(te_dataset,
                                 shuffle=True,
@@ -46,7 +48,7 @@ def data_loaders():
     return tr_data_loader, te_data_loader
 
 
-def pair_loaders():
+def pair_loaders(train=True):
     config = get_config()
     transform = transforms.Compose(
         [transforms.Scale((config.height, config.width)),
@@ -59,7 +61,8 @@ def pair_loaders():
         should_invert=False,
         channel=config.channel,
         negative=config.negative,
-        positive=config.positive
+        positive=config.positive,
+        train=train
     )
     tr_data_loader = DataLoader(tr_siamese_dataset,
                                 shuffle=True,
@@ -72,7 +75,8 @@ def pair_loaders():
         should_invert=False,
         channel=config.channel,
         negative=config.negative,
-        positive=config.positive
+        positive=config.positive,
+        train=train
     )
     te_data_loader = DataLoader(te_siamese_dataset,
                                 shuffle=True,
@@ -82,7 +86,7 @@ def pair_loaders():
     return tr_data_loader, te_data_loader
 
 
-def triplet_loaders():
+def triplet_loaders(train=True):
     config = get_config()
     transform = transforms.Compose(
         [transforms.Scale((config.height, config.width)),
@@ -93,7 +97,8 @@ def triplet_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transform,
         should_invert=False,
-        channel=config.channel
+        channel=config.channel,
+        train=train
     )
     tr_data_loader = DataLoader(tr_triplet_dataset,
                                 shuffle=True,
@@ -104,11 +109,47 @@ def triplet_loaders():
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transform,
         should_invert=False,
-        channel=config.channel
+        channel=config.channel,
+        train=train
     )
     te_data_loader = DataLoader(te_triplet_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
                                 batch_size=1)
 
+    return tr_data_loader, te_data_loader
+
+
+def histogram_loaders(train=True):
+    config = get_config()
+    transform = transforms.Compose(
+        [transforms.Scale((config.height, config.width)),
+         transforms.ToTensor(),
+         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+
+    tr_dataset = NetworkDataset(
+        image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
+        transform=transform,
+        should_invert=False,
+        channel=config.channel,
+        train=train
+    )
+
+    sampler = HistogramSampler(tr_dataset.labels, config.batch_size)
+
+    tr_data_loader = DataLoader(tr_dataset,
+                                batch_sampler=sampler,
+                                num_workers=config.num_workers)
+    te_dataset = NetworkDataset(
+        image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
+        transform=transform,
+        should_invert=False,
+        channel=config.channel,
+        train=train
+    )
+
+    sampler = HistogramSampler(te_dataset.labels, config.batch_size)
+    te_data_loader = DataLoader(te_dataset,
+                                batch_sampler=sampler,
+                                num_workers=config.num_workers)
     return tr_data_loader, te_data_loader
