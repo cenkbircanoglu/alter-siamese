@@ -13,6 +13,12 @@ def classify(data_path):
     fname = "{}/train_embeddings.csv".format(data_path)
     tr_embeddings = np.loadtxt(fname)
 
+    fname = "{}/val_labels.csv".format(data_path)
+    val_labels = np.loadtxt(fname)
+
+    fname = "{}/val_embeddings.csv".format(data_path)
+    val_embeddings = np.loadtxt(fname)
+
     fname = "{}/test_labels.csv".format(data_path)
     te_labels = np.loadtxt(fname)
 
@@ -23,12 +29,14 @@ def classify(data_path):
     clf.fit(tr_embeddings, tr_labels)
 
     tr_score = clf.score(tr_embeddings, tr_labels)
-
+    val_score = clf.score(val_embeddings, val_labels)
     te_score = clf.score(te_embeddings, te_labels)
     print("tr_score %s" % tr_score)
+    print("val_score %s" % val_score)
     print("te_score %s" % te_score)
     with open('%s/results.txt' % os.path.abspath(os.path.join(os.path.dirname(data_path), os.pardir)), mode='a') as f:
-        f.write('Data Path: %s\tTrain Accuracy:%s\tTest Accuracy:%s\n' % (data_path, tr_score, te_score))
+        f.write('Data Path: %s\tTrain Accuracy:%s\tVal Accuracy:%s\tTest Accuracy:%s\n' % (
+            data_path, tr_score, val_score, te_score))
 
 
 if __name__ == '__main__':

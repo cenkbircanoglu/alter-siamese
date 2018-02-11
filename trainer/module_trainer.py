@@ -19,7 +19,7 @@ def run():
     from torchsample.modules import ModuleTrainer
     create_dirs()
     cuda_device = -1
-    tr_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=True)
+    tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=True)
 
     model = getattr(models, config.network).get_network()(channel=config.network_channel,
                                                           embedding_size=config.embedding)
@@ -29,7 +29,9 @@ def run():
         criterion.cuda()
     trainer = ModuleTrainer(model)
 
-    callbacks = [ModelCheckpoint(config.result_dir),CSVLogger("%s/logger.csv" % config.result_dir)]
+    callbacks = [EarlyStopping(monitor='val_loss', patience=5),
+                 ModelCheckpoint(config.result_dir, save_best_only=True, verbose=1),
+                 CSVLogger("%s/logger.csv" % config.result_dir)]
     metrics = []
     if config.loader_name == 'data_loaders':
         metrics.append(CategoricalAccuracy(top_k=1))
@@ -38,7 +40,7 @@ def run():
     if config.cuda:
         cuda_device = 0
     start_time = time.time()
-    trainer.fit_loader(tr_data_loader,  num_epoch=config.epochs, verbose=1,
+    trainer.fit_loader(tr_data_loader, val_loader=te_data_loader, num_epoch=config.epochs, verbose=2,
                        cuda_device=cuda_device)
     end_time = time.time()
     with open("%s/app.log" % config.result_dir, mode="a") as f:
@@ -48,22 +50,29 @@ def run():
     print(tr_loss)
     te_loss = trainer.evaluate_loader(te_data_loader, cuda_device=cuda_device)
     print(te_loss)
-
-    tr_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False)
-    tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
-    te_y_pred = trainer.predict_loader(te_data_loader, cuda_device=cuda_device)
     with open(config.log_path, "a") as f:
         f.write('Train: %s\nTest: %s\n' % (str(tr_loss), te_loss))
-    with open('%s/train_embeddings.csv' % config.result_dir, 'a') as f:
-        if type(tr_y_pred) == list:
-            tr_y_pred = tr_y_pred[0]
-        np.savetxt(f, tr_y_pred.data.cpu().numpy())
-    with open('%s/test_embeddings.csv' % config.result_dir, 'a') as f:
-        if type(te_y_pred) == list:
-            te_y_pred = te_y_pred[0]
-        np.savetxt(f, te_y_pred.data.cpu().numpy())
+
+    tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False)
+
+    tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
+    save_embeddings(tr_y_pred, '%s/train_embeddings.csv' % config.result_dir)
     save_labels(tr_data_loader, '%s/train_labels.csv' % config.result_dir)
+
+    val_y_pred = trainer.predict_loader(val_data_loader, cuda_device=cuda_device)
+    save_embeddings(val_y_pred, '%s/val_embeddings.csv' % config.result_dir)
+    save_labels(val_data_loader, '%s/val_labels.csv' % config.result_dir)
+
+    te_y_pred = trainer.predict_loader(te_data_loader, cuda_device=cuda_device)
+    save_embeddings(te_y_pred, '%s/test_embeddings.csv' % config.result_dir)
     save_labels(te_data_loader, '%s/test_labels.csv' % config.result_dir)
+
+
+def save_embeddings(data, outputfile):
+    with open(outputfile, 'a') as f:
+        if type(data) == list:
+            data = data[0]
+        np.savetxt(f, data.data.cpu().numpy())
 
 
 def save_labels(loader, outputfile):
