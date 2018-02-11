@@ -2,7 +2,7 @@
 
 # 163446
 
-EPOCHS=250
+EPOCHS=150
 network=alex_64
 for data in cacd2000_age
 do

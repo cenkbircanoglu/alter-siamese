@@ -2,7 +2,7 @@
 
 
 # 24998
-EPOCHS=150
+EPOCHS=100
 network=alex_64
 for data in cats_dogs
 do

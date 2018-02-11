@@ -3,7 +3,7 @@
 
 # 29985
 
-EPOCHS=150
+EPOCHS=100
 network=alex_224
 for data in fashion
 do

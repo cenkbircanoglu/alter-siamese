@@ -2,7 +2,7 @@
 
 # 70000
 
-EPOCHS=50
+EPOCHS=25
 network=alex_28
 for data in mnist
 do

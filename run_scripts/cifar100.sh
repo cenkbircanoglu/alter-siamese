@@ -2,7 +2,7 @@
 
 # 60000
 
-EPOCHS=150
+EPOCHS=75
 network=alex_32
 for data in cifar100
 do

@@ -11,7 +11,7 @@ class BaseConfig(object):
         self.log_path = os.path.join(PAR, './results/%s/%s/%s.log' % (data_name, network, loss))
         self.tr_dir = os.path.join(self.data_dir, '%s/train/' % data_name)
         self.te_dir = os.path.join(self.data_dir, '%s/test/' % data_name)
-        self.batch_size = 64
+        self.batch_size = 128
         self.epochs = epochs
         self.num_workers = num_workers
         self.channel = channel

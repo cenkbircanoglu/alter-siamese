@@ -29,8 +29,7 @@ def run():
         criterion.cuda()
     trainer = ModuleTrainer(model)
 
-    callbacks = [EarlyStopping(monitor='val_loss', patience=10), ModelCheckpoint(config.result_dir),
-                 CSVLogger("%s/logger.csv" % config.result_dir)]
+    callbacks = [ModelCheckpoint(config.result_dir),CSVLogger("%s/logger.csv" % config.result_dir)]
     metrics = []
     if config.loader_name == 'data_loaders':
         metrics.append(CategoricalAccuracy(top_k=1))
@@ -39,7 +38,7 @@ def run():
     if config.cuda:
         cuda_device = 0
     start_time = time.time()
-    trainer.fit_loader(tr_data_loader, val_loader=te_data_loader, num_epoch=config.epochs, verbose=2,
+    trainer.fit_loader(tr_data_loader,  num_epoch=config.epochs, verbose=1,
                        cuda_device=cuda_device)
     end_time = time.time()
     with open("%s/app.log" % config.result_dir, mode="a") as f:

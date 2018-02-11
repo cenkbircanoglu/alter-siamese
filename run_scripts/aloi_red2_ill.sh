@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # 24000
-EPOCHS=200
+EPOCHS=50
 network=alex_64
 for data in aloi_red2_ill
 do
