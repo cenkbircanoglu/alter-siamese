@@ -40,7 +40,7 @@ def run():
     if config.cuda:
         cuda_device = 0
     start_time = time.time()
-    trainer.fit_loader(tr_data_loader, val_loader=te_data_loader, num_epoch=config.epochs, verbose=2,
+    trainer.fit_loader(tr_data_loader, val_loader=val_data_loader, num_epoch=config.epochs, verbose=2,
                        cuda_device=cuda_device)
     end_time = time.time()
     with open("%s/app.log" % config.result_dir, mode="a") as f:
@@ -48,10 +48,11 @@ def run():
         f.write("%s %s\n" % (config.loss, str(end_time - start_time)))
     tr_loss = trainer.evaluate_loader(tr_data_loader, cuda_device=cuda_device)
     print(tr_loss)
+    val_loss = trainer.evaluate_loader(val_data_loader, cuda_device=cuda_device)
     te_loss = trainer.evaluate_loader(te_data_loader, cuda_device=cuda_device)
     print(te_loss)
     with open(config.log_path, "a") as f:
-        f.write('Train: %s\nTest: %s\n' % (str(tr_loss), te_loss))
+        f.write('Train %s\nVal:%s\nTest:%s\n' % (str(tr_loss),str(val_loss), te_loss))
 
     tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False)
 

@@ -6,3 +6,4 @@ from s28.alexnet import *
 from s32 import *
 from s64 import *
 from s64.alexnet import *
+from s32.alexnet import *

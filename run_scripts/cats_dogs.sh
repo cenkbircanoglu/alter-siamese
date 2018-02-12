@@ -7,7 +7,7 @@ network=alex_64
 for data in cats_dogs
 do
     # Listwise
-    for loss in CrossEntropyLoss MultiMarginLoss NLLLoss FocalLoss SoftmaxLoss CenterLoss  MultiClassHingeLoss
+    for loss in CrossEntropyLoss MultiMarginLoss  FocalLoss SoftmaxLoss CenterLoss  MultiClassHingeLoss
     do
           python __main__.py listwise --data_name $data --width 64 --height 64 --channel 3 \
             --network $network --embedding 2 --epochs $EPOCHS --loss $loss --loader_name data_loaders

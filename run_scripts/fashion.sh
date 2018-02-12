@@ -8,7 +8,7 @@ network=alex_224
 for data in fashion
 do
     # Listwise
-    for loss in CrossEntropyLoss MultiMarginLoss NLLLoss FocalLoss SoftmaxLoss CenterLoss  MultiClassHingeLoss
+    for loss in CrossEntropyLoss MultiMarginLoss  FocalLoss SoftmaxLoss CenterLoss  MultiClassHingeLoss
     do
           python __main__.py listwise --data_name $data --width 224 --height 224 --channel 3 \
             --network $network --embedding 10 --epochs $EPOCHS --loss $loss --loader_name data_loaders

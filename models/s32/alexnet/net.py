@@ -39,7 +39,6 @@ class Net(nn.Module):
 
     def forward_once(self, x):
         x = self.features(x)
-        print(x.size())
         x = x.view(x.size(0), 256 * 1 * 1)
         x = self.classifier(x)
         return x
