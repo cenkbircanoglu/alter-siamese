@@ -59,7 +59,7 @@ class DenseNet(nn.Module):
     """
 
     def __init__(self, growth_rate=32, block_config=(6, 12, 48, 32),
-                 num_init_features=64, bn_size=4, drop_rate=0, channel=3, embedding_size=1000):
+                 num_init_features=64, bn_size=4, drop_rate=0.2, channel=3, embedding_size=1000):
 
         super(DenseNet, self).__init__()
 

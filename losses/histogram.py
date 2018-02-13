@@ -2,8 +2,17 @@ from __future__ import division
 
 import torch
 from torch.autograd import Variable
+import torch.nn as nn
+class L2Normalization(nn.Module):
+    def __init__(self):
+        super(L2Normalization, self).__init__()
 
+    def forward(self, input):
+        input = input.squeeze()
+        return input.div(torch.norm(input, dim=1).view(-1, 1))
 
+    def __repr__(self):
+        return self.__class__.__name__
 class HistogramLoss(torch.nn.Module):
     def __init__(self, num_steps=150, cuda=True):
         super(HistogramLoss, self).__init__()
@@ -11,8 +20,11 @@ class HistogramLoss(torch.nn.Module):
         self.use_cuda = False
         self.t = torch.range(-1, 1, self.step).view(-1, 1)
         self.tsize = self.t.size()[0]
+        self.l2 = L2Normalization()
 
     def forward(self, features, classes):
+        features = self.l2.forward(features)
+
         def histogram(inds, size):
             s_repeat_ = s_repeat.clone()
             indsa = (delta_repeat == (self.t - self.step)) & inds
@@ -56,8 +68,8 @@ class HistogramLoss(torch.nn.Module):
             device_id (int, optional): if specified, all parameters will be
                 copied to that device
         """
-        self.t = self.t.cuda()
         self.use_cuda = True
+        self.t = self.t.cuda()
         return self._apply(lambda t: t.cuda(device_id))
 
 

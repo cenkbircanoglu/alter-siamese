@@ -3,7 +3,7 @@
 
 # 29985
 
-EPOCHS=300
+EPOCHS=500
 for network in net_224 alex_224 dense_224
 do
     for data in fashion
@@ -44,7 +44,7 @@ do
         for loss in HistogramLoss
         do
               python __main__.py listwise --data_name $data --width 224 --height 224 --channel 3 \
-                --network $network --embedding 10 --epochs $EPOCHS --loss $loss --loader_name histogram_loaders
+                --network $network --embedding 10 --epochs $EPOCHS --loss $loss --loader_name data_loaders
               python evaluate/svm.py --data_path results/${data}/${network}/${loss} &
         done
     done

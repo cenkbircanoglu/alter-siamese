@@ -1,3 +1,4 @@
+
 import random
 
 import numpy as np
@@ -207,3 +208,30 @@ def histogram_loaders(train=True):
                                 batch_sampler=sampler,
                                 num_workers=config.num_workers)
     return tr_data_loader, val_data_loader, te_data_loader
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('--trainer',type=str,default="listwise")
+    parser.add_argument('--width', type=int,default=28)
+    parser.add_argument('--height', type=int,default=28)
+    parser.add_argument('--channel', type=int,default=3)
+    parser.add_argument('--data_name', type=str,default="mnist")
+    parser.add_argument('--loader_name', type=str, default="histogram_loaders")
+    import torch
+    torch.manual_seed(1137)
+    np.random.seed(1137)
+    from config import set_config, get_config
+
+    args = parser.parse_args()
+
+    kwargs = vars(args)
+    trainer_name = kwargs['trainer']
+    kwargs.pop('trainer')
+
+    set_config(trainer_name, **kwargs)
+    tr_data_loader, val_data_loader, te_data_loader = histogram_loaders(trainer_name)
+
+    for a in tr_data_loader:
+        print(a)

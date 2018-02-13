@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # 24000
-EPOCHS=300
+EPOCHS=500
 for network in net_64 alex_64 dense_64
 do
     for data in aloi_red2_ill
@@ -42,7 +42,7 @@ do
         for loss in HistogramLoss
         do
               python __main__.py listwise --data_name $data --width 64 --height 64 --channel 3 \
-                --network $network --embedding 1000 --epochs $EPOCHS --loss $loss --loader_name histogram_loaders
+                --network $network --embedding 1000 --epochs $EPOCHS --loss $loss --loader_name data_loaders
               python evaluate/svm.py --data_path results/${data}/${network}/${loss} &
         done
 

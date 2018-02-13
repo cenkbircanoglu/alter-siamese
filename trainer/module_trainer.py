@@ -31,12 +31,11 @@ def run():
         model.cuda()
         criterion.cuda()
     trainer = ModuleTrainer(model)
-    early_stopping = EarlyStopping(monitor='val_loss', patience=25)
-    if config.loader_name == 'data_loaders':
-        early_stopping = EarlyStopping(monitor='val_acc', patience=25)
-    callbacks = [early_stopping,
+
+    callbacks = [EarlyStopping(monitor='val_loss', patience=50),
                  ModelCheckpoint(config.result_dir, save_best_only=True, verbose=1),
                  CSVLogger("%s/logger.csv" % config.result_dir)]
+
     metrics = []
     if config.loader_name == 'data_loaders':
         metrics.append(CategoricalAccuracy(top_k=1))

@@ -2,7 +2,7 @@
 
 # 70000
 
-EPOCHS=300
+EPOCHS=500
 for network in net_28 alex_28 dense_28
 do
     for data in mnist
@@ -43,7 +43,7 @@ do
         for loss in HistogramLoss
         do
               python __main__.py listwise --data_name $data --width 28 --height 28 --channel 1 \
-                --network $network --embedding 10 --epochs $EPOCHS --loss $loss --loader_name histogram_loaders
+                --network $network --embedding 10 --epochs $EPOCHS --loss $loss --loader_name data_loaders
               python evaluate/svm.py --data_path results/${data}/${network}/${loss} &
         done
     done
