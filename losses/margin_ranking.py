@@ -21,7 +21,7 @@ class MarginRankingLoss(Module):
     By default, `size_average` equals to ``True``.
     """
 
-    def __init__(self, margin=0, size_average=True):
+    def __init__(self, margin=1, size_average=True):
         super(MarginRankingLoss, self).__init__()
         self.margin = margin
         self.size_average = size_average

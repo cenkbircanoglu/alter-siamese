@@ -70,11 +70,11 @@ class SiameseNetworkDataset(Dataset):
         if self.transform is not None:
             img0 = self.transform(img0)
             img1 = self.transform(img1)
-        if img1_tuple[1] != img0_tuple[1]:
-            label = self.negative
+        if img1_tuple[1] == img0_tuple[1]:
+            label = torch.FloatTensor([float(self.positive)])
         else:
-            label = self.positive
-        return (img0, img1), torch.from_numpy(np.array([int(label)], dtype=np.float32))
+            label = torch.FloatTensor([float(self.negative)])
+        return (img0, img1), label
 
     def __getitem__(self, index):
         if self.train:

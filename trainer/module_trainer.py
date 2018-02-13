@@ -1,6 +1,7 @@
 from __future__ import division
 from __future__ import print_function
 
+import os
 import time
 
 import numpy as np
@@ -10,6 +11,8 @@ from tqdm import tqdm
 def run():
     from config import get_config
     config = get_config()
+    if os.path.exists('%s/train_embeddings.csv'):
+        return
     import losses
     import models
     from utils.make_dirs import create_dirs
@@ -28,8 +31,10 @@ def run():
         model.cuda()
         criterion.cuda()
     trainer = ModuleTrainer(model)
-
-    callbacks = [EarlyStopping(monitor='val_loss', patience=5),
+    early_stopping = EarlyStopping(monitor='val_loss', patience=25)
+    if config.loader_name == 'data_loaders':
+        early_stopping = EarlyStopping(monitor='val_acc', patience=25)
+    callbacks = [early_stopping,
                  ModelCheckpoint(config.result_dir, save_best_only=True, verbose=1),
                  CSVLogger("%s/logger.csv" % config.result_dir)]
     metrics = []
@@ -52,7 +57,7 @@ def run():
     te_loss = trainer.evaluate_loader(te_data_loader, cuda_device=cuda_device)
     print(te_loss)
     with open(config.log_path, "a") as f:
-        f.write('Train %s\nVal:%s\nTest:%s\n' % (str(tr_loss),str(val_loss), te_loss))
+        f.write('Train %s\nVal:%s\nTest:%s\n' % (str(tr_loss), str(val_loss), te_loss))
 
     tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False)
 

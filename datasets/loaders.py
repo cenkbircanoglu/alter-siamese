@@ -9,7 +9,7 @@ from config import get_config
 from datasets.dataset import NetworkDataset
 from datasets.siamese_dataset import SiameseNetworkDataset
 from datasets.triplet_dataset import TripletNetworkDataset
-from histogram_dataset import HistogramSampler
+from histogram import HistogramSampler
 
 random.seed(1137)
 np.random.seed(1137)

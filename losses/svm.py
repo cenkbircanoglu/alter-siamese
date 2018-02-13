@@ -9,7 +9,7 @@ import torch.nn as nn
 
 
 class MultiClassHingeLoss(nn.Module):
-    def __init__(self, p=1, margin=1, weight=None, size_average=True):
+    def __init__(self, p=2, margin=1, weight=None, size_average=True):
         super(MultiClassHingeLoss, self).__init__()
         self.p = p
         self.margin = margin

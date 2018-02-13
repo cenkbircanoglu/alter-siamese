@@ -1,12 +1,12 @@
-from models.s28.net import Net
+from models.s32.dense.net import DenseNet
 
 
-class SiameseNet(Net):
-    def forward(self, input1, input2):
+class SiameseDenseNet(DenseNet):
+    def forward(self, (input1, input2)):
         output1 = self.forward_once(input1)
         output2 = self.forward_once(input2)
         return (output1, output2)
 
 
 def get_network():
-    return SiameseNet
+    return SiameseDenseNet

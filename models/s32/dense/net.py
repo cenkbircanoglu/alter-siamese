@@ -92,7 +92,8 @@ class DenseNet(nn.Module):
     def forward_once(self, x):
         features = self.features(x)
         out = F.relu(features, inplace=True)
-        out = F.avg_pool2d(out, kernel_size=7, stride=1).view(features.size(0), -1)
+        # TODO 7 to 1
+        out = F.avg_pool2d(out, kernel_size=1, stride=1).view(features.size(0), -1)
         out = self.classifier(out)
         return out
 
@@ -107,7 +108,7 @@ def get_network():
 if __name__ == '__main__':
 
     N = 4
-    input_dim = 224
+    input_dim = 32
     output_dim = 10
     channel = 3
     model = get_network()(channel=channel, embedding_size=output_dim)

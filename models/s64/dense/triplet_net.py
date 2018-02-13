@@ -1,8 +1,8 @@
-from models.s32.net import Net
+from models.s64.dense.net import DenseNet
 
 
-class TripletNet(Net):
-    def forward(self, input1, input2, input3):
+class TripletDenseNet(DenseNet):
+    def forward(self, (input1, input2, input3)):
         output1 = self.forward_once(input1)
         output2 = self.forward_once(input2)
         output3 = self.forward_once(input3)
@@ -10,4 +10,4 @@ class TripletNet(Net):
 
 
 def get_network():
-    return TripletNet
+    return TripletDenseNet
