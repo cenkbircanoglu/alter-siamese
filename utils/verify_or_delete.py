@@ -29,6 +29,7 @@ def verify_or_delete(dir):
                 img.verify()
             except IOError as ie:
                 print(fname)
+                os.rmdir(fname)
 
 
 if __name__ == '__main__':

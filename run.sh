@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
 
-EPOCHS=1
-
 sh run_scripts/aloi_red2_ill.sh
+sh run_scripts/books.sh
 sh run_scripts/cacd2000_age.sh
 sh run_scripts/cacd2000_name.sh
 sh run_scripts/cats_dogs.sh
@@ -11,7 +10,9 @@ sh run_scripts/cifar10.sh
 sh run_scripts/cifar100.sh
 sh run_scripts/fashion.sh
 sh run_scripts/imagenet.sh
+sh run_scripts/marvel.sh
 sh run_scripts/mnist.sh
+sh run_scripts/ships.sh
 sh run_scripts/utkface_age.sh
 sh run_scripts/utkface_age_gender_race.sh
 

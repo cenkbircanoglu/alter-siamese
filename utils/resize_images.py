@@ -8,7 +8,7 @@ from PIL import Image
 __author__ = 'cenk'
 
 
-def change_file_size(input_dir, newsize):
+def change_file_size(input_dir, desired_size):
     pairs_same, pairs_else, names = [], [], []
     for _, dirs, _ in os.walk(input_dir):
         for dir in dirs:
@@ -18,10 +18,18 @@ def change_file_size(input_dir, newsize):
                     if '.DS_Store' not in file:
                         try:
                             file_name = os.path.join(subdirs, file)
-                            img = Image.open(file_name)
-                            img = img.resize((newsize, newsize))
-                            print(file_name)
-                            img.save(file_name)
+			    print(file_name)
+                            im = Image.open(file_name)
+			    old_size = im.size  # old_size[0] is in (width, height) format
+                            ratio = float(desired_size)/max(old_size)
+                            new_size = tuple([int(x*ratio) for x in old_size])
+
+                            im = im.resize(new_size, Image.ANTIALIAS)
+                            # create a new image and paste the resized on it
+                            new_im = Image.new("RGB", (desired_size, desired_size))
+                            new_im.paste(im, ((desired_size-new_size[0])//2,
+                                 (desired_size-new_size[1])//2))
+                            new_im.save(file_name)
                         except Exception as e:
                             print(e.message)
                             print('ERROR')

@@ -11,8 +11,10 @@ from tqdm import tqdm
 def run():
     from config import get_config
     config = get_config()
-    if os.path.exists('%s/train_embeddings.csv'):
-        return
+    print('%s/ckpt.pth.tar' % config.result_dir)
+    if os.path.exists('%s/ckpt.pth.tar' % config.result_dir):
+        return True
+    print("Not Return")
     import losses
     import models
     from utils.make_dirs import create_dirs
@@ -97,6 +99,7 @@ if __name__ == '__main__':
     parser.add_argument('--data_name', type=str, default="mnist")
     parser.add_argument('--network', type=str, default="net_28")
     parser.add_argument('--embedding', type=int, default=10)
+    parser.add_argument('--batch_size', type=int, default=256)
     parser.add_argument('--loss', type=str, default="NLLLoss")
     parser.add_argument('--epochs', type=int, default=10)
     parser.add_argument('--negative', type=int, default=0)

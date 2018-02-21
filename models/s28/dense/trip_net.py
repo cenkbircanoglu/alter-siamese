@@ -1,6 +1,6 @@
 import torch
 
-from models.s32.dense.net import DenseNet
+from models.s28.dense.net import DenseNet
 
 
 class TripDenseNet(DenseNet):

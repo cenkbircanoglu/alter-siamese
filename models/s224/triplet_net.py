@@ -1,4 +1,4 @@
-from models.s64.net import Net
+from models.s224.net import Net
 
 
 class TripletNet(Net):

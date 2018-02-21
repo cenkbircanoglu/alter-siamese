@@ -1,14 +1,13 @@
-
 import random
 
 import numpy as np
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision import datasets
-
-from config import get_config
+from config import  get_config
 from datasets.dataset import NetworkDataset
 from datasets.siamese_dataset import SiameseNetworkDataset
+from datasets.triplet import TripletDataset
 from datasets.triplet_dataset import TripletNetworkDataset
 from histogram import HistogramSampler
 
@@ -111,7 +110,7 @@ def pair_loaders(train=True):
     te_data_loader = DataLoader(te_siamese_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
-                                batch_size=1)
+                                batch_size=config.batch_size)
 
     return tr_data_loader, val_data_loader, te_data_loader
 
@@ -157,7 +156,7 @@ def triplet_loaders(train=True):
     te_data_loader = DataLoader(te_triplet_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
-                                batch_size=1)
+                                batch_size=config.batch_size)
 
     return tr_data_loader, val_data_loader, te_data_loader
 
@@ -212,14 +211,17 @@ def histogram_loaders(train=True):
 
 if __name__ == '__main__':
     import argparse
+
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('--trainer',type=str,default="listwise")
-    parser.add_argument('--width', type=int,default=28)
-    parser.add_argument('--height', type=int,default=28)
-    parser.add_argument('--channel', type=int,default=3)
-    parser.add_argument('--data_name', type=str,default="mnist")
-    parser.add_argument('--loader_name', type=str, default="histogram_loaders")
+    parser.add_argument('--trainer', type=str, default="listwise")
+    parser.add_argument('--width', type=int, default=28)
+    parser.add_argument('--height', type=int, default=28)
+    parser.add_argument('--channel', type=int, default=3)
+    parser.add_argument('--data_name', type=str, default="mnist")
+    parser.add_argument('--loader_name', type=str, default="data_loaders")
+    parser.add_argument('--label_count', type=int, default=8)
     import torch
+
     torch.manual_seed(1137)
     np.random.seed(1137)
     from config import set_config, get_config
@@ -231,7 +233,7 @@ if __name__ == '__main__':
     kwargs.pop('trainer')
 
     set_config(trainer_name, **kwargs)
-    tr_data_loader, val_data_loader, te_data_loader = histogram_loaders(trainer_name)
+    tr_data_loader, val_data_loader, te_data_loader = trip_loaders(trainer_name)
 
     for a in tr_data_loader:
         print(a)
