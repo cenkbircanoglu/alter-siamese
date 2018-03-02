@@ -26,10 +26,12 @@ def verify_or_delete(dir):
             fname = os.path.join(root, f)
             try:
                 img = Image.open(fname)
-                img.verify()
+                #img.verify()
+                img = img.convert("RGB")
+                #img.load()
             except IOError as ie:
                 print(fname)
-                os.rmdir(fname)
+                os.remove(fname)
 
 
 if __name__ == '__main__':

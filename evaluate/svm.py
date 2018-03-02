@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 from sklearn import svm
+from sklearn.externals import joblib
 from sklearn.metrics import f1_score
 
 __author__ = 'cenk'
@@ -13,6 +14,11 @@ def classify(data_path):
     if os.path.exists(result_path):
         if data_path in open(result_path).read():
             return True
+    model_path = '%s/svm.pkl' % data_path
+    tr_predictions_path = '%s/train_predictions.csv' % data_path
+    val_predictions_path = '%s/val_predictions.csv' % data_path
+    te_predictions_path = '%s/test_predictions.csv' % data_path
+
     fname = "{}/train_labels.csv".format(data_path)
     if not os.path.exists(fname):
         return True
@@ -32,13 +38,22 @@ def classify(data_path):
 
     fname = "{}/test_embeddings.csv".format(data_path)
     te_embeddings = np.loadtxt(fname)
-    print(tr_embeddings.shape)
-    clf = svm.SVC(kernel='linear', C=1, max_iter=200000000)
+
+    clf = svm.SVC(kernel='linear', C=1, max_iter=2000000000, verbose=True)
     clf.fit(tr_embeddings, tr_labels)
+    joblib.dump(clf, model_path)
 
     tr_score = clf.score(tr_embeddings, tr_labels)
     val_score = clf.score(val_embeddings, val_labels)
     te_score = clf.score(te_embeddings, te_labels)
+
+    tr_predictions = clf.predict(tr_embeddings)
+    val_predictions = clf.predict(val_embeddings)
+    te_predictions = clf.predict(te_embeddings)
+
+    np.savetxt(tr_predictions_path, tr_predictions)
+    np.savetxt(val_predictions_path, val_predictions)
+    np.savetxt(te_predictions_path, te_predictions)
 
     tr_fscore = f1_score(clf.predict(tr_embeddings), tr_labels, average="weighted")
     val_fscore = f1_score(clf.predict(val_embeddings), val_labels, average="weighted")

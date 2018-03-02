@@ -6,6 +6,7 @@ from torch.utils.data import DataLoader
 from torchvision import datasets
 from config import  get_config
 from datasets.dataset import NetworkDataset
+from datasets.pair import SiamesePairNetworkDataset
 from datasets.siamese_dataset import SiameseNetworkDataset
 from datasets.triplet import TripletDataset
 from datasets.triplet_dataset import TripletNetworkDataset
@@ -69,7 +70,7 @@ def pair_loaders(train=True):
          transforms.ToTensor(),
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
-    tr_siamese_dataset = SiameseNetworkDataset(
+    tr_siamese_dataset = SiamesePairNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),
         transform=transform,
         should_invert=False,
@@ -83,7 +84,7 @@ def pair_loaders(train=True):
                                 num_workers=config.num_workers,
                                 batch_size=config.batch_size)
 
-    val_dataset = SiameseNetworkDataset(
+    val_dataset = SiamesePairNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.val_dir),
         transform=transform,
         should_invert=False,
@@ -98,7 +99,7 @@ def pair_loaders(train=True):
                                  num_workers=config.num_workers,
                                  batch_size=config.batch_size)
 
-    te_siamese_dataset = SiameseNetworkDataset(
+    te_siamese_dataset = SiamesePairNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transform,
         should_invert=False,

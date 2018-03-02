@@ -4,15 +4,12 @@ import random
 
 import PIL.ImageOps
 import numpy as np
-import torch
 import torchvision.transforms as transforms
 from PIL import Image
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 from torchvision import datasets
-
-from config import get_config, set_config
-
+import torch
 random.seed(1137)
 np.random.seed(1137)
 
@@ -39,24 +36,35 @@ def itershuffle(iterable, bufsize=10000):
     raise StopIteration
 
 
+def batch(iterable, n=1):
+    l = len(iterable)
+    for ndx in range(0, l, n):
+        yield iterable[ndx:min(ndx + n, l)]
+
+
 class SiamesePairNetworkDataset(Dataset):
-    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, negative=0):
+    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, negative=0, positive=1,
+                 train=True):
         random.shuffle(image_folder_dataset.imgs)
         self.image_folder_dataset = image_folder_dataset
         self.transform = transform
         self.should_invert = should_invert
         self.channel = channel
+        self.negative = negative
+        self.positive = positive
+        self.num_inputs = 2
+        self.num_targets = 1
         self.create_pairs()
 
     def create_pairs(self):
         img1 = copy.deepcopy(self.image_folder_dataset.imgs)
-        img2 = copy.deepcopy(self.image_folder_dataset.imgs)
         random.shuffle(img1)
-        random.shuffle(img2)
-        self.pairs = itershuffle(itertools.combinations(img1, 2))
+        self.pairs = []
+        for x in batch(img1, 16):
+            self.pairs.extend(list(itertools.combinations(x, 2)))
 
     def __getitem__(self, index):
-        img0_tuple, img1_tuple = next(self.pairs)
+        img0_tuple, img1_tuple = self.pairs[index]
         img0 = Image.open(img0_tuple[0])
         img1 = Image.open(img1_tuple[0])
         if self.channel == 1:
@@ -73,18 +81,40 @@ class SiamesePairNetworkDataset(Dataset):
         if self.transform is not None:
             img0 = self.transform(img0)
             img1 = self.transform(img1)
-        if img1_tuple[1] != img0_tuple[1]:
-            label = 0
+        if img1_tuple[1] == img0_tuple[1]:
+            label = torch.FloatTensor([float(self.positive)])
         else:
-            label = 1
-        return (img0, img1), torch.from_numpy(np.array([label], dtype=np.float32))
+            label = torch.FloatTensor([float(self.negative)])
+        return (img0, img1), label
 
     def __len__(self):
-        return (len(self.image_folder_dataset.imgs) ** 2)
+        return len(self.pairs)
 
 
 if __name__ == '__main__':
-    set_config("SiamAtt")
+    import argparse
+
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('--trainer', type=str, default="siamese")
+    parser.add_argument('--width', type=int, default=28)
+    parser.add_argument('--height', type=int, default=28)
+    parser.add_argument('--channel', type=int, default=3)
+    parser.add_argument('--data_name', type=str, default="mnist")
+    parser.add_argument('--loader_name', type=str, default="data_loaders")
+    parser.add_argument('--label_count', type=int, default=8)
+
+    torch.manual_seed(1137)
+    np.random.seed(1137)
+    from config import set_config, get_config
+
+    args = parser.parse_args()
+
+    kwargs = vars(args)
+    trainer_name = kwargs['trainer']
+    kwargs.pop('trainer')
+
+    set_config(trainer_name, **kwargs)
+
     config = get_config()
     tr_siamese_dataset = SiamesePairNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.tr_dir),

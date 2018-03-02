@@ -12,7 +12,11 @@ class BaseConfig(object):
         self.tr_dir = os.path.join(self.data_dir, '%s/train/' % data_name)
         self.val_dir = os.path.join(self.data_dir, '%s/val/' % data_name)
         self.te_dir = os.path.join(self.data_dir, '%s/test/' % data_name)
+
         self.batch_size = batch_size
+        if "fashion" in self.tr_dir and "256" in network:
+            self.batch_size = 16
+            print(self.batch_size)
         self.epochs = epochs
         self.num_workers = num_workers
         self.channel = channel

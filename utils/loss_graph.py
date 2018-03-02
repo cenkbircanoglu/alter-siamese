@@ -13,7 +13,7 @@ def dateparse(time_in_secs):
 if __name__ == '__main__':
     fontsize = 7.5
 
-    names = glob.glob("/media/cenk/2TB/alter_siamese/results/**/**/**/logger.csv")
+    names = glob.glob("../results/**/**/**/logger.csv")
     for name in names:
         print(name)
         data = pd.read_csv(name)
@@ -25,7 +25,7 @@ if __name__ == '__main__':
         plt.savefig(name.replace("logger.csv", "loss.jpg"), dpi=300)
         plt.close()
 
-    for dataname in glob.glob("/media/cenk/2TB/alter_siamese/results/**/"):
+    for dataname in glob.glob("../results/**/"):
         fig = plt.figure()
         ax = fig.add_subplot(111)
         names = glob.glob(os.path.join(dataname, "**/**/logger.csv"))
@@ -41,7 +41,7 @@ if __name__ == '__main__':
         plt.savefig(os.path.join(dataname, "losses.jpg"), dpi=300)
         plt.close()
 
-    for dataname in glob.glob("/media/cenk/2TB/alter_siamese/results/**/"):
+    for dataname in glob.glob("../results/**/"):
         fig = plt.figure()
         ax = fig.add_subplot(111)
         names = glob.glob(os.path.join(dataname, "**/**/logger.csv"))
@@ -56,7 +56,7 @@ if __name__ == '__main__':
         plt.savefig(os.path.join(dataname, "train_losses.jpg"), dpi=300)
         plt.close()
 
-    for dataname in glob.glob("/media/cenk/2TB/alter_siamese/results/**/"):
+    for dataname in glob.glob("../results/**/"):
         fig = plt.figure()
         ax = fig.add_subplot(111)
         names = glob.glob(os.path.join(dataname, "**/**/logger.csv"))
@@ -72,7 +72,7 @@ if __name__ == '__main__':
         plt.close()
 
     for net in ["alex", "dense", "net"]:
-        for dataname in glob.glob("/media/cenk/2TB/alter_siamese/results/**/"):
+        for dataname in glob.glob("../results/**/"):
             fig = plt.figure()
             ax = fig.add_subplot(111)
             names = glob.glob(os.path.join(dataname, "%s*/**/logger.csv" % net))

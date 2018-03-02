@@ -17,7 +17,9 @@ from angle import AngleLoss
 from center import CenterLoss
 from center2 import CenterLoss2
 from contrastive import ContrastiveLoss  # Siamese (`1` or `0`)
+from contrastive import ContrastiveLoss  as AllContrastiveLoss  # Siamese (`1` or `0`)
 from cosine_embedding import CosineEmbeddingLoss  # Siamese (`1` or `-1`)
+from cosine_embedding import CosineEmbeddingLoss as AllCosineEmbeddingLoss  # Siamese (`1` or `-1`)
 from focal import FocalLoss
 from histogram import HistogramLoss
 from margin_ranking import MarginRankingLoss  # Siamese (`1` or `-1`)
@@ -29,4 +31,4 @@ __all__ = ['ContrastiveLoss', 'L1Loss', 'NLLLoss', 'KLDivLoss', 'MSELoss', 'BCEL
            'CosineEmbeddingLoss', 'HingeEmbeddingLoss', 'MarginRankingLoss',
            'MultiLabelSoftMarginLoss', 'MultiMarginLoss', 'SmoothL1Loss', 'SoftMarginLoss', 'CrossEntropyLoss',
            'TripletMarginLoss', 'PoissonNLLLoss', 'CenterLoss', 'CenterLoss2', 'FocalLoss', 'HistogramLoss',
-           'MultiClassHingeLoss', 'SoftmaxLoss', 'AngleLoss']
+           'MultiClassHingeLoss', 'SoftmaxLoss', 'AngleLoss', 'AllContrastiveLoss', 'AllCosineEmbeddingLoss']

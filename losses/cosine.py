@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.autograd import Variable
-from torch.nn.modules.distance import CosineSimilarity
 
 
 class CosineLoss(nn.Module):
@@ -28,7 +27,7 @@ if __name__ == '__main__':
 
     y = Variable(torch.Tensor([0, 0, 0, 1]))  # .cuda()
     # print y
-    feat = Variable(torch.zeros(4, 2), requires_grad=True)  # .cuda()
+    feat = Variable(torch.zeros(8, 4), requires_grad=True)  # .cuda()
     # print feat
 
     out = ct(feat, y)

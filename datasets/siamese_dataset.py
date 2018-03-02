@@ -78,7 +78,7 @@ class SiameseNetworkDataset(Dataset):
 
     def __getitem__(self, index):
         if self.train:
-            return self.get_train_items(index)
+            return self.get_eval_items(index)
         return self.get_eval_items(index)
 
     def __len__(self):

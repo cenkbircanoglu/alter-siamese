@@ -59,22 +59,6 @@ class TripletNetworkDataset(Dataset):
                 triplets.append([indices[c1][n1], indices[c1][n2], indices[c2][n3]])
         return torch.LongTensor(np.array(triplets))
 
-    def get_eval_items(self, index):
-        img0_tuple = self.image_folder_dataset.imgs[self.counter]
-        # we need to make sure approx 50% of images are in the same class
-        self.counter += 1
-        img0 = Image.open(img0_tuple[0])
-        if self.channel == 1:
-            img0 = img0.convert("L")
-        elif self.channel == 3:
-            img0 = img0.convert("RGB")
-
-        if self.should_invert:
-            img0 = PIL.ImageOps.invert(img0)
-
-        if self.transform is not None:
-            img0 = self.transform(img0)
-        return (img0, img0, img0), img0_tuple[1]
 
     def get_train_items(self, index):
         def transform_img(img):
@@ -103,11 +87,7 @@ class TripletNetworkDataset(Dataset):
         return img_a, img_p, img_n
 
     def __getitem__(self, index):
-        if self.train:
-            return self.get_train_items(index)
-        return self.get_eval_items(index)
+        return self.get_train_items(index)
 
     def __len__(self):
-        if self.train:
-            return self.triplets.size(0)
-        return len(self.image_folder_dataset.imgs)
+        return self.triplets.size(0)

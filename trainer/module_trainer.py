@@ -11,6 +11,8 @@ from tqdm import tqdm
 def run():
     from config import get_config
     config = get_config()
+    if config.loader_name != 'data_loaders':
+        return
     print('%s/ckpt.pth.tar' % config.result_dir)
     if os.path.exists('%s/ckpt.pth.tar' % config.result_dir):
         return True

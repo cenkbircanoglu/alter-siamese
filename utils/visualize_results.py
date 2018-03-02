@@ -11,7 +11,7 @@ def dateparse(time_in_secs):
 
 
 if __name__ == '__main__':
-    names = glob.glob("/media/cenk/2TB/alter_siamese/results/**/results.txt")
+    names = glob.glob("../results/**/**/*.log")
     print(names)
     for name in names:
         print(name)

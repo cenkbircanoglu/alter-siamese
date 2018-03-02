@@ -2,6 +2,7 @@ from s224 import *
 from s224.alexnet import *
 from s224.dense import *
 from s224.inception_resnet_v2 import *
+from s256.my import *
 from s28 import *
 from s28.alexnet import *
 from s28.dense import *

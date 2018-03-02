@@ -106,15 +106,15 @@ def get_network():
 
 if __name__ == '__main__':
 
-    N = 4
+    N = 16
     input_dim = 224
     output_dim = 10
     channel = 3
-    model = get_network()(channel=channel, embedding_size=output_dim)
-    x = Variable(torch.randn(N, channel, input_dim, input_dim))
-    y = Variable(torch.randn(N, output_dim), requires_grad=False)
+    model = get_network()(channel=channel, embedding_size=output_dim).cuda()
+    x = Variable(torch.randn(N, channel, input_dim, input_dim)).cuda()
+    y = Variable(torch.randn(N, output_dim), requires_grad=False).cuda()
 
-    criterion = torch.nn.MSELoss(size_average=False)
+    criterion = torch.nn.MSELoss(size_average=False).cuda()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-4)
     for t in range(5):
         y_pred = model(x)
