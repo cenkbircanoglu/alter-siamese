@@ -17,3 +17,15 @@ do
 done
 
 
+for network in angle_net_224 angle_alex_224 angle_dense_224
+do
+    for data in fashion
+    do
+        # Listwise
+        for loss in AngleLoss
+        do
+              python __main__.py listwise --data_name $data --width 224 --height 224 --channel 3 \
+                --network $network --embedding 10 --epochs $EPOCHS --loss $loss --loader_name data_loaders
+        done
+    done
+done

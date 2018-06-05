@@ -33,7 +33,7 @@ def run():
         model.cuda()
         criterion.cuda()
     trainer = ModuleTrainer(model)
-    if config.loader_name == 'data_loaders':
+    if config.loader_name == 'data_loaders' and 'Angle' not in config.loss:
 
         callbacks = [EarlyStopping(monitor='val_loss', patience=50),
                      ModelCheckpoint(config.result_dir, save_best_only=True, verbose=1),
@@ -46,7 +46,7 @@ def run():
         epochs = 150
 
     metrics = []
-    if config.loader_name == 'data_loaders':
+    if config.loader_name == 'data_loaders' and 'Angle' not in config.loss:
         metrics.append(CategoricalAccuracy(top_k=1))
     trainer.compile(loss=criterion, optimizer='adam', metrics=metrics)
     trainer.set_callbacks(callbacks)
