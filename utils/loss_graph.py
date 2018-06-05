@@ -15,8 +15,14 @@ if __name__ == '__main__':
 
     names = glob.glob("../results/**/**/**/logger.csv")
     for name in names:
-        print(name)
-        data = pd.read_csv(name)
+
+        try:
+            data = pd.read_csv(name)
+        except Exception as e:
+            print(name)
+            os.remove(name)
+            continue
+        print(len(data))
         data.plot(x='epoch', y=["loss", "val_loss"], figsize=(9, 6), title=name.split("/")[-2])
         plt.legend(["train", "validation"], fontsize=fontsize)
         plt.ylabel('Loss')

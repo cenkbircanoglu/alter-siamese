@@ -8,8 +8,6 @@ from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 from torchvision import datasets
 
-from config import get_config, set_config
-
 random.seed(1137)
 np.random.seed(1137)
 
@@ -37,7 +35,7 @@ def itershuffle(iterable, bufsize=10000):
 
 
 class TripletDataset(Dataset):
-    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, negative=0):
+    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, negative=0, val=False):
         random.shuffle(image_folder_dataset.imgs)
         self.image_folder_dataset = image_folder_dataset
         self.transform = transform
@@ -46,7 +44,7 @@ class TripletDataset(Dataset):
         self.labels = image_folder_dataset.classes
         self.labels_unique = np.unique(self.labels)
         self.batch_size = 256
-
+        self.val = val
         self.label_indexes = {}
         for i, label in enumerate(self.labels):
             self.label_indexes.setdefault(label, []).append(i)
@@ -65,7 +63,23 @@ class TripletDataset(Dataset):
 
             yield list(inds)
 
-    def __getitem__(self, index):
+    def get_val_items(self, index):
+        img0_tuple = self.image_folder_dataset.imgs[index]
+        # we need to make sure approx 50% of images are in the same class
+        img0 = Image.open(img0_tuple[0])
+        if self.channel == 1:
+            img0 = img0.convert("L")
+        elif self.channel == 3:
+            img0 = img0.convert("RGB")
+
+        if self.should_invert:
+            img0 = PIL.ImageOps.invert(img0)
+
+        if self.transform is not None:
+            img0 = self.transform(img0)
+        return (img0, img0, img0), img0_tuple[1]
+
+    def get_train_items(self, index):
         img0_tuple, img1_tuple, img2_tuple = next(self.triplets)
         img0 = Image.open(img0_tuple[0])
         img1 = Image.open(img1_tuple[0])
@@ -91,7 +105,14 @@ class TripletDataset(Dataset):
 
         return (img0, img1, img2)
 
+    def __getitem__(self, index):
+        if self.val:
+            return self.get_val_items(index)
+        return self.get_train_items(index)
+
     def __len__(self):
+        if self.val:
+            return len(self.image_folder_dataset.imgs)
         return (len(self.image_folder_dataset.imgs) ** 2)
 
 

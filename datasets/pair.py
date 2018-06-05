@@ -4,12 +4,13 @@ import random
 
 import PIL.ImageOps
 import numpy as np
+import torch
 import torchvision.transforms as transforms
 from PIL import Image
 from torch.utils.data import DataLoader
 from torch.utils.data import Dataset
 from torchvision import datasets
-import torch
+
 random.seed(1137)
 np.random.seed(1137)
 
@@ -44,7 +45,7 @@ def batch(iterable, n=1):
 
 class SiamesePairNetworkDataset(Dataset):
     def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, negative=0, positive=1,
-                 train=True):
+                 train=True, val=False):
         random.shuffle(image_folder_dataset.imgs)
         self.image_folder_dataset = image_folder_dataset
         self.transform = transform
@@ -55,15 +56,35 @@ class SiamesePairNetworkDataset(Dataset):
         self.num_inputs = 2
         self.num_targets = 1
         self.create_pairs()
+        self.val = val
+
+
+    def get_val_items(self, index):
+
+        img0_tuple = self.image_folder_dataset.imgs[index]
+        # we need to make sure approx 50% of images are in the same class
+
+        img0 = Image.open(img0_tuple[0])
+        if self.channel == 1:
+            img0 = img0.convert("L")
+        elif self.channel == 3:
+            img0 = img0.convert("RGB")
+
+        if self.should_invert:
+            img0 = PIL.ImageOps.invert(img0)
+
+        if self.transform is not None:
+            img0 = self.transform(img0)
+        return (img0, img0), img0_tuple[1]
 
     def create_pairs(self):
         img1 = copy.deepcopy(self.image_folder_dataset.imgs)
         random.shuffle(img1)
         self.pairs = []
-        for x in batch(img1, 16):
+        for x in batch(img1, 8):
             self.pairs.extend(list(itertools.combinations(x, 2)))
 
-    def __getitem__(self, index):
+    def get_train_items(self, index):
         img0_tuple, img1_tuple = self.pairs[index]
         img0 = Image.open(img0_tuple[0])
         img1 = Image.open(img1_tuple[0])
@@ -87,7 +108,14 @@ class SiamesePairNetworkDataset(Dataset):
             label = torch.FloatTensor([float(self.negative)])
         return (img0, img1), label
 
+    def __getitem__(self, index):
+        if self.val:
+            return self.get_val_items(index)
+        return self.get_train_items(index)
+
     def __len__(self):
+        if self.val:
+            return len(self.image_folder_dataset.imgs)
         return len(self.pairs)
 
 

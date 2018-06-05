@@ -10,6 +10,20 @@ __author__ = 'cenk'
 
 def classify(data_path):
     print(data_path)
+    # fname = "{}/best_train_labels.csv".format(data_path)
+    # os.remove(fname)
+    # fname = "{}/best_train_embeddings.csv".format(data_path)
+    # os.remove(fname)
+    # fname = "{}/best_val_labels.csv".format(data_path)
+    # os.remove(fname)
+    # fname = "{}/best_val_embeddings.csv".format(data_path)
+    # os.remove(fname)
+    # fname = "{}/best_test_labels.csv".format(data_path)
+    # os.remove(fname)
+    # fname = "{}/best_test_embeddings.csv".format(data_path)
+    # os.remove(fname)
+    # return True
+    data_path = data_path.replace("results", "best_results")
     result_path = '%s/results.txt' % os.path.abspath(os.path.join(os.path.dirname(data_path), os.pardir))
     if os.path.exists(result_path):
         if data_path in open(result_path).read():
@@ -39,7 +53,7 @@ def classify(data_path):
     fname = "{}/test_embeddings.csv".format(data_path)
     te_embeddings = np.loadtxt(fname)
 
-    clf = svm.SVC(kernel='linear', C=1, max_iter=2000000000, verbose=True)
+    clf = svm.SVC(kernel='linear', C=1, max_iter=2000000000, verbose=False)
     clf.fit(tr_embeddings, tr_labels)
     joblib.dump(clf, model_path)
 

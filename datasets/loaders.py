@@ -7,8 +7,6 @@ from torchvision import datasets
 from config import  get_config
 from datasets.dataset import NetworkDataset
 from datasets.pair import SiamesePairNetworkDataset
-from datasets.siamese_dataset import SiameseNetworkDataset
-from datasets.triplet import TripletDataset
 from datasets.triplet_dataset import TripletNetworkDataset
 from histogram import HistogramSampler
 
@@ -16,8 +14,13 @@ random.seed(1137)
 np.random.seed(1137)
 
 
-def data_loaders(train=True):
+def data_loaders(train=True, val=False):
     config = get_config()
+
+    batch_size = config.batch_size
+    if 'dense' in config.network:
+        batch_size = 12
+
     transform = transforms.Compose(
         [transforms.Scale((config.height, config.width)),
          transforms.ToTensor(),
@@ -28,43 +31,51 @@ def data_loaders(train=True):
         transform=transform,
         should_invert=False,
         channel=config.channel,
-        train=train
+        train=train,
+        val=val
     )
     tr_data_loader = DataLoader(tr_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
-                                batch_size=config.batch_size)
+                                batch_size=batch_size)
 
     val_dataset = NetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.val_dir),
         transform=transform,
         should_invert=False,
         channel=config.channel,
-        train=train
+        train=train,
+        val=val
     )
 
     val_data_loader = DataLoader(val_dataset,
                                  shuffle=True,
                                  num_workers=config.num_workers,
-                                 batch_size=config.batch_size)
+                                 batch_size=batch_size)
 
     te_dataset = NetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transform,
         should_invert=False,
         channel=config.channel,
-        train=train
+        train=train,
+        val=val
     )
     te_data_loader = DataLoader(te_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
-                                batch_size=config.batch_size)
+                                batch_size=batch_size)
 
     return tr_data_loader, val_data_loader, te_data_loader
 
 
-def pair_loaders(train=True):
+def pair_loaders(train=True, val=False):
     config = get_config()
+
+    batch_size = config.batch_size
+    if 'dense' in config.network:
+        batch_size = 12
+
     transform = transforms.Compose(
         [transforms.Scale((config.height, config.width)),
          transforms.ToTensor(),
@@ -77,12 +88,13 @@ def pair_loaders(train=True):
         channel=config.channel,
         negative=config.negative,
         positive=config.positive,
-        train=train
+        train=train,
+        val=val
     )
     tr_data_loader = DataLoader(tr_siamese_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
-                                batch_size=config.batch_size)
+                                batch_size=batch_size)
 
     val_dataset = SiamesePairNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.val_dir),
@@ -91,13 +103,14 @@ def pair_loaders(train=True):
         channel=config.channel,
         negative=config.negative,
         positive=config.positive,
-        train=train
+        train=train,
+        val=val
     )
 
     val_data_loader = DataLoader(val_dataset,
                                  shuffle=True,
                                  num_workers=config.num_workers,
-                                 batch_size=config.batch_size)
+                                 batch_size=batch_size)
 
     te_siamese_dataset = SiamesePairNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
@@ -106,18 +119,23 @@ def pair_loaders(train=True):
         channel=config.channel,
         negative=config.negative,
         positive=config.positive,
-        train=train
+        train=train,
+        val=val
     )
     te_data_loader = DataLoader(te_siamese_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
-                                batch_size=config.batch_size)
+                                batch_size=batch_size)
 
     return tr_data_loader, val_data_loader, te_data_loader
 
 
-def triplet_loaders(train=True):
+def triplet_loaders(train=True, val=False):
     config = get_config()
+    batch_size = config.batch_size
+    if 'dense' in config.network:
+        batch_size = 8
+
     transform = transforms.Compose(
         [transforms.Scale((config.height, config.width)),
          transforms.ToTensor(),
@@ -128,42 +146,50 @@ def triplet_loaders(train=True):
         transform=transform,
         should_invert=False,
         channel=config.channel,
-        train=train
+        train=train,
+        val=val
     )
     tr_data_loader = DataLoader(tr_triplet_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
-                                batch_size=config.batch_size)
+                                batch_size=batch_size)
 
     val_triplet_dataset = TripletNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.val_dir),
         transform=transform,
         should_invert=False,
         channel=config.channel,
-        train=train
+        train=train,
+        val=val
     )
     val_data_loader = DataLoader(val_triplet_dataset,
                                  shuffle=True,
                                  num_workers=config.num_workers,
-                                 batch_size=config.batch_size)
+                                 batch_size=batch_size)
 
     te_triplet_dataset = TripletNetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.te_dir),
         transform=transform,
         should_invert=False,
         channel=config.channel,
-        train=train
+        train=train,
+        val=val
     )
     te_data_loader = DataLoader(te_triplet_dataset,
                                 shuffle=True,
                                 num_workers=config.num_workers,
-                                batch_size=config.batch_size)
+                                batch_size=batch_size)
 
     return tr_data_loader, val_data_loader, te_data_loader
 
 
 def histogram_loaders(train=True):
     config = get_config()
+
+    batch_size = config.batch_size
+    if 'dense' in config.network:
+        batch_size = 12
+
     transform = transforms.Compose(
         [transforms.Scale((config.height, config.width)),
          transforms.ToTensor(),
@@ -181,7 +207,7 @@ def histogram_loaders(train=True):
 
     tr_data_loader = DataLoader(tr_dataset,
                                 batch_sampler=sampler,
-                                num_workers=config.num_workers)
+                                num_workers=num_workers)
     val_dataset = NetworkDataset(
         image_folder_dataset=datasets.ImageFolder(root=config.val_dir),
         transform=transform,
@@ -190,7 +216,7 @@ def histogram_loaders(train=True):
         train=train
     )
 
-    sampler = HistogramSampler(val_dataset.labels, config.batch_size)
+    sampler = HistogramSampler(val_dataset.labels, batch_size)
     val_data_loader = DataLoader(val_dataset,
                                  batch_sampler=sampler,
                                  num_workers=config.num_workers)
@@ -203,7 +229,7 @@ def histogram_loaders(train=True):
         train=train
     )
 
-    sampler = HistogramSampler(te_dataset.labels, config.batch_size)
+    sampler = HistogramSampler(te_dataset.labels, batch_size)
     te_data_loader = DataLoader(te_dataset,
                                 batch_sampler=sampler,
                                 num_workers=config.num_workers)

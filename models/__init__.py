@@ -13,3 +13,4 @@ from s32.dense import *
 from s64 import *
 from s64.alexnet import *
 from s64.dense import *
+from s28.my import *

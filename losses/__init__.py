@@ -2,7 +2,6 @@ from torch.nn.modules.loss import BCELoss
 from torch.nn.modules.loss import BCEWithLogitsLoss
 from torch.nn.modules.loss import CrossEntropyLoss  # ListWise
 from torch.nn.modules.loss import HingeEmbeddingLoss  # Siamese (`1` or `-1`)
-from torch.nn.modules.loss import KLDivLoss  # ListWise
 from torch.nn.modules.loss import L1Loss
 from torch.nn.modules.loss import MSELoss
 from torch.nn.modules.loss import MultiLabelSoftMarginLoss  # Listwise
@@ -27,8 +26,9 @@ from softmax import SoftmaxLoss
 from svm import MultiClassHingeLoss
 from triplet import TripletMarginLoss
 
-__all__ = ['ContrastiveLoss', 'L1Loss', 'NLLLoss', 'KLDivLoss', 'MSELoss', 'BCELoss', 'BCEWithLogitsLoss', 'NLLLoss2d',
+__all__ = ['ContrastiveLoss', 'L1Loss', 'NLLLoss', 'MSELoss', 'BCELoss', 'BCEWithLogitsLoss', 'NLLLoss2d',
            'CosineEmbeddingLoss', 'HingeEmbeddingLoss', 'MarginRankingLoss',
            'MultiLabelSoftMarginLoss', 'MultiMarginLoss', 'SmoothL1Loss', 'SoftMarginLoss', 'CrossEntropyLoss',
            'TripletMarginLoss', 'PoissonNLLLoss', 'CenterLoss', 'CenterLoss2', 'FocalLoss', 'HistogramLoss',
-           'MultiClassHingeLoss', 'SoftmaxLoss', 'AngleLoss', 'AllContrastiveLoss', 'AllCosineEmbeddingLoss']
+           'MultiClassHingeLoss', 'SoftmaxLoss', 'AngleLoss', 'AllContrastiveLoss', 'AllCosineEmbeddingLoss'
+           ]

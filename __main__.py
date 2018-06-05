@@ -3,7 +3,7 @@ import argparse
 import numpy as np
 import torch
 
-from trainer import module_trainer
+from trainer import module_trainer, saved_module_tester, log_model
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
@@ -36,4 +36,13 @@ if __name__ == '__main__':
     #trainer = getattr(trainer_module, trainer_name)
 
     print(get_config().__dict__)
-    module_trainer.run()
+    import os
+    if os.path.exists('%s/ckpt.pth.tar' % get_config().result_dir):
+        pass
+        #saved_module_tester.run()
+    else:
+        #pass
+        module_trainer.run()
+        #saved_module_tester.run()
+
+    #log_model.run()

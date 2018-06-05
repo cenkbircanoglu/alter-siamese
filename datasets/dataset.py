@@ -10,7 +10,7 @@ np.random.seed(1137)
 
 
 class NetworkDataset(Dataset):
-    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, train=True):
+    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, train=True, val=False):
         self.train = train
         if self.train:
             random.shuffle(image_folder_dataset.imgs)
@@ -18,15 +18,16 @@ class NetworkDataset(Dataset):
         self.transform = transform
         self.should_invert = should_invert
         self.channel = channel
-        self.counter = 0
+
         self.num_inputs = 1
         self.num_targets = 1
         self.labels = [x[1] for x in image_folder_dataset.imgs]
+        self.val = val
 
     def get_items(self, index):
-        img0_tuple = self.image_folder_dataset.imgs[self.counter]
+        img0_tuple = self.image_folder_dataset.imgs[index]
         # we need to make sure approx 50% of images are in the same class
-        self.counter += 1
+
         img0 = Image.open(img0_tuple[0])
         if self.channel == 1:
             img0 = img0.convert("L")

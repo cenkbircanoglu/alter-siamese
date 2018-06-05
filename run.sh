@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
 sh run_scripts/mnist.sh
-sh run_scripts/cats_dogs.sh
 sh run_scripts/cifar100.sh
 sh run_scripts/cifar10.sh
-sh run_scripts/fashion.sh
-sh run_scripts/fashion_percent.sh
+#sh run_scripts/cifar10_percent.sh
 sh run_scripts/aloi_red2_ill.sh
-sh run_scripts/books.sh
 sh run_scripts/cacd2000_age.sh
-sh run_scripts/marvel.sh
-sh run_scripts/ships.sh
 sh run_scripts/utkface_age.sh
-sh run_scripts/imagenet.sh
+sh run_scripts/fashion.sh
+sh run_scripts/books.sh
+sh run_scripts/marvel.sh
+sh run_scripts/cats_dogs.sh
+#sh run_scripts/fashion_percent.sh
+#sh run_scripts/imagenet.sh
 
 #python __main__.py listwise --data_name att  --width 100 --height 100 --channel 1 --network vgg_100 --embedding 40  --epochs $EPOCHS --loss NLLLoss
 #python evaluate/svm.py --data_path results/listwise_att/ &

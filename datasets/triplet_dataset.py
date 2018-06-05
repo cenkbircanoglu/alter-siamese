@@ -1,5 +1,6 @@
 import random
 
+import PIL
 import numpy as np
 import torch
 from PIL import Image
@@ -10,7 +11,7 @@ np.random.seed(1137)
 
 
 class TripletNetworkDataset(Dataset):
-    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, train=True):
+    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, train=True, val=False):
         self.train = train
         if self.train:
             random.shuffle(image_folder_dataset.imgs)
@@ -24,6 +25,7 @@ class TripletNetworkDataset(Dataset):
         self.num_inputs = 3
         self.num_targets = 0
         self.counter = 0
+        self.val = val
 
     @staticmethod
     def generate_triplets(labels, num_triplets):
@@ -59,7 +61,6 @@ class TripletNetworkDataset(Dataset):
                 triplets.append([indices[c1][n1], indices[c1][n2], indices[c2][n3]])
         return torch.LongTensor(np.array(triplets))
 
-
     def get_train_items(self, index):
         def transform_img(img):
             if self.transform is not None:
@@ -86,8 +87,29 @@ class TripletNetworkDataset(Dataset):
         img_n = transform_img(n)
         return img_a, img_p, img_n
 
+    def get_val_items(self, index):
+        img0_tuple = self.image_folder_dataset.imgs[index]
+        # we need to make sure approx 50% of images are in the same class
+        self.counter += 1
+        img0 = Image.open(img0_tuple[0])
+        if self.channel == 1:
+            img0 = img0.convert("L")
+        elif self.channel == 3:
+            img0 = img0.convert("RGB")
+
+        if self.should_invert:
+            img0 = PIL.ImageOps.invert(img0)
+
+        if self.transform is not None:
+            img0 = self.transform(img0)
+        return (img0, img0, img0), img0_tuple[1]
+
     def __getitem__(self, index):
+        if self.val:
+            return self.get_val_items(index)
         return self.get_train_items(index)
 
     def __len__(self):
+        if self.val:
+            return len(self.image_folder_dataset.imgs)
         return self.triplets.size(0)

@@ -4,7 +4,7 @@ PAR = os.path.abspath(os.path.join(os.path.join(__file__, os.pardir), '../'))
 
 
 class BaseConfig(object):
-    def __init__(self, data_name=None, batch_size=256, epochs=20, num_workers=1, channel=1, cuda=False, loss=None,
+    def __init__(self, data_name=None, batch_size=256, epochs=20, num_workers=16, channel=1, cuda=False, loss=None,
                  embedding=128, loader_name=None, network=None, label_count=16, **kwargs):
         self.data_dir = os.path.join(PAR, 'data')
         self.result_dir = os.path.join(PAR, './results/%s/%s/%s' % (data_name, network, loss))
@@ -12,11 +12,8 @@ class BaseConfig(object):
         self.tr_dir = os.path.join(self.data_dir, '%s/train/' % data_name)
         self.val_dir = os.path.join(self.data_dir, '%s/val/' % data_name)
         self.te_dir = os.path.join(self.data_dir, '%s/test/' % data_name)
-
         self.batch_size = batch_size
-        if "fashion" in self.tr_dir and "256" in network:
-            self.batch_size = 16
-            print(self.batch_size)
+
         self.epochs = epochs
         self.num_workers = num_workers
         self.channel = channel

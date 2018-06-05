@@ -7,34 +7,23 @@ class MyNet(nn.Module):
         super(MyNet, self).__init__()
 
         self.features = nn.Sequential(
-            nn.Conv2d(channel, 64, kernel_size=64, stride=2, padding=1),
+            nn.Conv2d(channel, 64, kernel_size=16, stride=2, padding=1),
             nn.LeakyReLU(inplace=True),
             nn.BatchNorm2d(64),
-
-            nn.Conv2d(64, 128, kernel_size=32, stride=2, padding=1),
+            nn.Conv2d(64, 128, kernel_size=8, stride=2, padding=1),
             nn.LeakyReLU(inplace=True),
             nn.BatchNorm2d(128),
-
-            nn.Conv2d(128, 196, kernel_size=16, stride=2, padding=1),
+            nn.Conv2d(128, 196, kernel_size=4, stride=2, padding=1),
             nn.LeakyReLU(inplace=True),
             nn.BatchNorm2d(196),
-
-            nn.Conv2d(196, 256, kernel_size=8, stride=2, padding=1),
-            nn.LeakyReLU(inplace=True),
-            nn.BatchNorm2d(256),
-
-            nn.Conv2d(256, 256, kernel_size=4, padding=1),
-            nn.LeakyReLU(inplace=True),
-            nn.BatchNorm2d(256),
-
-            nn.Conv2d(256, 256, kernel_size=2, padding=1),
+            nn.Conv2d(196, 256, kernel_size=2, stride=2, padding=1),
             nn.LeakyReLU(inplace=True),
             nn.BatchNorm2d(256),
         )
 
         self.classifier = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(256 * 3 * 3, 4096),
+            nn.Linear(256 * 1 * 1, 4096),
             nn.ReLU(inplace=True),
             nn.BatchNorm1d(4096),
             nn.Dropout(),
@@ -46,7 +35,7 @@ class MyNet(nn.Module):
 
     def forward_once(self, x):
         x = self.features(x)
-        x = x.view(x.size(0), 256 * 3 * 3)
+        x = x.view(x.size(0), 256 * 1 * 1)
         x = self.classifier(x)
         return x
 
@@ -63,7 +52,7 @@ if __name__ == '__main__':
     from torch.autograd import Variable
 
     N = 4
-    input_dim = 256
+    input_dim = 28
     output_dim = 10
     channel = 3
     model = get_network()(channel=channel, embedding_size=output_dim)

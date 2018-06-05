@@ -11,8 +11,6 @@ from tqdm import tqdm
 def run():
     from config import get_config
     config = get_config()
-    if config.loader_name != 'data_loaders':
-        return
     print('%s/ckpt.pth.tar' % config.result_dir)
     if os.path.exists('%s/ckpt.pth.tar' % config.result_dir):
         return True
@@ -35,10 +33,17 @@ def run():
         model.cuda()
         criterion.cuda()
     trainer = ModuleTrainer(model)
+    if config.loader_name == 'data_loaders':
 
-    callbacks = [EarlyStopping(monitor='val_loss', patience=50),
-                 ModelCheckpoint(config.result_dir, save_best_only=True, verbose=1),
-                 CSVLogger("%s/logger.csv" % config.result_dir)]
+        callbacks = [EarlyStopping(monitor='val_loss', patience=50),
+                     ModelCheckpoint(config.result_dir, save_best_only=True, verbose=1),
+                     CSVLogger("%s/logger.csv" % config.result_dir)]
+        epochs = config.epochs
+
+    else:
+        callbacks = [ModelCheckpoint(config.result_dir, save_best_only=False, verbose=1),
+                     CSVLogger("%s/logger.csv" % config.result_dir)]
+        epochs = 150
 
     metrics = []
     if config.loader_name == 'data_loaders':
@@ -48,7 +53,7 @@ def run():
     if config.cuda:
         cuda_device = 0
     start_time = time.time()
-    trainer.fit_loader(tr_data_loader, val_loader=val_data_loader, num_epoch=config.epochs, verbose=2,
+    trainer.fit_loader(tr_data_loader, val_loader=val_data_loader, num_epoch=epochs, verbose=2,
                        cuda_device=cuda_device)
     end_time = time.time()
     with open("%s/app.log" % config.result_dir, mode="a") as f:

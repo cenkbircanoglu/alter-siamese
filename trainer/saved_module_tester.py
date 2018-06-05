@@ -7,12 +7,16 @@ import numpy as np
 import torch
 from tqdm import tqdm
 
+from config import set_config
+
 
 def run():
     from config import get_config
     config = get_config()
-    print('%s/best_train_embeddings.csv' % config.result_dir)
-    if os.path.exists('%s/best_train_embeddings.csv' % config.result_dir):
+    print('%s/train_embeddings.csv' % config.result_dir)
+    result_dir = config.result_dir.replace("results", "best_results")
+    print('%s/train_embeddings.csv' % result_dir)
+    if os.path.exists('%s/train_embeddings.csv' % result_dir) and os.path.exists('%s/test_embeddings.csv' % result_dir):
         return True
     print("Not Return")
     import losses
@@ -22,10 +26,8 @@ def run():
     from torchsample.modules import ModuleTrainer
     create_dirs()
     cuda_device = -1
-    tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=True)
 
-    model = getattr(models, config.network).get_network()(channel=config.network_channel,
-                                                          embedding_size=config.embedding)
+    model = getattr(models, config.network).get_network()(channel=config.network_channel, embedding_size=config.embedding)
 
     check_point = os.path.join(config.result_dir, "ckpt.pth.tar")
     if os.path.isfile(check_point):
@@ -45,6 +47,7 @@ def run():
 
     if config.cuda:
         cuda_device = 0
+    tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False, val=True)
 
     tr_loss = trainer.evaluate_loader(tr_data_loader, cuda_device=cuda_device)
     val_loss = trainer.evaluate_loader(val_data_loader, cuda_device=cuda_device)
@@ -52,21 +55,23 @@ def run():
     with open(config.log_path, "a") as f:
         f.write('Best Train %s\nBest Val:%s\nBest Test:%s\n' % (str(tr_loss), str(val_loss), te_loss))
 
-    tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False)
     tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
-    save_embeddings(tr_y_pred, '%s/best_train_embeddings.csv' % config.result_dir)
-    save_labels(tr_data_loader, '%s/best_train_labels.csv' % config.result_dir)
+    save_embeddings(tr_y_pred, '%s/train_embeddings.csv' % config.result_dir)
+    save_labels(tr_data_loader, '%s/train_labels.csv' % config.result_dir)
 
     val_y_pred = trainer.predict_loader(val_data_loader, cuda_device=cuda_device)
-    save_embeddings(val_y_pred, '%s/best_val_embeddings.csv' % config.result_dir)
-    save_labels(val_data_loader, '%s/best_val_labels.csv' % config.result_dir)
+    save_embeddings(val_y_pred, '%s/val_embeddings.csv' % config.result_dir)
+    save_labels(val_data_loader, '%s/val_labels.csv' % config.result_dir)
 
     te_y_pred = trainer.predict_loader(te_data_loader, cuda_device=cuda_device)
-    save_embeddings(te_y_pred, '%s/best_test_embeddings.csv' % config.result_dir)
-    save_labels(te_data_loader, '%s/best_test_labels.csv' % config.result_dir)
+    save_embeddings(te_y_pred, '%s/test_embeddings.csv' % config.result_dir)
+    save_labels(te_data_loader, '%s/test_labels.csv' % config.result_dir)
 
 
 def save_embeddings(data, outputfile):
+    outputfile = outputfile.replace("results", "best_results")
+    if not os.path.exists(os.path.dirname(outputfile)):
+        os.makedirs(os.path.dirname(outputfile))
     with open(outputfile, 'a') as f:
         if type(data) == list:
             data = data[0]
@@ -74,6 +79,9 @@ def save_embeddings(data, outputfile):
 
 
 def save_labels(loader, outputfile):
+    outputfile = outputfile.replace("results", "best_results")
+    if not os.path.exists(os.path.dirname(outputfile)):
+        os.makedirs(os.path.dirname(outputfile))
     for i, data in tqdm(enumerate(loader, 0), total=loader.__len__()):
         img, label = data
         with open(outputfile, 'a') as f:
@@ -94,8 +102,6 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', type=int, default=10)
     parser.add_argument('--negative', type=int, default=0)
     parser.add_argument('--positive', type=int, default=1)
-
-    from config import set_config, get_config
 
     args = parser.parse_args()
 

@@ -25,7 +25,7 @@ class CosineEmbeddingLoss(Module):
     batch samples. By default, `size_average = True`.
     """
 
-    def __init__(self, margin=0.5, size_average=True):
+    def __init__(self, margin=0.5, size_average=False):
         super(CosineEmbeddingLoss, self).__init__()
         self.margin = margin
         self.size_average = size_average

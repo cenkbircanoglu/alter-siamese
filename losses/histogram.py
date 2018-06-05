@@ -5,8 +5,6 @@ from torch.autograd import Variable
 import torch.nn as nn
 
 
-
-
 class L2Normalization(nn.Module):
     def __init__(self):
         super(L2Normalization, self).__init__()
@@ -17,11 +15,13 @@ class L2Normalization(nn.Module):
 
     def __repr__(self):
         return self.__class__.__name__
+
+
 class HistogramLoss(torch.nn.Module):
     def __init__(self, num_steps=150, cuda=True):
         super(HistogramLoss, self).__init__()
         from config import get_config
-        num_steps = get_config().embedding
+        #num_steps = get_config().embedding
         self.step = 2 / (num_steps - 1)
         self.use_cuda = False
         self.t = torch.range(-1, 1, self.step).view(-1, 1)
