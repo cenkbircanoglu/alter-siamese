@@ -18,7 +18,7 @@ do
         done
         for loss in TripletMarginLoss
         do
-               python evaluate/svm.py --data_path results/${data}/triplet_${network}/${loss}
+              python evaluate/svm.py --data_path results/${data}/triplet_${network}/${loss}
         done
     done
 done
