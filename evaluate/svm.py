@@ -23,8 +23,9 @@ def classify(data_path):
     # fname = "{}/best_test_embeddings.csv".format(data_path)
     # os.remove(fname)
     # return True
-    data_path = data_path.replace("results", "best_results")
-    result_path = '%s/results.txt' % os.path.abspath(os.path.join(os.path.dirname(data_path), os.pardir))
+    # data_path = data_path.replace("results", "best_results")
+    result_path = '%s/results.txt' % os.path.abspath(
+        os.path.join(os.path.dirname(data_path), os.path.join(os.pardir, os.pardir)))
     if os.path.exists(result_path):
         if data_path in open(result_path).read():
             return True

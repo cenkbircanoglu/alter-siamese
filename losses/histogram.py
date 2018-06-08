@@ -21,8 +21,8 @@ class HistogramLoss(torch.nn.Module):
     def __init__(self, num_steps=150, cuda=True):
         super(HistogramLoss, self).__init__()
         from config import get_config
-        #num_steps = get_config().embedding
-        self.step = 2 / (num_steps - 1)
+        num_steps = get_config().embedding
+        self.step = 2.0 / (num_steps - 1)
         self.use_cuda = False
         self.t = torch.range(-1, 1, self.step).view(-1, 1)
         self.tsize = self.t.size()[0]
@@ -38,8 +38,8 @@ class HistogramLoss(torch.nn.Module):
             s_repeat_[~(indsb | indsa)] = 0
             s_repeat_[indsa] = (s_repeat_ - Variable(self.t) + self.step)[indsa] / self.step
             s_repeat_[indsb] = (-s_repeat_ + Variable(self.t) + self.step)[indsb] / self.step
-
-            return s_repeat_.sum(1) / size
+            eps = 1e-24
+            return (s_repeat_.sum(1) +eps) / size
 
         classes_size = classes.size()[0]
         classes_eq = (classes.repeat(classes_size, 1) == classes.view(-1, 1).repeat(1, classes_size)).data

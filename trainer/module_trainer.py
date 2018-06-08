@@ -67,7 +67,7 @@ def run():
     with open(config.log_path, "a") as f:
         f.write('Train %s\nVal:%s\nTest:%s\n' % (str(tr_loss), str(val_loss), te_loss))
 
-    tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False)
+    tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False, val=True)
 
     tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
     save_embeddings(tr_y_pred, '%s/train_embeddings.csv' % config.result_dir)

@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-
-
 sh test_scripts/cats_dogs.sh
 sh test_scripts/cifar10.sh
 sh test_scripts/cifar100.sh
@@ -14,4 +12,19 @@ sh test_scripts/utkface_age.sh
 sh test_scripts/aloi_red2_ill.sh
 sh test_scripts/books.sh
 sh test_scripts/cacd2000_age.sh
-sh test_scripts/visualize.sh
+sh test_scripts/gamo.sh
+
+sh test_scripts/cats_dogs_single.sh
+sh test_scripts/cifar10_single.sh
+sh test_scripts/cifar100_single.sh
+sh test_scripts/fashion_single.sh
+sh test_scripts/imagenet_single.sh
+sh test_scripts/marvel_single.sh
+sh test_scripts/mnist_single.sh
+sh test_scripts/ships_single.sh
+sh test_scripts/utkface_age_single.sh
+sh test_scripts/aloi_red2_ill_single.sh
+sh test_scripts/books_single.sh
+sh test_scripts/cacd2000_age_single.sh
+sh test_scripts/gamo_single.sh
+#sh test_scripts/visualize.sh

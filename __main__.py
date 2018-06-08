@@ -37,12 +37,7 @@ if __name__ == '__main__':
 
     print(get_config().__dict__)
     import os
-    if os.path.exists('%s/ckpt.pth.tar' % get_config().result_dir):
-        pass
-        #saved_module_tester.run()
-    else:
-        #pass
-        module_trainer.run()
-        #saved_module_tester.run()
+
+    module_trainer.run()
 
     #log_model.run()

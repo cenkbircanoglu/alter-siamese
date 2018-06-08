@@ -22,7 +22,6 @@ class NetworkDataset(Dataset):
         self.num_inputs = 1
         self.num_targets = 1
         self.labels = [x[1] for x in image_folder_dataset.imgs]
-        self.val = val
 
     def get_items(self, index):
         img0_tuple = self.image_folder_dataset.imgs[index]
