@@ -35,7 +35,7 @@ class Net(nn.Module):
             nn.Linear(4096, 4096),
             nn.ReLU(inplace=True),
             nn.BatchNorm1d(4096),
-            AngleLinear(50, embedding_size),
+            AngleLinear(4096, embedding_size),
         )
 
     def forward_once(self, x):

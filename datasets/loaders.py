@@ -19,7 +19,7 @@ def data_loaders(train=True, val=False):
 
     batch_size = config.batch_size
     if 'dense' in config.network:
-        batch_size = 12
+        batch_size = 16
 
     transform = transforms.Compose(
         [transforms.Scale((config.height, config.width)),
