@@ -1,18 +1,19 @@
 from __future__ import division
 from __future__ import print_function
+
 import time
 
 import numpy as np
+import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision import datasets
 from tqdm import tqdm
-import torchvision.transforms as transforms
 
 from datasets.dataset import NetworkDataset
-from losses.triplet_2 import module_hook
+from losses import ContrastiveLoss2
+
 
 def run():
-    from losses import TripletMarginLoss2
     from models.s28.net import Net
     from torchsample.metrics import CategoricalAccuracy
     from torchsample.modules import ModuleTrainer
@@ -23,7 +24,8 @@ def run():
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
 
     tr_dataset = NetworkDataset(
-        image_folder_dataset=datasets.ImageFolder(root='/media/cenk/2TB1/alter_siamese/data/mnist/train'),
+        image_folder_dataset=datasets.ImageFolder(
+            root='/Users/cenk.bircanoglu/personal/alter_siamese/data/mnist/train'),
         transform=transform,
         should_invert=False,
         channel=1,
@@ -36,7 +38,7 @@ def run():
                                 batch_size=128)
 
     val_dataset = NetworkDataset(
-        image_folder_dataset=datasets.ImageFolder(root='/media/cenk/2TB1/alter_siamese/data/mnist/val'),
+        image_folder_dataset=datasets.ImageFolder(root='/Users/cenk.bircanoglu/personal/alter_siamese/data/mnist/val'),
         transform=transform,
         should_invert=False,
         channel=1,
@@ -50,7 +52,7 @@ def run():
                                  batch_size=128)
 
     te_dataset = NetworkDataset(
-        image_folder_dataset=datasets.ImageFolder(root='/media/cenk/2TB1/alter_siamese/data/mnist/test'),
+        image_folder_dataset=datasets.ImageFolder(root='/Users/cenk.bircanoglu/personal/alter_siamese/data/mnist/test'),
         transform=transform,
         should_invert=False,
         channel=1,
@@ -64,8 +66,7 @@ def run():
 
     cuda_device = -1
     model = Net(channel=1, embedding_size=128)
-    criterion = TripletMarginLoss2()
-    criterion.register_backward_hook(module_hook)
+    criterion = ContrastiveLoss2()
     trainer = ModuleTrainer(model)
     metrics = []
     metrics.append(CategoricalAccuracy(top_k=1))
@@ -82,12 +83,16 @@ def run():
     print(te_loss)
 
     tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
+    save_embeddings(tr_y_pred, 'constrastive/train_embeddings.csv')
+    save_labels(tr_data_loader, 'constrastive/train_labels.csv')
 
     val_y_pred = trainer.predict_loader(val_data_loader, cuda_device=cuda_device)
-
+    save_embeddings(val_y_pred, 'constrastive/val_embeddings.csv')
+    save_labels(val_data_loader, 'constrastive/val_labels.csv')
 
     te_y_pred = trainer.predict_loader(te_data_loader, cuda_device=cuda_device)
-
+    save_embeddings(te_y_pred, 'constrastive/test_embeddings.csv')
+    save_labels(te_data_loader, 'constrastive/test_labels.csv')
 
 
 def save_embeddings(data, outputfile):
@@ -105,5 +110,4 @@ def save_labels(loader, outputfile):
 
 
 if __name__ == '__main__':
-
     run()

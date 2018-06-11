@@ -26,10 +26,12 @@ from softmax import SoftmaxLoss
 from svm import MultiClassHingeLoss
 from triplet import TripletMarginLoss
 from triplet_2 import TripletMarginLoss2
-
+from contrastive_2 import ContrastiveLoss2
+from cosine_embedding_2 import CosineEmbeddingLoss2
 __all__ = ['ContrastiveLoss', 'L1Loss', 'NLLLoss', 'MSELoss', 'BCELoss', 'BCEWithLogitsLoss', 'NLLLoss2d',
            'CosineEmbeddingLoss', 'HingeEmbeddingLoss', 'MarginRankingLoss',
            'MultiLabelSoftMarginLoss', 'MultiMarginLoss', 'SmoothL1Loss', 'SoftMarginLoss', 'CrossEntropyLoss',
            'TripletMarginLoss', 'PoissonNLLLoss', 'CenterLoss', 'CenterLoss2', 'FocalLoss', 'HistogramLoss',
-           'MultiClassHingeLoss', 'SoftmaxLoss', 'AngleLoss', 'AllContrastiveLoss', 'AllCosineEmbeddingLoss', 'TripletMarginLoss2'
+           'MultiClassHingeLoss', 'SoftmaxLoss', 'AngleLoss', 'AllContrastiveLoss', 'AllCosineEmbeddingLoss',
+           'TripletMarginLoss2', 'ContrastiveLoss2','CosineEmbeddingLoss2'
            ]
