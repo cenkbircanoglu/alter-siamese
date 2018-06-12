@@ -19,7 +19,7 @@ def run():
     print('%s/train_embeddings.csv' % result_dir)
     if os.path.exists('%s/train_embeddings.csv' % result_dir) and os.path.exists('%s/test_embeddings.csv' % result_dir):
         return True
-    print("Not Return")
+    print("Saved Module Trainer Not Return")
     import losses
     import models
     from utils.make_dirs import create_dirs

@@ -14,3 +14,6 @@ from s64 import *
 from s64.alexnet import *
 from s64.dense import *
 from s28.my import *
+from s32.my import *
+from s224.my import *
+from s64.my import *

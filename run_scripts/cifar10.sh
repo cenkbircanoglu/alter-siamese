@@ -3,7 +3,7 @@
 # 50000
 
 EPOCHS=500
-for network in net_32 alex_32 dense_32
+for network in net_32 alex_32 #dense_32
 do
     for data in cifar10
     do

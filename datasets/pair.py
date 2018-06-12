@@ -15,37 +15,9 @@ random.seed(1137)
 np.random.seed(1137)
 
 
-def itershuffle(iterable, bufsize=10000):
-    """Shuffle an iterator. This works by holding `bufsize` items back
-    and yielding them sometime later. This is NOT 100% random, proved or anything."""
-    iterable = iter(iterable)
-    buf = []
-    try:
-        while True:
-            for i in xrange(random.randint(1, bufsize - len(buf))):
-                buf.append(iterable.next())
-            random.shuffle(buf)
-            for i in xrange(random.randint(1, bufsize)):
-                if buf:
-                    yield buf.pop()
-                else:
-                    break
-    except StopIteration:
-        random.shuffle(buf)
-        while buf:
-            yield buf.pop()
-    raise StopIteration
-
-
-def batch(iterable, n=1):
-    l = len(iterable)
-    for ndx in range(0, l, n):
-        yield iterable[ndx:min(ndx + n, l)]
-
-
 class SiamesePairNetworkDataset(Dataset):
     def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, negative=0, positive=1,
-                 train=True, val=False):
+                 train=True, val=False, vall=False):
         random.shuffle(image_folder_dataset.imgs)
         self.image_folder_dataset = image_folder_dataset
         self.transform = transform
@@ -61,6 +33,23 @@ class SiamesePairNetworkDataset(Dataset):
         self.labels_set = set(self.labels)
         self.label_to_indices = {label: np.where(np.array(self.labels) == label)[0]
                                  for label in self.labels_set}
+        self.vall = vall
+        if self.vall:
+            random_state = np.random.RandomState(29)
+
+            positive_pairs = [[i,
+                               random_state.choice(self.label_to_indices[self.image_folder_dataset.imgs[i][1]]),
+                               1]
+                              for i in range(0, len(self.image_folder_dataset.imgs), 2)]
+
+            negative_pairs = [[i,
+                               np.random.choice(
+                                   self.label_to_indices[np.random.choice(
+                                       list(self.labels_set - set([self.image_folder_dataset.imgs[i][1]])))]),
+                               0]
+                              for i in range(0, len(self.image_folder_dataset.imgs), 2)]
+
+            self.vall_pairs = positive_pairs + negative_pairs
 
     def get_val_items(self, index):
 
@@ -80,19 +69,22 @@ class SiamesePairNetworkDataset(Dataset):
             img0 = self.transform(img0)
         return (img0, img0), img0_tuple[1]
 
-
     def get_train_items(self, index):
-        target = np.random.randint(0, 2)
-        img0, label0 = self.image_folder_dataset.imgs[index]
-        if target == 1:
-            siamese_index = index
-            while siamese_index == index:
-                siamese_index = np.random.choice(self.label_to_indices[label0])
+        if self.vall:
+            img0 = self.image_folder_dataset.imgs[self.vall_pairs[index][0]][0]
+            img1 = self.image_folder_dataset.imgs[self.vall_pairs[index][1]][0]
+            target = self.vall_pairs[index][2]
         else:
-            siamese_label = np.random.choice(list(self.labels_set - set([label0])))
-            siamese_index = np.random.choice(self.label_to_indices[siamese_label])
-        img1 = self.image_folder_dataset.imgs[siamese_index][0]
-
+            target = np.random.randint(0, 2)
+            img0, label0 = self.image_folder_dataset.imgs[index]
+            if target == 1:
+                siamese_index = index
+                while siamese_index == index:
+                    siamese_index = np.random.choice(self.label_to_indices[label0])
+            else:
+                siamese_label = np.random.choice(list(self.labels_set - set([label0])))
+                siamese_index = np.random.choice(self.label_to_indices[siamese_label])
+            img1 = self.image_folder_dataset.imgs[siamese_index][0]
 
         img0 = Image.open(img0)
         img1 = Image.open(img1)
@@ -122,8 +114,6 @@ class SiamesePairNetworkDataset(Dataset):
         return self.get_train_items(index)
 
     def __len__(self):
-        if self.val:
-            return len(self.image_folder_dataset.imgs)
         return len(self.image_folder_dataset.imgs)
 
 

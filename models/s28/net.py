@@ -23,7 +23,7 @@ class Net(nn.Module):
 
     def forward(self, x):
         x = self.forward_once(x)
-        return F.log_softmax(x)
+        return x
 
 
 def get_network():

@@ -10,20 +10,6 @@ __author__ = 'cenk'
 
 def classify(data_path):
     print(data_path)
-    # fname = "{}/best_train_labels.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_train_embeddings.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_val_labels.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_val_embeddings.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_test_labels.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_test_embeddings.csv".format(data_path)
-    # os.remove(fname)
-    # return True
-    # data_path = data_path.replace("results", "best_results")
     result_path = '%s/results.txt' % os.path.abspath(
         os.path.join(os.path.dirname(data_path), os.path.join(os.pardir, os.pardir)))
     if os.path.exists(result_path):
@@ -83,20 +69,6 @@ def classify(data_path):
 
 def classify1(data_path):
     print(data_path)
-    # fname = "{}/best_train_labels.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_train_embeddings.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_val_labels.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_val_embeddings.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_test_labels.csv".format(data_path)
-    # os.remove(fname)
-    # fname = "{}/best_test_embeddings.csv".format(data_path)
-    # os.remove(fname)
-    # return True
-    # data_path = data_path.replace("results", "best_results")
     result_path = '%s/mlp_results.txt' % os.path.abspath(
         os.path.join(os.path.dirname(data_path), os.path.join(os.pardir, os.pardir)))
     if os.path.exists(result_path):
@@ -158,8 +130,12 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('--data_path', type=str)
+    parser.add_argument('--data_path', type=str, default='/media/cenk/2TB1/alter_siamese/results/mnist/triplet_net_28/TripletMarginLoss')
     args = parser.parse_args()
 
-    classify1(args.data_path)
-    #classify(args.data_path)
+    data_path = args.data_path
+    classify1(data_path)
+    classify(data_path)
+    data_path = data_path.replace("results", "best_results")
+    classify1(data_path)
+    classify(data_path)

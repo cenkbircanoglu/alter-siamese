@@ -33,17 +33,11 @@ def run():
         model.cuda()
         criterion.cuda()
     trainer = ModuleTrainer(model)
-    if config.loader_name == 'data_loaders' and 'Angle' not in config.loss:
+    epochs = config.epochs
 
-        callbacks = [EarlyStopping(monitor='val_loss', patience=50),
+    callbacks = [EarlyStopping(monitor='val_loss', patience=50),
                      ModelCheckpoint(config.result_dir, save_best_only=True, verbose=1),
                      CSVLogger("%s/logger.csv" % config.result_dir)]
-        epochs = config.epochs
-
-    else:
-        callbacks = [ModelCheckpoint(config.result_dir, save_best_only=False, verbose=1),
-                     CSVLogger("%s/logger.csv" % config.result_dir)]
-        epochs = 150
 
     metrics = []
     if config.loader_name == 'data_loaders' and 'Angle' not in config.loss:

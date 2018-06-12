@@ -3,9 +3,9 @@
 # 50000
 
 EPOCHS=500
-for network in net_32 alex_32 dense_32
+for network in net_32 alex_32 #dense_32
 do
-    for data in cifar100
+    for data in cifar100 cifar10 #cifar10_10 cifar10_20 cifar10_30 cifar10_40 cifar10_50 cifar10_60
     do
         # Siamese
         for loss in  ContrastiveLoss

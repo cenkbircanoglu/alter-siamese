@@ -3,7 +3,7 @@
 # 24095
 
 EPOCHS=500
-for network in net_64 alex_64 dense_64
+for network in net_64 alex_64 #dense_64
 do
     for data in utkface_age
     do

@@ -1,7 +1,8 @@
-from models.s256.my.net import MyNet
+from models.s28.my.net import MyNet
 
 
 class TripletMyNet(MyNet):
+
     def forward(self, input1, input2, input3):
         output1 = self.forward_once(input1)
         output2 = self.forward_once(input2)

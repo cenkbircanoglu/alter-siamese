@@ -3,7 +3,7 @@
 
 # 29985
 EPOCHS=500
-for network in net_224 alex_224 dense_224
+for network in net_224 alex_224 #dense_224
 do
     for data in fashion
     do

@@ -3,7 +3,7 @@
 # 70000
 
 EPOCHS=500
-for network in net_28 alex_28 dense_28
+for network in net_28 alex_28 #dense_28
 do
     for data in mnist
     do
@@ -26,6 +26,20 @@ do
         do
               python __main__.py triplet --data_name $data  --width 28 --height 28 --channel 1 \
                 --network triplet_${network} --embedding 128 --epochs $EPOCHS --loss $loss  --loader_name triplet_loaders
+        done
+    done
+done
+
+for network in mynet_28
+do
+    for data in mnist
+    do
+
+        # Triplet
+        for loss in TripletMarginLoss CosineEmbeddingLoss ContrastiveLoss
+        do
+              python __main__.py triplet --data_name $data  --width 28 --height 28 --channel 1 \
+                --network triplet_${network} --embedding 256 --epochs $EPOCHS --loss $loss  --loader_name triplet_loaders
         done
     done
 done

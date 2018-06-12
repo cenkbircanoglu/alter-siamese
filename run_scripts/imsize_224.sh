@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
 
-# 29985
-
+# 24998
 EPOCHS=500
-for network in net_224 alex_224 dense_224
+for network in net_224 alex_224 #dense_224
 do
-    for data in fashion_10 fashion_20 fashion_30 fashion_40 fashion_50 fashion_60
+    for data in marvel fashion books #fashion_10 fashion_20 fashion_30 fashion_40 fashion_50 fashion_60
     do
         # Siamese
         for loss in  ContrastiveLoss

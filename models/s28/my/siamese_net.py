@@ -1,4 +1,4 @@
-from models.s256.my.net import MyNet
+from models.s28.my.net import MyNet
 
 
 class SiameseMyNet(MyNet):

@@ -10,7 +10,7 @@ np.random.seed(1137)
 
 
 class TripletNetworkDataset(Dataset):
-    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, train=True, val=False):
+    def __init__(self, image_folder_dataset, transform=None, should_invert=True, channel=1, train=True, val=False, vall=False):
         self.train = train
         if self.train:
             random.shuffle(image_folder_dataset.imgs)
@@ -23,26 +23,45 @@ class TripletNetworkDataset(Dataset):
         self.labels_set = set(self.labels)
         self.num_inputs = 3
         self.num_targets = 0
-        self.counter = 0
         self.val = val
-
+        self.vall = vall
         self.label_to_indices = {label: np.where(np.array(self.labels) == label)[0]
                                  for label in self.labels_set}
 
+        if self.vall:
+            random_state = np.random.RandomState(29)
+
+            triplets = [[i,
+                         random_state.choice(self.label_to_indices[self.image_folder_dataset.imgs[i][1]]),
+                         random_state.choice(self.label_to_indices[
+                                                 np.random.choice(
+                                                     list(self.labels_set - set([self.image_folder_dataset.imgs[i][1]]))
+                                                 )
+                                             ])
+                         ]
+                        for i in range(len(self.image_folder_dataset.imgs))]
+            self.triplets = triplets
+
     def get_train_items(self, index):
+
         def transform_img(img):
             if self.transform is not None:
                 img = self.transform(img)
             return img
+        if self.vall:
+            a = self.image_folder_dataset.imgs[self.triplets[index][0]][0]
+            p = self.image_folder_dataset.imgs[self.triplets[index][1]][0]
+            n = self.image_folder_dataset.imgs[self.triplets[index][2]][0]
+        else:
+            a, label1 = self.image_folder_dataset.imgs[index]
+            positive_index = index
+            while positive_index == index:
+                positive_index = np.random.choice(self.label_to_indices[label1])
+            negative_label = np.random.choice(list(self.labels_set - set([label1])))
+            negative_index = np.random.choice(self.label_to_indices[negative_label])
 
-        a, label1 = self.image_folder_dataset.imgs[index]
-        positive_index = index
-        while positive_index == index:
-            positive_index = np.random.choice(self.label_to_indices[label1])
-        negative_label = np.random.choice(list(self.labels_set - set([label1])))
-        negative_index = np.random.choice(self.label_to_indices[negative_label])
-        p = self.image_folder_dataset.imgs[positive_index][0]
-        n = self.image_folder_dataset.imgs[negative_index][0]
+            p, label2 = self.image_folder_dataset.imgs[positive_index]
+            n, label3 = self.image_folder_dataset.imgs[negative_index]
 
         a = Image.open(a)
         p = Image.open(p)
@@ -64,8 +83,6 @@ class TripletNetworkDataset(Dataset):
 
     def get_val_items(self, index):
         img0_tuple = self.image_folder_dataset.imgs[index]
-        # we need to make sure approx 50% of images are in the same class
-        self.counter += 1
         img0 = Image.open(img0_tuple[0])
         if self.channel == 1:
             img0 = img0.convert("L")

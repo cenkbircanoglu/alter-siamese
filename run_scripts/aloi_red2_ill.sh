@@ -2,7 +2,7 @@
 
 # 24000
 EPOCHS=500
-for network in net_64 alex_64 dense_64
+for network in net_64 alex_64 #dense_64
 do
     for data in aloi_red2_ill
     do

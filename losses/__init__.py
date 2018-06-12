@@ -25,13 +25,10 @@ from losses.margin_ranking import MarginRankingLoss  # Siamese (`1` or `-1`)
 from losses.softmax import SoftmaxLoss
 from losses.svm import MultiClassHingeLoss
 from losses.triplet import TripletMarginLoss
-from losses.triplet_2 import TripletMarginLoss2
-from losses.contrastive_2 import ContrastiveLoss2
-from losses.cosine_embedding_2 import CosineEmbeddingLoss2
+
 __all__ = ['ContrastiveLoss', 'L1Loss', 'NLLLoss', 'MSELoss', 'BCELoss', 'BCEWithLogitsLoss', 'NLLLoss2d',
            'CosineEmbeddingLoss', 'HingeEmbeddingLoss', 'MarginRankingLoss',
            'MultiLabelSoftMarginLoss', 'MultiMarginLoss', 'SmoothL1Loss', 'SoftMarginLoss', 'CrossEntropyLoss',
            'TripletMarginLoss', 'PoissonNLLLoss', 'CenterLoss', 'CenterLoss2', 'FocalLoss', 'HistogramLoss',
-           'MultiClassHingeLoss', 'SoftmaxLoss', 'AngleLoss', 'AllContrastiveLoss', 'AllCosineEmbeddingLoss',
-           'TripletMarginLoss2', 'ContrastiveLoss2','CosineEmbeddingLoss2'
+           'MultiClassHingeLoss', 'SoftmaxLoss', 'AngleLoss', 'AllContrastiveLoss', 'AllCosineEmbeddingLoss'
            ]
