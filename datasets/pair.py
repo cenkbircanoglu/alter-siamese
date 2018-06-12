@@ -55,9 +55,12 @@ class SiamesePairNetworkDataset(Dataset):
         self.positive = positive
         self.num_inputs = 2
         self.num_targets = 1
-        self.create_pairs()
-        self.val = val
 
+        self.val = val
+        self.labels = [x[1] for x in image_folder_dataset.imgs]
+        self.labels_set = set(self.labels)
+        self.label_to_indices = {label: np.where(np.array(self.labels) == label)[0]
+                                 for label in self.labels_set}
 
     def get_val_items(self, index):
 
@@ -77,17 +80,22 @@ class SiamesePairNetworkDataset(Dataset):
             img0 = self.transform(img0)
         return (img0, img0), img0_tuple[1]
 
-    def create_pairs(self):
-        img1 = copy.deepcopy(self.image_folder_dataset.imgs)
-        random.shuffle(img1)
-        self.pairs = []
-        for x in batch(img1, 8):
-            self.pairs.extend(list(itertools.combinations(x, 2)))
 
     def get_train_items(self, index):
-        img0_tuple, img1_tuple = self.pairs[index]
-        img0 = Image.open(img0_tuple[0])
-        img1 = Image.open(img1_tuple[0])
+        target = np.random.randint(0, 2)
+        img0, label0 = self.image_folder_dataset.imgs[index]
+        if target == 1:
+            siamese_index = index
+            while siamese_index == index:
+                siamese_index = np.random.choice(self.label_to_indices[label0])
+        else:
+            siamese_label = np.random.choice(list(self.labels_set - set([label0])))
+            siamese_index = np.random.choice(self.label_to_indices[siamese_label])
+        img1 = self.image_folder_dataset.imgs[siamese_index][0]
+
+
+        img0 = Image.open(img0)
+        img1 = Image.open(img1)
         if self.channel == 1:
             img0 = img0.convert("L")
             img1 = img1.convert("L")
@@ -102,7 +110,7 @@ class SiamesePairNetworkDataset(Dataset):
         if self.transform is not None:
             img0 = self.transform(img0)
             img1 = self.transform(img1)
-        if img1_tuple[1] == img0_tuple[1]:
+        if target:
             label = torch.FloatTensor([float(self.positive)])
         else:
             label = torch.FloatTensor([float(self.negative)])
@@ -116,7 +124,7 @@ class SiamesePairNetworkDataset(Dataset):
     def __len__(self):
         if self.val:
             return len(self.image_folder_dataset.imgs)
-        return len(self.pairs)
+        return len(self.image_folder_dataset.imgs)
 
 
 if __name__ == '__main__':

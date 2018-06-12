@@ -4,11 +4,12 @@ import numpy as np
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from torchvision import datasets
-from config import  get_config
+
+from config import get_config
 from datasets.dataset import NetworkDataset
+from datasets.histogram import HistogramSampler
 from datasets.pair import SiamesePairNetworkDataset
 from datasets.triplet_dataset import TripletNetworkDataset
-from histogram import HistogramSampler
 
 random.seed(1137)
 np.random.seed(1137)
@@ -251,7 +252,7 @@ if __name__ == '__main__':
 
     torch.manual_seed(1137)
     np.random.seed(1137)
-    from config import set_config, get_config
+    from config import set_config
 
     args = parser.parse_args()
 

@@ -36,9 +36,9 @@ if __name__ == '__main__':
 
     ct = CenterLoss2(10, 2)
     # ct = ct.cuda()
-    print list(ct.parameters())
+    print(list(ct.parameters()))
 
-    print ct.centers.grad
+    print(ct.centers.grad)
 
     y = Variable(torch.Tensor([0, 0, 0, 1]))  # .cuda()
     # print y
@@ -47,4 +47,4 @@ if __name__ == '__main__':
 
     out = ct(feat, y)
     out.backward()
-    print ct.centers.grad
+    print(ct.centers.grad)

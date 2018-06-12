@@ -12,22 +12,22 @@ from torch.nn.modules.loss import PoissonNLLLoss  # ListWise
 from torch.nn.modules.loss import SmoothL1Loss
 from torch.nn.modules.loss import SoftMarginLoss  # Listwise
 
-from angle import AngleLoss
-from center import CenterLoss
-from center2 import CenterLoss2
-from contrastive import ContrastiveLoss  # Siamese (`1` or `0`)
-from contrastive import ContrastiveLoss  as AllContrastiveLoss  # Siamese (`1` or `0`)
-from cosine_embedding import CosineEmbeddingLoss  # Siamese (`1` or `-1`)
-from cosine_embedding import CosineEmbeddingLoss as AllCosineEmbeddingLoss  # Siamese (`1` or `-1`)
-from focal import FocalLoss
-from histogram import HistogramLoss
-from margin_ranking import MarginRankingLoss  # Siamese (`1` or `-1`)
-from softmax import SoftmaxLoss
-from svm import MultiClassHingeLoss
-from triplet import TripletMarginLoss
-from triplet_2 import TripletMarginLoss2
-from contrastive_2 import ContrastiveLoss2
-from cosine_embedding_2 import CosineEmbeddingLoss2
+from losses.angle import AngleLoss
+from losses.center import CenterLoss
+from losses.center2 import CenterLoss2
+from losses.contrastive import ContrastiveLoss  # Siamese (`1` or `0`)
+from losses.contrastive import ContrastiveLoss  as AllContrastiveLoss  # Siamese (`1` or `0`)
+from losses.cosine_embedding import CosineEmbeddingLoss  # Siamese (`1` or `-1`)
+from losses.cosine_embedding import CosineEmbeddingLoss as AllCosineEmbeddingLoss  # Siamese (`1` or `-1`)
+from losses.focal import FocalLoss
+from losses.histogram import HistogramLoss
+from losses.margin_ranking import MarginRankingLoss  # Siamese (`1` or `-1`)
+from losses.softmax import SoftmaxLoss
+from losses.svm import MultiClassHingeLoss
+from losses.triplet import TripletMarginLoss
+from losses.triplet_2 import TripletMarginLoss2
+from losses.contrastive_2 import ContrastiveLoss2
+from losses.cosine_embedding_2 import CosineEmbeddingLoss2
 __all__ = ['ContrastiveLoss', 'L1Loss', 'NLLLoss', 'MSELoss', 'BCELoss', 'BCEWithLogitsLoss', 'NLLLoss2d',
            'CosineEmbeddingLoss', 'HingeEmbeddingLoss', 'MarginRankingLoss',
            'MultiLabelSoftMarginLoss', 'MultiMarginLoss', 'SmoothL1Loss', 'SoftMarginLoss', 'CrossEntropyLoss',
