@@ -3,7 +3,7 @@
 # 70000
 
 EPOCHS=500
-for network in net_28 alex_28 #dense_28
+for network in net_28 alex_28 dense_28
 do
     for data in mnist
     do

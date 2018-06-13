@@ -26,7 +26,7 @@ class OnlineContrastiveLoss(nn.Module):
         output1 = torch.cat([embeddings[positive_pairs[:, 0]], embeddings[negative_pairs[:, 0]]], dim=0).cuda()
         output2 = torch.cat([embeddings[positive_pairs[:, 1]], embeddings[negative_pairs[:, 1]]], dim=0).cuda()
         label = Variable(
-            torch.cat([torch.ones(positive_pairs.shape[0]), torch.zeros(negative_pairs.shape[0])], dim=0).cuda())
+            torch.cat([torch.zeros(negative_pairs.shape[0]), torch.ones(positive_pairs.shape[0])], dim=0).cuda())
 
         euclidean_distance = F.pairwise_distance(output1, output2)
 
