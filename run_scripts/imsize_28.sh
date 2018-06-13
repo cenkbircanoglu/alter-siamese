@@ -36,10 +36,26 @@ do
     do
 
         # Triplet
-        for loss in TripletMarginLoss CosineEmbeddingLoss ContrastiveLoss
+        for loss in TripletMarginLoss
         do
               python __main__.py triplet --data_name $data  --width 28 --height 28 --channel 1 \
                 --network triplet_${network} --embedding 256 --epochs $EPOCHS --loss $loss  --loader_name triplet_loaders
+        done
+
+         # Triplet
+        for loss in CosineEmbeddingLoss
+        do
+              python __main__.py siamese --data_name $data  --width 28 --height 28 --channel 1 \
+                --network siamese_${network} --embedding 256 --epochs $EPOCHS --loss $loss  --negative -1 --positive 1 \
+                 --loader_name pair_loaders
+        done
+
+         # Triplet
+        for loss in  ContrastiveLoss
+        do
+              python __main__.py siamese --data_name $data  --width 28 --height 28 --channel 1 \
+                --network siamese_${network} --embedding 256 --epochs $EPOCHS --loss $loss  --negative 1 --positive 0 \
+                 --loader_name pair_loaders
         done
     done
 done
