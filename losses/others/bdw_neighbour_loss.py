@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 
-from losses.dist_weight_neighbour_loss import DistWeightNeighbourLoss
+from losses.others.dist_weight_neighbour_loss import DistWeightNeighbourLoss
 
 
 class BDWNeighbourLoss(nn.Module):

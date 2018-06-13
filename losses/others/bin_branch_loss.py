@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 
-from losses.bin_deviance_loss import BinDevianceLoss
+from losses.others.bin_deviance_loss import BinDevianceLoss
 
 
 def similarity(inputs_):

@@ -4,7 +4,7 @@ import torch
 from torch import nn
 from torch.autograd import Variable
 
-from losses.dist_weight_deviance_loss import DistWeightBinDevianceLoss
+from losses.others.dist_weight_deviance_loss import DistWeightBinDevianceLoss
 
 
 def similarity(inputs_):

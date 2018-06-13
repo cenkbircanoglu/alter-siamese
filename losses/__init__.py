@@ -30,7 +30,7 @@ from losses.others.center_triplet import CenterTripletLoss
 from losses.others.cluster_nca_loss import ClusterNCALoss
 from losses.contrastive import ContrastiveLoss  # Siamese (`1` or `0`)
 from losses.contrastive import ContrastiveLoss  as AllContrastiveLoss  # Siamese (`1` or `0`)
-from losses.contrastive_loss import ContrastiveLoss as ContrastiveNewLoss
+from losses.others.contrastive_loss import ContrastiveLoss as ContrastiveNewLoss
 from losses.cosine_embedding import CosineEmbeddingLoss  # Siamese (`1` or `-1`)
 from losses.cosine_embedding import CosineEmbeddingLoss as AllCosineEmbeddingLoss  # Siamese (`1` or `-1`)
 from losses.others.decor_loss import DecorLoss
