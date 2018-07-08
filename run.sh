@@ -10,6 +10,9 @@ sh run_scripts/aloi_red2_ill.sh
 sh run_scripts/cacd2000_age.sh
 sh run_scripts/utkface_age.sh
 sh run_scripts/fashion.sh
+sh run_scripts/cub_200_2011.sh
+sh run_scripts/car_196.sh
+sh run_stanford_products.sh
 sh run_scripts/books.sh
 sh run_scripts/marvel.sh
 #sh run_scripts/fashion_percent.sh

@@ -1,15 +1,21 @@
 import math
+import random
 
 import numpy as np
 from torch.utils.data.sampler import BatchSampler
+
+random.seed(1137)
+np.random.seed(1137)
 
 
 class BalancedBatchSampler(BatchSampler):
 
     def __init__(self, image_folder_dataset, n_classes, n_samples):
         self.labels = [x[1] for x in image_folder_dataset.imgs]
-
         self.labels_set = list(set(self.labels))
+        if len(self.labels_set) < 10:
+            n_classes = len(self.labels_set)
+            n_samples = 64 / n_classes
         self.label_to_indices = {label: np.where(np.array(self.labels) == label)[0]
                                  for label in self.labels_set}
         for l in self.labels_set:
@@ -23,7 +29,7 @@ class BalancedBatchSampler(BatchSampler):
 
     def __iter__(self):
         self.count = 0
-        #while self.count + self.batch_size < len(self.dataset):
+        # while self.count + self.batch_size < len(self.dataset):
         while True:
             classes = np.random.choice(self.labels_set, self.n_classes, replace=False)
             indices = []

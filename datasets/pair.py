@@ -114,6 +114,8 @@ class SiamesePairNetworkDataset(Dataset):
         return self.get_train_items(index)
 
     def __len__(self):
+        if self.vall:
+            return len(self.vall_pairs)
         return len(self.image_folder_dataset.imgs)
 
 

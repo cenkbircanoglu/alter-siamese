@@ -95,6 +95,7 @@ class DenseNet(nn.Module):
         # TODO 7 to 2
         out = F.avg_pool2d(out, kernel_size=2, stride=1).view(features.size(0), -1)
         out = self.classifier(out)
+        out = F.normalize(out, p=2, dim=1)
         return out
 
     def forward(self, x):

@@ -31,7 +31,7 @@ def verify_or_delete(dir):
                 #img.load()
             except IOError as ie:
                 print(fname)
-                os.remove(fname)
+                #os.remove(fname)
 
 
 if __name__ == '__main__':

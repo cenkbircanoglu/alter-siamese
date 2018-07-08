@@ -20,7 +20,7 @@ def data_loaders(train=True, val=False):
 
     batch_size = config.batch_size
     if 'dense' in config.network:
-        batch_size = 16
+        batch_size = 24
 
     transform = transforms.Compose(
         [transforms.Scale((config.height, config.width)),
@@ -220,10 +220,13 @@ def online_pair_loaders(train=True, val=False):
         train=train,
         val=val
     )
+    batch_size = 64
+    if 'dense' in config.network:
+        batch_size = 24
 
-    train_batch_sampler = BalancedBatchSampler(tr_dataset.image_folder_dataset, n_classes=8, n_samples=8)
-    val_batch_sampler = BalancedBatchSampler(val_dataset.image_folder_dataset, n_classes=8, n_samples=8)
-    test_batch_sampler = BalancedBatchSampler(te_dataset.image_folder_dataset, n_classes=8, n_samples=8)
+    train_batch_sampler = BalancedBatchSampler(tr_dataset.image_folder_dataset, n_classes=8, n_samples=batch_size / 8)
+    val_batch_sampler = BalancedBatchSampler(val_dataset.image_folder_dataset, n_classes=8, n_samples=batch_size / 8)
+    test_batch_sampler = BalancedBatchSampler(te_dataset.image_folder_dataset, n_classes=8, n_samples=batch_size / 8)
 
     kwargs = {'num_workers': 1, 'pin_memory': True} if config.cuda else {}
     tr_data_loader = DataLoader(tr_dataset, batch_sampler=train_batch_sampler, **kwargs)
@@ -267,10 +270,12 @@ def online_triplet_loaders(train=True, val=False):
         train=train,
         val=val
     )
-
-    train_batch_sampler = BalancedBatchSampler(tr_dataset.image_folder_dataset, n_classes=8, n_samples=8)
-    val_batch_sampler = BalancedBatchSampler(val_dataset.image_folder_dataset, n_classes=8, n_samples=8)
-    test_batch_sampler = BalancedBatchSampler(te_dataset.image_folder_dataset, n_classes=8, n_samples=8)
+    batch_size = 64
+    if 'dense' in config.network:
+        batch_size = 24
+    train_batch_sampler = BalancedBatchSampler(tr_dataset.image_folder_dataset, n_classes=8, n_samples=batch_size / 8)
+    val_batch_sampler = BalancedBatchSampler(val_dataset.image_folder_dataset, n_classes=8, n_samples=batch_size / 8)
+    test_batch_sampler = BalancedBatchSampler(te_dataset.image_folder_dataset, n_classes=8, n_samples=batch_size / 8)
 
     kwargs = {'num_workers': 1, 'pin_memory': True} if config.cuda else {}
     tr_data_loader = DataLoader(tr_dataset, batch_sampler=train_batch_sampler, **kwargs)
@@ -304,9 +309,37 @@ if __name__ == '__main__':
     trainer_name = kwargs['trainer']
     kwargs.pop('trainer')
 
+    name = 'utkface_age'
+    kwargs.update({'loader_name': None, 'height': 64, 'epochs': 500, 'data_dir': '/media/cenk/2TB1/alter_siamese/data',
+                   'positive': 1, 'width': 64, 'te_dir': '/media/cenk/2TB1/alter_siamese/data/%s/test/' % name,
+                   'channel': 3, 'num_workers': 4, 'batch_size': 256, 'negative': 0,
+                   'tr_dir': '/media/cenk/2TB1/alter_siamese/data/%s/train/' % name,
+                   'val_dir': '/media/cenk/2TB1/alter_siamese/data/%s/val/' % name, 'cuda': True, 'embedding': 128})
+
     set_config(trainer_name, **kwargs)
     print(get_config().__dict__)
     tr_data_loader, val_data_loader, te_data_loader = online_pair_loaders(train=True, val=False)
 
-    for b in tr_data_loader:
-        print(b)
+    counter = 0
+    from tqdm import tqdm
+
+    for b, a in tqdm(tr_data_loader):
+        counter += 1
+        if len(tr_data_loader) == counter:
+            break
+    print(counter)
+    counter = 0
+
+    for b, a in tqdm(val_data_loader):
+        counter += 1
+        if len(val_data_loader) == counter:
+            break
+    print(counter)
+
+    counter = 0
+
+    for b, a in tqdm(te_data_loader):
+        counter += 1
+        if len(te_data_loader) == counter:
+            break
+    print(counter)

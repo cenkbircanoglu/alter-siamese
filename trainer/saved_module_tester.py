@@ -19,6 +19,8 @@ def run():
     print('%s/train_embeddings.csv' % result_dir)
     if os.path.exists('%s/train_embeddings.csv' % result_dir) and os.path.exists('%s/test_embeddings.csv' % result_dir):
         return True
+    if not os.path.exists(result_dir):
+        os.makedirs(result_dir)
     print("Saved Module Trainer Not Return")
     import losses
     import models
@@ -28,7 +30,8 @@ def run():
     create_dirs()
     cuda_device = -1
 
-    model = getattr(models, config.network).get_network()(channel=config.network_channel, embedding_size=config.embedding)
+    model = getattr(models, config.network).get_network()(channel=config.network_channel,
+                                                          embedding_size=config.embedding)
 
     check_point = os.path.join(config.result_dir, "ckpt.pth.tar")
     if os.path.isfile(check_point):
@@ -57,25 +60,23 @@ def run():
     val_loss = trainer.evaluate_loader(val_data_loader, cuda_device=cuda_device)
     te_loss = trainer.evaluate_loader(te_data_loader, cuda_device=cuda_device)
 
-
     tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
-    save_embeddings(tr_y_pred, '%s/train_embeddings.csv' % config.result_dir)
-    save_labels(tr_data_loader, '%s/train_labels.csv' % config.result_dir)
+    save_embeddings(tr_y_pred, '%s/train_embeddings.csv' % result_dir)
+    save_labels(tr_data_loader, '%s/train_labels.csv' % result_dir)
 
     val_y_pred = trainer.predict_loader(val_data_loader, cuda_device=cuda_device)
-    save_embeddings(val_y_pred, '%s/val_embeddings.csv' % config.result_dir)
-    save_labels(val_data_loader, '%s/val_labels.csv' % config.result_dir)
+    save_embeddings(val_y_pred, '%s/val_embeddings.csv' % result_dir)
+    save_labels(val_data_loader, '%s/val_labels.csv' % result_dir)
 
     te_y_pred = trainer.predict_loader(te_data_loader, cuda_device=cuda_device)
-    save_embeddings(te_y_pred, '%s/test_embeddings.csv' % config.result_dir)
-    save_labels(te_data_loader, '%s/test_labels.csv' % config.result_dir)
+    save_embeddings(te_y_pred, '%s/test_embeddings.csv' % result_dir)
+    save_labels(te_data_loader, '%s/test_labels.csv' % result_dir)
 
     with open(config.log_path.replace("results", "best_results"), "a") as f:
         f.write('Best Train %s\nBest Val:%s\nBest Test:%s\n' % (str(tr_loss), str(val_loss), te_loss))
 
 
 def save_embeddings(data, outputfile):
-    outputfile = outputfile.replace("results", "best_results")
     if not os.path.exists(os.path.dirname(outputfile)):
         os.makedirs(os.path.dirname(outputfile))
     with open(outputfile, 'a') as f:
@@ -85,33 +86,9 @@ def save_embeddings(data, outputfile):
 
 
 def save_labels(loader, outputfile):
-    outputfile = outputfile.replace("results", "best_results")
     if not os.path.exists(os.path.dirname(outputfile)):
         os.makedirs(os.path.dirname(outputfile))
     for i, data in tqdm(enumerate(loader, 0), total=loader.__len__()):
         img, label = data
         with open(outputfile, 'a') as f:
             np.savetxt(f, label.numpy())
-
-
-if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser(description='')
-    parser.add_argument('--width', type=int, default=28)
-    parser.add_argument('--height', type=int, default=28)
-    parser.add_argument('--channel', type=int, default=1)
-    parser.add_argument('--data_name', type=str, default="mnist")
-    parser.add_argument('--network', type=str, default="net_28")
-    parser.add_argument('--embedding', type=int, default=10)
-    parser.add_argument('--loss', type=str, default="NLLLoss")
-    parser.add_argument('--epochs', type=int, default=10)
-    parser.add_argument('--negative', type=int, default=0)
-    parser.add_argument('--positive', type=int, default=1)
-
-    args = parser.parse_args()
-
-    kwargs = vars(args)
-    set_config("siamese", **kwargs)
-
-    run()

@@ -46,6 +46,4 @@ class NetworkDataset(Dataset):
         return self.get_items(index)
 
     def __len__(self):
-        if self.train:
-            return len(self.image_folder_dataset.imgs)
         return len(self.image_folder_dataset.imgs)

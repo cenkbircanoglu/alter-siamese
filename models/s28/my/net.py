@@ -1,5 +1,5 @@
 import torch.nn as nn
-
+import torch.nn.functional as F
 
 class MyNet(nn.Module):
 
@@ -22,6 +22,7 @@ class MyNet(nn.Module):
     def forward_once(self, x):
         x = self.features(x)
         x = x.view(x.size(0), self.embedding)
+        x = F.normalize(x, p=2, dim=1)
         return x
 
     def forward(self, x):

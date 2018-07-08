@@ -3,7 +3,7 @@ from configs.base import BaseConfig
 
 class ListWiseConfig(BaseConfig):
     def __init__(self, width=None, height=None, network=None, channel=1, loss="CrossEntropyLoss", embedding=128 * 1,
-                 batch_size=256, epochs=20, num_workers=16, cuda=False, **kwargs):
+                 batch_size=256, epochs=20, num_workers=4, cuda=False, **kwargs):
         super(ListWiseConfig, self).__init__(batch_size=batch_size, epochs=epochs, num_workers=num_workers,
                                              channel=channel, cuda=cuda, loss=loss, network=network,
                                              embedding=embedding, **kwargs)

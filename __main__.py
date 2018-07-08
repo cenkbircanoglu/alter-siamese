@@ -31,13 +31,17 @@ if __name__ == '__main__':
     kwargs.pop('trainer')
 
     set_config(trainer_name, **kwargs)
-    #import trainer as trainer_module
+    # import trainer as trainer_module
 
-    #trainer = getattr(trainer_module, trainer_name)
+    # trainer = getattr(trainer_module, trainer_name)
 
     print(get_config().__dict__)
     import os
 
+    if os.path.exists('%s/test_embeddings.csv' % get_config().result_dir):
+        saved_module_tester.run()
     module_trainer.run()
-
-    #log_model.run()
+    if os.path.exists('%s/test_embeddings.csv' % get_config().result_dir):
+        saved_module_tester.run()
+    # saved_module_tester.run()
+    # log_model.run()

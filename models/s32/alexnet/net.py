@@ -1,5 +1,7 @@
 import torch.nn as nn
 
+import torch.nn.functional as F
+
 
 class Net(nn.Module):
 
@@ -41,6 +43,7 @@ class Net(nn.Module):
         x = self.features(x)
         x = x.view(x.size(0), 256 * 1 * 1)
         x = self.classifier(x)
+        x = F.normalize(x, p=2, dim=1)
         return x
 
     def forward(self, x):

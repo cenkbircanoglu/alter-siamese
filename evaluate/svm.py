@@ -3,8 +3,11 @@ import os
 import numpy as np
 from sklearn import svm
 from sklearn.externals import joblib
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, confusion_matrix
 from sklearn.neural_network.multilayer_perceptron import MLPClassifier
+
+from evaluate.confusion_matrix import plot_confusion_matrix
+
 __author__ = 'cenk'
 
 
@@ -67,6 +70,11 @@ def classify(data_path):
             'Data Path: %s\tTrain Accuracy:%s\tVal Accuracy:%s\tTest Accuracy:%s\tTrain FScore:%s\tVal FScore:%s\tTest FScore:%s\n' % (
                 data_path, tr_score, val_score, te_score, tr_fscore, val_fscore, te_fscore))
 
+    conf_mat = confusion_matrix(te_labels, te_predictions)
+    labels = sorted(list(set(list(te_labels))))
+    plot_confusion_matrix(conf_mat, classes=labels, normalize=True, title='Normalized confusion matrix',
+                          output=data_path, path_name='confusion_matrix', alg='svm')
+
 def classify1(data_path):
     print(data_path)
     result_path = '%s/mlp_results.txt' % os.path.abspath(
@@ -99,7 +107,7 @@ def classify1(data_path):
     fname = "{}/test_embeddings.csv".format(data_path)
     te_embeddings = np.loadtxt(fname)
 
-    clf = MLPClassifier(random_state=2, max_iter=200000000, hidden_layer_sizes=(96, 64, 32))
+    clf = MLPClassifier(random_state=2, max_iter=200000000, hidden_layer_sizes=(96, 64, 32), verbose=False)
     clf.fit(tr_embeddings, tr_labels)
     joblib.dump(clf, model_path)
 
@@ -126,11 +134,18 @@ def classify1(data_path):
             'Data Path: %s\tTrain Accuracy:%s\tVal Accuracy:%s\tTest Accuracy:%s\tTrain FScore:%s\tVal FScore:%s\tTest FScore:%s\n' % (
                 data_path, tr_score, val_score, te_score, tr_fscore, val_fscore, te_fscore))
 
+    conf_mat = confusion_matrix(te_labels, te_predictions)
+    labels = sorted(list(set(list(te_labels))))
+    plot_confusion_matrix(conf_mat, classes=labels, normalize=True, title='Normalized confusion matrix',
+                          output=data_path, path_name='confusion_matrix', alg='mlp')
+
+
 if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('--data_path', type=str, default='/media/cenk/2TB1/alter_siamese/results/mnist/triplet_net_28/TripletMarginLoss')
+    parser.add_argument('--data_path', type=str,
+                        default='/media/cenk/2TB1/alter_siamese/results/mnist/net_28/OnlineContrastiveLossAllPositivePairSelector')
     args = parser.parse_args()
 
     data_path = args.data_path
