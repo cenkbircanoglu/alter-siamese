@@ -116,3 +116,6 @@ utils/res.txt
 *.xls
 *.out
 *.txt
+others
+counts.csv
+mlp_latex_2.ods
