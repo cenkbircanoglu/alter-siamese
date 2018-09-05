@@ -26,30 +26,6 @@ def run():
     cuda_device = -1
     tr_data_loader, val_data_loader, te_data_loader = loaders.online_pair_loaders()
 
-    counter = 0
-    from tqdm import tqdm
-
-    for b in tqdm(tr_data_loader):
-        counter += 1
-        if len(tr_data_loader) == counter:
-            break
-    print(counter)
-    counter = 0
-
-    for b in tqdm(val_data_loader):
-        counter += 1
-        if len(val_data_loader) == counter:
-            break
-    print(counter)
-
-    counter = 0
-
-    for b in tqdm(te_data_loader):
-        counter += 1
-        if len(te_data_loader) == counter:
-            break
-    print(counter)
-
     model = getattr(models, config.network).get_network()(channel=config.network_channel,
                                                           embedding_size=config.embedding)
     from losses.online_contrastive import OnlineContrastiveLoss
@@ -96,30 +72,6 @@ def run():
         f.write('Train %s\nVal:%s\nTest:%s\n' % (str(tr_loss), str(val_loss), te_loss))
 
     tr_data_loader, val_data_loader, te_data_loader = loaders.data_loaders(train=False, val=True)
-
-    counter = 0
-    from tqdm import tqdm
-
-    for b in tqdm(tr_data_loader):
-        counter += 1
-        if len(tr_data_loader) == counter:
-            break
-    print(counter)
-    counter = 0
-
-    for b in tqdm(val_data_loader):
-        counter += 1
-        if len(val_data_loader) == counter:
-            break
-    print(counter)
-
-    counter = 0
-
-    for b in tqdm(te_data_loader):
-        counter += 1
-        if len(te_data_loader) == counter:
-            break
-    print(counter)
 
     tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
     save_embeddings(tr_y_pred, '%s/train_embeddings.csv' % config.result_dir)

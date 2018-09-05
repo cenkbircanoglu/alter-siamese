@@ -3,7 +3,7 @@
 
 train ()
 {
-    for network in dense_${img_dim} mynet_${img_dim} net_${img_dim} alex_${img_dim}
+    for network in net_${img_dim} alex_${img_dim} dense_${img_dim}  # mynet_$[img_dim}
     do
 
         # Listwise
@@ -42,18 +42,29 @@ train ()
             python trainer/contrastive_trainer.py --data_name $data --width $img_dim --height $img_dim --channel $channel \
                 --network $network --embedding 128 --epochs $EPOCHS --loss OnlineContrastiveLoss${selector} \
                  --selector $selector
+
+            python trainer/contrastive_timer.py --data_name $data --width $img_dim --height $img_dim --channel $channel \
+                --network $network --embedding 128 --epochs $EPOCHS --loss OnlineContrastiveLoss${selector} \
+                 --selector $selector
         done
 
         for selector in AllTripletSelector HardestNegativeTripletSelector RandomNegativeTripletSelector SemihardNegativeTripletSelector
         do
-            python trainer/triplet_trainer.py --data_name $data --width $img_dim --height $img_dim --channel $channel \
+           python trainer/triplet_trainer.py --data_name $data --width $img_dim --height $img_dim --channel $channel \
+                --network $network --embedding 128 --epochs $EPOCHS --loss OnlineTripletLoss${selector} \
+                 --selector $selector
+
+            python trainer/triplet_timer.py --data_name $data --width $img_dim --height $img_dim --channel $channel \
                 --network $network --embedding 128 --epochs $EPOCHS --loss OnlineTripletLoss${selector} \
                  --selector $selector
         done
 
         for selector in HardNegativePairSelector AllPositivePairSelector
         do
-            python trainer/cosine_trainer.py --data_name $data --width $img_dim --height $img_dim --channel $channel \
+           python trainer/cosine_trainer.py --data_name $data --width $img_dim --height $img_dim --channel $channel \
+                --network $network --embedding 128 --epochs $EPOCHS --loss OnlineCosineLoss${selector} \
+                 --selector $selector
+           python trainer/cosine_timer.py --data_name $data --width $img_dim --height $img_dim --channel $channel \
                 --network $network --embedding 128 --epochs $EPOCHS --loss OnlineCosineLoss${selector} \
                  --selector $selector
         done
@@ -76,7 +87,7 @@ img_dim=32
 
 embedding=10
 
-for data in cifar10 cifar10_10 cifar10_20 cifar10_30 cifar10_40 cifar10_50 cifar10_60
+for data in cifar10 #cifar10_10 cifar10_20 cifar10_30 cifar10_40 cifar10_50 cifar10_60
 do
     train
 done
@@ -107,9 +118,13 @@ embedding=98
 data=utkface_age
 train
 
-embedding=1000
-data=imagenet
+embedding=6
+data=trasnet
 train
+
+#embedding=1000
+#data=imagenet
+#train
 
 img_dim=224
 
@@ -122,7 +137,7 @@ data=cub_200_2011
 train
 
 embedding=10
-for data in fashion fashion_10 fashion_20 fashion_30 fashion_40 fashion_50 fashion_60
+for data in fashion #fashion_10 fashion_20 fashion_30 fashion_40 fashion_50 fashion_60
 do
     train
 done
@@ -135,8 +150,7 @@ embedding=32
 data=books
 train
 
-
-embedding=22634
-data=products
-train
-
+#embedding=22634
+#data=products
+#train
+#

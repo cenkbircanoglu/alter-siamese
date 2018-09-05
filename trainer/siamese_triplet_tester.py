@@ -5,6 +5,7 @@ import os
 
 import numpy as np
 import torch
+from torch.nn import CrossEntropyLoss
 from torchsample.metrics import CategoricalAccuracy
 from tqdm import tqdm
 
@@ -15,7 +16,7 @@ def run():
     from config import get_config
     config = get_config()
     print('%s/train_embeddings.csv' % config.result_dir)
-    result_dir = config.result_dir
+    result_dir = config.result_dir#.replace("results", "best_results")
     print('%s/train_embeddings.csv' % result_dir)
     if os.path.exists('%s/train_embeddings.csv' % result_dir) and os.path.exists('%s/test_embeddings.csv' % result_dir):
         return True
@@ -42,23 +43,18 @@ def run():
               .format(check_point, checkpoint['epoch']))
     else:
         print("=> no checkpoint found at '{}'".format(check_point))
-    criterion = getattr(losses, config.loss)()
+    #criterion = getattr(losses, config.loss)()
+    criterion = CrossEntropyLoss()
     if config.cuda:
         model.cuda()
         criterion.cuda()
     trainer = ModuleTrainer(model)
-    metrics = []
-    if config.loader_name == 'data_loaders':
-        metrics.append(CategoricalAccuracy(top_k=1))
-    trainer.compile(loss=criterion, optimizer='adam', metrics=metrics)
+
+    trainer.compile(loss=criterion, optimizer='adam')
 
     if config.cuda:
         cuda_device = 0
     tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False, val=True)
-
-    tr_loss = trainer.evaluate_loader(tr_data_loader, cuda_device=cuda_device)
-    val_loss = trainer.evaluate_loader(val_data_loader, cuda_device=cuda_device)
-    te_loss = trainer.evaluate_loader(te_data_loader, cuda_device=cuda_device)
 
     tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
     save_embeddings(tr_y_pred, '%s/train_embeddings.csv' % result_dir)
@@ -71,9 +67,6 @@ def run():
     te_y_pred = trainer.predict_loader(te_data_loader, cuda_device=cuda_device)
     save_embeddings(te_y_pred, '%s/test_embeddings.csv' % result_dir)
     save_labels(te_data_loader, '%s/test_labels.csv' % result_dir)
-
-    with open(config.log_path.replace("results", "best_results"), "a") as f:
-        f.write('Best Train %s\nBest Val:%s\nBest Test:%s\n' % (str(tr_loss), str(val_loss), te_loss))
 
 
 def save_embeddings(data, outputfile):

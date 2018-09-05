@@ -3,7 +3,8 @@ import argparse
 import numpy as np
 import torch
 
-from trainer import module_trainer, saved_module_tester, log_model
+from trainer import module_trainer, saved_module_tester, log_model, siamese_triplet_tester, module_timer, \
+    load_model_epoch
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
@@ -19,6 +20,7 @@ if __name__ == '__main__':
     parser.add_argument('--negative', type=int, default=0)
     parser.add_argument('--positive', type=int, default=1)
     parser.add_argument('--loader_name', type=str, default="data_loaders")
+    parser.add_argument('--selector', type=str, default="data_loaders")
 
     torch.manual_seed(1137)
     np.random.seed(1137)
@@ -38,10 +40,19 @@ if __name__ == '__main__':
     print(get_config().__dict__)
     import os
 
-    if os.path.exists('%s/test_embeddings.csv' % get_config().result_dir):
-        saved_module_tester.run()
+    if not os.path.exists('%s/test_embeddings.csv' % get_config().result_dir):
+        try:
+            saved_module_tester.run()
+        except Exception as e:
+            print(e)
+        try:
+            siamese_triplet_tester.run()
+        except Exception as e:
+            print(e)
     module_trainer.run()
-    if os.path.exists('%s/test_embeddings.csv' % get_config().result_dir):
+    if not os.path.exists('%s/test_embeddings.csv' % get_config().result_dir):
         saved_module_tester.run()
-    # saved_module_tester.run()
-    # log_model.run()
+    #log_model.run()
+
+    #module_timer.run()
+    load_model_epoch.run()

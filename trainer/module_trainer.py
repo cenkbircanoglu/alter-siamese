@@ -25,29 +25,6 @@ def run():
     create_dirs()
     cuda_device = -1
     tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=True)
-    counter = 0
-    from tqdm import tqdm
-
-    for b in tqdm(tr_data_loader):
-        counter += 1
-        if len(tr_data_loader) == counter:
-            break
-    print(counter)
-    counter = 0
-
-    for b in tqdm(val_data_loader):
-        counter += 1
-        if len(val_data_loader) == counter:
-            break
-    print(counter)
-
-    counter = 0
-
-    for b in tqdm(te_data_loader):
-        counter += 1
-        if len(te_data_loader) == counter:
-            break
-    print(counter)
 
     model = getattr(models, config.network).get_network()(channel=config.network_channel,
                                                           embedding_size=config.embedding)
@@ -87,32 +64,7 @@ def run():
     with open(config.log_path, "a") as f:
         f.write('Train %s\nVal:%s\nTest:%s\n' % (str(tr_loss), str(val_loss), te_loss))
 
-    config.batch_size = 32
     tr_data_loader, val_data_loader, te_data_loader = getattr(loaders, config.loader_name)(train=False, val=True)
-    counter = 0
-    from tqdm import tqdm
-
-    for b in tqdm(tr_data_loader):
-        counter += 1
-        if len(tr_data_loader) == counter:
-            break
-    print(counter)
-    counter = 0
-
-    for b in tqdm(val_data_loader):
-        counter += 1
-        if len(val_data_loader) == counter:
-            break
-    print(counter)
-
-    counter = 0
-
-    for b in tqdm(te_data_loader):
-        counter += 1
-        if len(te_data_loader) == counter:
-            break
-    print(counter)
-
 
     tr_y_pred = trainer.predict_loader(tr_data_loader, cuda_device=cuda_device)
     save_embeddings(tr_y_pred, '%s/train_embeddings.csv' % config.result_dir)
