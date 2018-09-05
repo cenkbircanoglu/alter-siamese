@@ -112,3 +112,7 @@ folder
 best_results
 results_1
 utils/res.txt
+*.png
+*.xls
+*.out
+*.txt
